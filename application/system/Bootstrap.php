@@ -33,12 +33,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         
              
     }
-      protected function _initControlerDirectory()
-      {
-          $front = Zend_Controller_Front::getInstance();
-          $front->getDispatcher()->setParam('prefixDefaultModule', true);
-      }   
-
+      
+	
 
 //     protected function _initZFDebug()
 //    {
