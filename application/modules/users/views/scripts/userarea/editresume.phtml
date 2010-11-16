@@ -1,0 +1,227 @@
+<script type="text/javascript" src="/js/jquery/messages_ru.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.select.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#registration").validate();
+});
+</script>
+
+
+<script type="text/javascript">
+	function set_SubCategory(root_category){
+                var id_category = root_category;
+		$("#activity_item option").each(function(){
+			if($(this).val()==id_category){
+				$(this).attr("selected", "selected");
+			}
+		});
+	}
+
+
+$(document).ready(function(){
+  // подкатегории
+  function getSubActivity(){
+  	var root_category = $('#activity').val();
+  	var tmpSelect = $('#activity_item');
+        $("#loader").show("fast");
+  	if(root_category == 0) {
+  		tmpSelect.attr('disabled','disabled');
+  		tmpSelect.clearSelect();
+  	} else {
+  		
+  		$.getJSON('/users/ru/userarea/subcategory/',{id_root:root_category},
+  			function(data) {
+  				if(data =='err'){
+  					tmpSelect.clearSelect();
+                                        $("#loader").hide("fast");
+  				} else {
+                                        
+  					tmpSelect.fillSelect(data).attr('disabled','');
+                                        $("#loader").hide("fast");
+  					set_SubCategory(<?=$this->resume['activity_item']?>);
+  				}
+  			}
+  		);
+                
+                
+  	}
+        
+  };
+
+  $('#activity').change(function(){
+  	var value = $(this).val();
+  	getSubActivity();
+  }).change();
+});
+</script>
+
+<h1 class="head_content"><?=$this->h1?></h1>
+<!-- Activity catalog-->
+
+    <div class="content_text form_cont">
+        <?php if ($this->ok==1){?>
+                    <h2>Изменения сохранены</h2>
+              <?php }?>
+
+    <form action="" method="post" id="resumeeditform" enctype="multipart/form-data">
+        <div class="form">
+    <?
+        if (isset($this->fields) && count($this->fields)) {?>
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['region']['title']?></span>
+            <select id="<?=$this->fields['region']['type']?>" name="resume[<?=$this->fields['region']['type']?>]" class="width_360 <?=$this->fields['region']['required']?'required':''?>">
+                <?foreach($this->fields['region']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['region']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['activity']['title']?><span class="red">*</span></span>
+            <select id="<?=$this->fields['activity']['type']?>" name="resume[<?=$this->fields['activity']['type']?>]" class="width_360 <?=$this->fields['activity']['required']?'required':''?>">
+                <?foreach($this->fields['activity']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['activity']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['activity_item']['title']?><span class="red">*</span></span>
+            <div id="loader" style="display: none;"><img src="/img/loader.gif"></div>
+            <select id="<?=$this->fields['activity_item']['type']?>" name="resume[<?=$this->fields['activity_item']['type']?>]" disabled="disabled" class="width_360 <?=$this->fields['activity_item']['required']?'required':''?>">
+                <option value="">Выберите сферу деятельности</option>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['opyt_raboty']['title']?></span>
+            <select id="<?=$this->fields['opyt_raboty']['type']?>" name="resume[<?=$this->fields['opyt_raboty']['type']?>]" class="width_360 <?=$this->fields['opyt_raboty']['required']?'required':''?>">
+                <option value="">Не указано</option>
+                <?foreach($this->fields['opyt_raboty']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['opyt_raboty']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['obrazovanie']['title']?></span>
+            <select id="<?=$this->fields['obrazovanie']['type']?>" name="resume[<?=$this->fields['obrazovanie']['type']?>]" class="width_360 <?=$this->fields['obrazovanie']['required']?'required':''?>">
+                <option value="">Не указано</option>
+                <?foreach($this->fields['obrazovanie']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['obrazovanie']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['inostrannyj_yazyk']['title']?></span>
+            <select id="<?=$this->fields['inostrannyj_yazyk']['type']?>" name="resume[<?=$this->fields['inostrannyj_yazyk']['type']?>]" class="width_360 <?=$this->fields['inostrannyj_yazyk']['required']?'required':''?>">
+                <option value="">Не указан</option>
+                <?foreach($this->fields['inostrannyj_yazyk']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['inostrannyj_yazyk']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['tip_raboty']['title']?></span>
+            <select id="<?=$this->fields['tip_raboty']['type']?>" name="resume[<?=$this->fields['tip_raboty']['type']?>]" class="width_360 <?=$this->fields['tip_raboty']['required']?'required':''?>">
+                <option value="">Не указан</option>
+                <?foreach($this->fields['tip_raboty']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['tip_raboty']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['grafik_raboty']['title']?></span>
+            <select id="<?=$this->fields['grafik_raboty']['type']?>" name="resume[<?=$this->fields['grafik_raboty']['type']?>]" class="width_360 <?=$this->fields['grafik_raboty']['required']?'required':''?>">
+                <option value="">Не указан</option>
+                <?foreach($this->fields['grafik_raboty']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['grafik_raboty']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['student']['title']?></span>
+            <select id="<?=$this->fields['student']['type']?>" name="resume[<?=$this->fields['student']['type']?>]" class="width_360 <?=$this->fields['student']['required']?'required':''?>">
+                <option value="">Не указан</option>
+                <?foreach($this->fields['student']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['student']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+            <div class="item overflow pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['pol']['title']?></span>
+            <select id="<?=$this->fields['pol']['type']?>" name="resume[<?=$this->fields['pol']['type']?>]" class="width_360 <?=$this->fields['pol']['required']?'required':''?>">
+                <option value="">Не указан</option>
+                <?foreach($this->fields['pol']['childs'] as $value=>$option){?>
+                <option value="<?=$value?>" <?=$value==$this->resume['pol']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+
+
+
+            <?echo "<span class=\"title_form\">Зарплата</span>";?>
+            <div class="item overflow pad_bottom_20 ser">
+                <?echo "<span class=\"title_form\">От</span>";?>
+                <?echo $this->formText('resume[zarplata_ot]', $this->resume['zarplata_ot']!=0?$this->resume['zarplata_ot']:'', array('style'=>"width:100px, float:left"));?>
+                <?echo "<span class=\"title_form\">До</span>";?>
+                <?echo $this->formText('resume[zarplata_do]', $this->resume['zarplata_do']!=999999999?$this->resume['zarplata_do']:'', array('style'=>"width:100px, float:left"));?>
+            </div>
+            <?echo "<span class=\"title_form\">Возраст</span>";?>
+            <div class="item overflow pad_bottom_20">
+                <?echo $this->formText('resume[age]', $this->resume['age'], array('style'=>"width:352px",));?>
+            </div>
+            <?echo "<span class=\"title_form\">Дополнительная информация</span>";?>
+            <div class="item overflow pad_bottom_20">
+            <?echo $this->formTextarea('resume[add_info]', $this->resume['add_info'], array('style'=>"width:352px", 'rows'=>7));?>
+            </div>
+            <div class="item pad_bottom_20">
+            <span class=\"title_form\"><?=$this->fields['srok_razmeweniya']['title']?></span>
+            <select id="<?=$this->fields['srok_razmeweniya']['type']?>" name="resume[<?=$this->fields['srok_razmeweniya']['type']?>]" class="width_360 <?=$this->fields['pol']['required']?'required':''?>">
+                <?foreach($this->fields['srok_razmeweniya']['childs'] as $value=>$option){?>
+                <option value="<?=$option?>" <?=$value==$this->resume['srok_razmeweniya']?'selected':''?>><?=$option?></option>>
+                <?}?>
+            </select>
+            </div>
+            <div class="item pad_bottom_20">
+                <input type="checkbox" style="" id="resume-active" name="resume[active]" <?=$this->resume['active']==1?'checked':''?>>
+                Опубликовано
+                <br>
+                <input type="checkbox" style="" id="resume-notify" name="resume[notify]" <?=$this->resume['notify']==1?'checked':''?>>
+                Уведомлять меня об истечении срока подачи резюме
+            </div>
+        <?}
+    ?>
+        </div>
+        <p><span class="red">*</span>- поля, обязательны к заполнению!</p>
+
+        <div class="clear"></div>
+			<div class="post_advert f_left">
+              <a href="#" onclick="$('#resumeeditform').submit(); return false;" class="button_red add_company"><span>Изменить резюме</span></a>
+              <noscript>
+              	<input type="submit" value="Добавить резюме">
+              </noscript>
+			   <div class="message">Резюме измененно</div>
+			   <div class="clear"></div>
+			  </div>
+    </form>
+        <?php if (isset($this->errors)){?>
+             <div class="errors">
+                <h2>Ошибка</h2>
+                <?php foreach ($this->errors as $key=>$error){?>
+                    <p><strong><?=$key?></strong> : <?=$error?></p>
+                <?php }?>
+             </div>
+         <?php }?>
+                    
+    </div>
+
+
+
+

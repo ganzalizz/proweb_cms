@@ -1,0 +1,258 @@
+
+<span style="color:red; margin-left: 16px"><strong><?=$this->error?></strong></span>
+<div id="redactor_main_head">
+    <div class="redactor_head">
+        <div class="left_y"><!-- --></div>
+        <div class="redactor_headbg_longer">
+            <table cellspacing="0" cellpadding="0" border="0" class="red_title">
+                <tr>
+                    <td class="redactor_img"><!-- --></td>
+                    <td>Редактор содержимого</td>
+                </tr>
+            </table>
+        </div>
+        <div class="right_y"><!-- --></div>
+    </div>
+    <div class="clear"><!-- --></div>
+    <div id="redactor_content">
+        <form action='/admin/<?=$this->lang?>/pages/add/parent_id/<?=$this->parentId?>/' method="POST" enctype="multipart/form-data" id="addPage" name="addPage">
+            <table class='edit_page' border="0" cellpadding="4" cellspacing="4" style="padding: 15px 0 0 30px">
+                <tr>
+                    <td>
+                        <p>
+												Название
+                            <span>
+                                <img src="/images/ico_help.gif" title="Подсказка..." />
+                            </span>
+                        </p>
+
+                    </td>
+                    <td>
+                        <p>
+												Ключевые слова
+                            <span>
+                                <img src="/images/ico_help.gif" title="Подсказка..." />
+                            </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input id="name" name='name' onchange="javascript:ttAdd()">
+                    </td>
+                    <td>
+                        <input id="keywords" name='keywords'">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>
+												TITLE
+                            <span>
+                                <img src="/images/ico_help.gif" title="Подсказка..." />
+                            </span>
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+												DESCRIPTIONS
+                            <span>
+                                <img src="/images/ico_help.gif" title="Подсказка..." />
+                            </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input id="page_title" name='page_title'>
+                    </td>
+                    <td>
+                        <input id="descriptions" name='descriptions'">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>
+												URL
+                            <span>
+                                <img src="/images/ico_help.gif" title="Подсказка..." />
+                            </span>
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+												ЗаголовокH1
+                            <span>
+                                <img src="/images/ico_help.gif" title="Подсказка..." />
+                            </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input id="path" name='path'">
+                    </td>
+                    <td>
+                        <input id="h1" name='h1'">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>
+												Тип раздела
+                            <span>
+                                <img src="/images/ico_help.gif" title="Подсказка..." />
+                            </span>
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+												Теги
+                            <span>
+                                <img src="/images/ico_help.gif" title="Подсказка..." />
+                            </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="template" id="template">
+                            <?php
+                            foreach ($this->templates as $key => $data) {
+                                ?>
+                            <option value="<?=$key?>" <?=($key=='default' ? 'selected="selected"' :'') ?> title="Подсказка..."><?=$data['name']?></option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td style="padding-top: 5px">
+                                    <input type='checkbox' checked="checked" id="published" name='published' style='width: 10px !important'/>
+                                </td>
+                                <td>
+                                    <p>
+															Активна
+                                        <span>
+                                            <img src="/images/ico_help.gif" title="Подсказка..." />
+                                        </span>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        <table>
+                            <tr>
+                                <td style="padding-top: 5px">
+                                    <input type='checkbox' id="sitemap" name='sitemap' checked="checked" style='width: 10px !important'/>
+                                </td>
+                                <td>
+                                    <p>
+															Карта сайта
+                                        <span>
+                                            <img src="/images/ico_help.gif" title="Подсказка..." />
+                                        </span>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td style="padding-top: 5px">
+                                    <input type='checkbox'  name='show_childs' checked="checked" style='width: 10px !important'/>
+                                </td>
+                                <td>
+                                    <p>
+															Отображать вложенные документы
+                                        <span>
+                                            <img src="/images/ico_help.gif" title="Подсказка..." />
+                                        </span>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr >
+                    <td class="main">Лого</td>
+                    <td >
+
+                        <input type="file"   name="image" value="" />
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div style='margin-left: 14px; width: 88%; height: 1px; background-color: #000;'><!-- --></div>
+                        <div style='width: 800px;'>
+                            <p>Краткое описание</p>
+                            <?php
+
+                            $this->introText->Create();
+                            ?>
+                        </div>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div style='margin-left: 14px; width: 88%; height: 1px; background-color: #000;'><!-- --></div>
+                        <div style='width: 800px;'>
+                            <p>Полное описание</p>
+                            <?php
+
+                            $this->fck->Create();
+                            ?>
+                        </div>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <?php
+                if (isset($this->menu)) {
+                    foreach ($this->menu as $key => $data) {
+                        ?>
+                <tr>
+                    <td>
+                        <input type="checkbox" name = 'menu[<?=$data->id?>]' value="<?=$data->id?>"/><?=$data->title?>
+                    </td>
+                </tr>
+                        <?php
+                    }
+                }
+                ?>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        <input type="submit" name="addSubmit" id="addSubmit" value="Отправить" style="margin-left: 56%; width: 80px !important">
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+    </div>
+    <div class="clear"><!-- --></div>
+
+    <div class="redactor_footer">
+        <div class="left_y"><!-- --></div>
+        <div class="redactor_footerbg_longer">
+
+        </div>
+        <div class="right_y"><!-- --></div>
+    </div>
+</div>
+
+<?php
+$this->parent_name = "<a href='/admin/ru/pages/' class='blue'>СТРУКТУРА</a>";
+$this->child_name = "Новая страница";
+$this->name = "Добавить страницу";
+?>				

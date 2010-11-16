@@ -1,0 +1,19 @@
+<div class="head">
+    <h3>Результаты опроса</h3>
+</div>
+<?if (isset($this->layout()->poll) && count($this->layout()->answers)) {?>
+      <div class="cont poll"> <span class="text"><?=$this->layout()->poll[0]->title?></span>
+        <table id="poll-sum" cellspacing="0" cellpadding="0" style="width: 230px;">
+            <tbody>
+                <?foreach ($this->layout()->answers as $item) {?>
+                    <tr>
+                        <td style="width: 180px"><?=$item->title?></td>
+                    <td>
+                        <?=number_format($item->votecount*100/$this->layout()->sum, 1, '.', '') ?>% (<?=$item->votecount ?>)
+                    </td>
+                    </tr>
+                <?}?>
+            </tbody>
+        </table>
+      </div>
+    <?}?>

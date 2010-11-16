@@ -1,0 +1,138 @@
+<div id="left_block"  class="form_page">
+				
+							
+							
+							
+							<form method="post" id="edit_form" action="<?=$this->currentModule?>/edit/<?=$this->item->id ? 'id/'.$this->item->id.'/' : ''?><?=$this->id_division ? 'id_division/'.$this->id_division.'/' : ''?>" enctype="multipart/form-data"  >
+							<?if ($this->ok==1) {?>
+								<p align="center"><font color="green"><b>Данные сохранены</b></font></p>
+							<?} ?>							
+							<?if ($this->ok===0) {?>
+								<p align="center"><font color="red"><b>Заполните поля помеченные звездочкой</b></font></p>
+							<?} ?>	
+							
+							<div class="content_block">
+						       	<p class="form_name">Название*</p>
+						        <?=$this->formText('title', $this->item->title, array('onBlur'=>"fill_seoBlock('title')")) ?>
+						        <p class="form_name">Цена</p>
+						        <?=$this->formText('price', $this->item->price) ?>
+						   </div>
+						   <div class="content_block">
+								<h3><a href="#" title="Показать/Скрыть блок" class="show_hide" onclick="show_hide_block('seo_block', 'seo_block_img'); return false;"><span id="show-" ><img src="/img/admin/ico_show+.gif" alt="" id="seo_block_img" /></span> Seo</a></h3>
+								<div id="seo_block" style="display: none;">
+									 <p class="form_name">Title<span class="ser_text size11">(seo)</span></p>								
+									 <?=$this->formText('seo_title', $this->escape($this->item->seo_title)) ?>
+									
+									 <p class="form_name">Keywords<span class="ser_text size11">(seo)</span></p>								
+									<?=$this->formText('seo_keywords', $this->escape($this->item->seo_keywords)) ?>							
+									
+									
+									 <p class="form_name">Description <span class="ser_text size11">(seo)</span></p>								
+									<?=$this->formText('seo_description', $this->escape($this->item->seo_description)) ?>
+								</div>
+							</div>     
+						      <div class="content_block">  
+						        <p class="form_name">Краткое описание</p>
+								
+										<?	$this->fck_intro->Value = $this->item->intro;		
+											$this->fck_intro->Create();	
+										?>
+								
+								
+								<p class="form_name">Полное описание</p>
+								
+										<?	$this->fck_content->Value = $this->item->description;		
+											$this->fck_content->Create();	
+										?>
+								
+								<p class="form_name">Лого</p>
+										<?if ($this->img!=''){ ?>
+											<p align="center" >
+											<a href="/pics/catalog/product/<?=$this->img?>" target="_blank">
+		                                		<img  src="/thumb.php?img=/pics/catalog/product/<?=$this->img?>&w=120&h=120" >
+		                                	</a><br>
+											
+											
+												<input type="checkbox" class="checkbox" name="delete_img" id="delete_img" value="1"><label for="delete_img">удалить изображение</label>
+											
+											</p>
+										<?} ?>	
+									
+								<?=$this->formFile('img') ?>	
+								<p class="form_name">Приоритет</p>
+						        <?=$this->formText('priority', $this->item->priority) ?>
+								<p class="form_name">Активность <span class="ser_text size11">(На сайте отображаются только активные элементы)</span></p>								
+								<?=$this->formCheckbox('active', null, array('class'=>'checkbox', 'checked'=>$this->item->active)) ?> Да
+								
+								<?php if (isset($this->def_options)){?>
+									<?php foreach ($this->def_options as $option){?>
+										<p class="form_name"><?=$option->title?></p>
+										<?php echo $this->formHtmlElement($option->form_type, $name = "option[$option->id]",  isset($option->value) ? $option->value : '')?>
+									
+										
+									<?php }?>
+								<?php }?>
+								
+								
+								
+								
+								<?php if ($this->item->id){?>
+									<input type="hidden" name="id" value="<?=$this->item->id ?>">
+								<?php }?>	
+						      </div>
+						      
+						      <div class="right">
+						        <button class="orange" type="button" onclick="location.href='<?=$this->currentModule?>'"><span><em>Отменить</em></span></button>
+						        <button  type="submit"><span><em>Сохранить</em></span></button>
+						      </div>
+														
+													
+														
+							</form>
+</div>
+<div id="right_block">
+      <div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>
+          <li><a href="<?=$this->currentModule?>/edit/id_division/<?=$this->id_division?>">Создать элемент</a></li>
+          <?php if ($this->item->id){?>
+          	<!-- <li><a href="/catalog/<?=$this->lang?>/admin_product_images/index/id_product/<?=$this->item->id?>"><strong>Фотографии</strong></a></li><li> -->
+          	<li><a href="/catalog/<?=$this->lang?>/admin_product_options_enabled/index/id_product/<?=$this->item->id?>"><strong>Параметры</strong></a></li><li>
+          <?php }?>
+          <li><a href="<?=$this->currentModule?>/index/id_division/<?=$this->id_division?>">Вернутся к списку товаров</a></li>
+           <li><a href="/catalog/<?=$this->lang?>/admin_division/">Вернутсья к дереву разделов</a></li>
+        </ul>        
+      </div>
+
+    <?if (isset($this->params) && count($this->params)){?>
+    <div class="block_r gray">
+        <h3><b>Опции</b></h3>
+        <ul class="admin_option_ul">
+            <?foreach ($this->params as $param){?>
+                <li class="admin_product_options_li">
+                    <span class="list_arrow">
+                        <a href="/catalog/ru/admin_product_options_values/index/id_product/<?=$this->item->id?>/id_option/<?=$param['id_option']?>">
+                        <?=$param['title']?>
+                       </a>
+                    </span>
+                    <?if (isset($param['values']) && count($param['values'])){?>
+                        <ul class="admin_option_ul">
+                            <?foreach ($param['values'] as $value){?>
+                                <li class="admin_product_options_li">
+                                    <span class="list_arrow">
+                                        <a href="/catalog/ru/admin_product_options_values/edit/id_product/<?=$this->item->id?>/id_option/<?=$param['id']?>/id/<?=$value['id']?>">
+                                        <?=$value['title']?>
+                                        </a>
+                                        &nbsp;&nbsp;&nbsp;(<?=$value['price']?> бр)
+                                    </span>
+                                </li>
+                            <?}?>
+                        </ul>
+                    <?}?>
+                    </li>
+            <?}?>
+        </ul>
+    </div>
+    <?}?>
+  </div>							
+							

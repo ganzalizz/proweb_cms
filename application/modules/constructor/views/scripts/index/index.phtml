@@ -1,0 +1,81 @@
+<div class="center_col"><div class="inner">
+        <div class="text_cont ser_block">
+            <p>
+                Инструкция по использованию данного Конструктора, советы, рекомендации, возможности, ограничения, и прочая текстовая набивка...
+            </p>
+        </div>
+    </div>
+</div>
+<?if(isset($this->type) && $this->type!=null){?>
+<form action="" name="constructor_form" id="constructor_form" method="post">
+    <div class="right_col"><div class="inner">
+            <div class="tip_bludo">
+                <h3>Выберите тип блюда</h3>
+                <div class="item_tip">
+                    <?=$this->formSelect("type", $this->selected_type, array('class'=>'width_315'), $this->select_types)?>
+                </div>
+
+            </div>
+            <?
+                $items = $this->type->getSizesFields('size_', $this->size);
+                if ($items && count($items)) {
+            ?>
+            <div class="tip_bludo">
+                <h3>Выберите размер блюда</h3>
+                <div class="item_tip overflow">
+                    
+                    <?                    
+                        foreach($items as $title=>$item) {?>
+                    <div class=" width_155 f_left overflow h">
+                        <div class="f_left">
+                                    <?=$item?>
+                        </div>
+                        <div class="text_form overflow">
+                                    <?=$title?>
+                        </div>
+                    </div>
+                        <?}?>
+                </div>
+            </div>
+            <?}?>
+
+            <?foreach($this->type->_groups as $group) {?>
+            <div class="tip_bludo">
+                <h3><?=$group->title?></h3>
+                <div class="<?=$group->required && $group->form_type=='radio'?'required':''?> item_tip overflow">
+                        <?$items = $group->getFormField('item', $this->defaults)?>
+                        <?
+                        if ($items && count($items)) {
+                            foreach ($items as $title=>$item) {?>
+                    <div class="<?=$group->form_type=='select'?'width_315':'width_155'?>  f_left overflow h">
+                        <div class="f_left">
+                                        <?=$item?>
+                        </div>
+                        <div class="text_form overflow">
+                                        <?=$title?$title:''?>
+                        </div>
+                    </div>
+                            <?}?>
+                </div>
+
+            </div>            
+                <?}}?>
+            <div class="tip_bludo">
+                <h3>Количество</h3>
+                <div class="item_tip overflow">
+                    <input type="text" name="count" class="input width_115" id="count" value="<?=isset($this->count) && $this->count?$this->count:1?>"/>
+                </div>
+            </div>
+
+
+            <div class="tip_bludo_bottom overflow">
+                <span class="price f_left"><span class="price_text">0</span> <i>рублей</i></span>
+                <div class="button f_right"><input name="" type="image" src="/img/button_zakaz.gif" /></div>
+            </div>
+            
+        </div>
+    </div>
+</form>
+<?}?>
+
+

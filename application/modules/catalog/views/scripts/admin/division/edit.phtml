@@ -1,0 +1,91 @@
+
+<div id="left_block"  class="form_page">
+							<?if ($this->ok==1){ ?>
+								<div class="content_block">
+									<p class="data_saved">Данные сохранены</p>
+								</div>
+							<?} ?>
+							<?if (isset($this->err)){ ?>
+								<div class="content_block">
+									<p class="error">
+										<?=$this->htmlList($this->err, false , array('class'=>'error' )) ?>
+									</p>
+								</div>
+								
+							<?} ?>
+
+							<form action="" method="POST" id="addPage" enctype="multipart/form-data" name="addPage">
+							
+							<div class="content_block">
+								 <p class="form_name">Название <span class="ser_text size11">(используется в меню)</span></p>
+								<?=$this->formText('name', $this->item->name, array('onBlur'=>"fill_seoBlock('name')")) ?>
+								
+								
+							</div>
+							
+							<div class="content_block">
+								<h3><a href="#" title="Показать/Скрыть блок" class="show_hide" onclick="show_hide_block('seo_block', 'seo_block_img'); return false;"><span id="show-" ><img src="/img/admin/ico_show+.gif" alt="" id="seo_block_img" /></span> Seo</a></h3>
+								<div id="seo_block" style="display: none;">
+									 <p class="form_name">Title<span class="ser_text size11">(seo)</span></p>								
+									 <?=$this->formText('seo_title', $this->escape($this->item->seo_title)) ?>
+									
+									 <p class="form_name">Keywords<span class="ser_text size11">(seo)</span></p>								
+									<?=$this->formText('seo_keywords', $this->escape($this->item->seo_keywords)) ?>							
+									
+									
+									 <p class="form_name">Description <span class="ser_text size11">(seo)</span></p>								
+									<?=$this->formText('seo_description', $this->escape($this->item->seo_description)) ?>
+								</div>
+							</div>
+							
+							 
+      							<div class="content_block">
+      								<h3><span id="show-" ><img src="/img/admin/ico_show-.gif" alt="" /></span> Контент</h3>
+      								<p class="form_name">Краткое описание</p>
+      								<?php 
+													$this->intro->Value = $this->item->intro;		
+													$this->intro->Create();	
+												?>
+									<p class="form_name">Полное описание</p>
+												<?php 
+													$this->fck_content->Value = $this->item->description;		
+													$this->fck_content->Create();	
+												?>	
+												
+									<p class="form_name">Лого</p>
+										<?if ($this->item->img!=''){ ?>
+											<p align="center" >
+											<img src="/pics/catalog/division/<?=$this->item->img ?>"><br>
+											
+											
+												<input type="checkbox" class="checkbox" name="delete_img" id="delete_img" value="1"><label for="delete_img">удалить изображение</label>
+											
+											</p>
+										<?} ?>	
+									
+									  		<?=$this->formFile('img') ?>						
+      							</div>
+      							
+      							
+							<?if ($this->item->id!=''){?>
+								<input type="hidden" name="id" value="<?=$this->item->id?>">
+							<?php }?>
+							<div class="right">
+						        <button class="orange" type="button" onclick="location.href='/catalog/ru/admin_division/'"><span><em>Отменить</em></span></button>
+						        <button  type="submit"><span><em>Сохранить</em></span></button>
+						      </div>
+						    </form>  
+						</div>
+						<div id="right_block">
+      <div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>          
+          <li><a href="<?=$this->currentModule?>">Вернутся к списку</a></li>
+          <?php if ($this->item->issetProductInDiv()){?>
+          	<li><a href="/catalog/<?=$this->lang?>/admin_product/index/id_division/<?=$this->item->id?>">Товары раздела</a></li>
+          <?php }?>
+          
+        </ul>        
+      </div>      
+  </div>
+						

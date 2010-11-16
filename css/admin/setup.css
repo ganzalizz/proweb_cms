@@ -1,0 +1,121 @@
+@charset "windows-1251";
+/* CSS Document */
+
+
+/* Очищем все отступы заданные по умолчанию */
+* {
+	margin:0;
+	padding:0;
+}
+/* general */
+
+    body {
+	font:62.5%  Verdana, Arial, Helvetica, sans-serif;
+	color:#555;
+	margin:0;
+	padding:0;
+	background-color:#faf6e7;
+	margin-left:30px; margin-right:30px;
+}
+/* Стиль для регулирования максимальной и минимальной ширины экрана */
+#width {
+	margin:auto;
+	font-size:1.2em;
+	height: 100%; /*IE*/
+	min-width: 1000px;
+	max-width: 1300px;
+	margin: 0;
+	padding: 0;
+	position: relative;
+ //overflow-x: hidden;
+ //width: expression( ( document.getElementById('minmax') && document.getElementById('minmax').clientWidth < 1000 ) ? '1000px' :	( document.getElementById('minmax') && document.getElementById('minmax').clientWidth < 1280 ) ? '100%' :	'1280px' );
+}
+#minmax {
+	height:2em;
+	margin-top:-2em;
+}
+/* Начало - Управление структурой страницы */
+
+.right { text-align:right; padding-right:15px; position:relative}
+
+/* Очистка после float */
+
+.clear {
+	clear:both;
+}
+/* Верхняя часть страницы (шапка) */
+#header {
+	height:271px;
+}
+/* Центральный блок */
+#col_center {
+	float:left;
+	width:79%;
+}
+/* Блок контента */
+.content {
+
+
+}
+/* Левая колонка */
+#col_left {
+	float:left;
+	height:100%;
+	background-color:#FCF5CE;
+	width:29.9%;
+}
+/* Правая колонка */
+#col_right {
+	float:right;
+	background-color:#FCF5CE;
+	width:21%;
+}
+#footer {
+}
+/* Управление структурой страницы ---------------------------------------------- Конец  */
+													
+													
+
+
+
+/* Начало                                                         Управление текстом по умолчанию */
+														
+
+h1 {
+	font-size:20px;
+	font-weight:normal;
+	margin:0;
+	color:#000000;
+}
+h2, h3, h4, h5, h6 {
+	font-weight:normal;
+}
+h2 {
+	font-size:160%;
+}
+h3 {
+	font-size:140%;
+}
+h4 {
+	font-size:120%;
+	margin:0;
+	padding:0;
+}
+a {
+	text-decoration:none;
+	color:#005b7f;
+	text-decoration:underline;
+}
+a:hover {
+	color:#005b7f;
+	text-decoration:none;
+}
+p {
+	margin:0;
+	padding:0px;
+}
+img {
+	border:none;
+}
+
+/* Управление текстом по умолчанию ---------------------------------------------- Конец  */

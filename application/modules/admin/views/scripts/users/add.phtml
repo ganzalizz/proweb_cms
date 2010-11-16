@@ -1,0 +1,90 @@
+<?php
+	$this->parent_name = "<a href='/admin/' class='blue'>ГЛАВНАЯ СТРАНИЦА</a>" . "\\" .
+		"<a href='/admin/all/users/users-list-all/' class='blue'>ВСЕ ПОЛЬЗОВАТЕЛИ</a>";
+	$this->child_name = 'Новый пользователь';
+	$this->name = "Добавление нового пользователя";
+?>
+<div id="top_menu_z">
+						<table cellspacing="0" cellpadding="0" border="0" class="head_change_table">
+						<tr>
+							<td class="normal"><a href="/admin/all/users/users-list-all/">Пользователи</a></td>
+							<td class="active">Добавить</td>
+						</tr>
+					</table>
+					</div>
+					<div id="news_main_head">
+						<div class="news_head">
+							<div class="left_y"><!-- --></div>
+							<div class="news_headbg_longer"><!-- --></div>
+							<div class="right_y"><!-- --></div>
+						</div>
+						<div class="clear"><!-- --></div>
+						<div id="redactor_content">
+							
+							<div class="clear"><!-- --></div>
+							<form method="POST" action="/admin/all/users/add/">
+							<table>
+								<tr>
+									<td class="le_config">
+										Активен
+										<input type="checkbox" name="activity"/>
+									</td>
+								</tr>
+							</table>
+							<table id="news_table" cellspacing="0" cellpadding="0" border="0">
+										<tr>
+												<td class="active_config">
+													Логин
+												</td>
+												<td class="active_config">
+													<input type="text" name="username"/>
+												</td>
+											</tr>	
+											<tr>
+												<td class="active_config">
+													Пароль
+												</td>
+												<td class="active_config">
+													<input type="text" name="password""/>
+												</td>
+											</tr>	
+											<tr>
+												<td class="active_config">
+													E-mail
+												</td>
+												<td class="active_config">
+													<input type="text" name="email"/>
+												</td>
+											</tr>	
+											<tr>
+												<td class="active_config">
+													Фамилия
+												</td>
+												<td class="active_config">
+													<input type="text" name="last_name"/>
+												</td>
+											</tr>	
+											<tr>
+												<td class="active_config">
+													Имя
+												</td>
+												<td class="active_config">
+													<input type="text" name="first_name"/>
+												</td>
+											</tr>
+											
+							</table>
+							<input type="submit" name="edit" value="Сохранить"/>
+<!--							<div class="btn_app"><input type="image" src="/images/news_app.gif" /></a>-->
+						</div>
+						</form>
+						<div class="clear"><!-- --></div>
+						<div class="redactor_footer">
+							<div class="left_y"><!-- --></div>
+							<div class="redactor_footerbg_longer">
+								
+							</div>
+							<div class="right_y"><!-- --></div>
+						</div>
+					</div>
+				

@@ -1,0 +1,315 @@
+.prava_dostupa .right button {
+	cursor:pointer;
+}
+
+#tree-ct, #tree-ct ul  {
+display:block;
+}
+
+.tree .ltr li.last {
+	float: none;
+}
+.tree li.click {
+	background:url(/img/admin/click.gif) repeat-x top;
+	
+}
+.tree li.hover {
+	background:url(/img/admin/hover.gif) repeat-x top;
+	
+}
+.tree ul ul .all {padding-right:15px;} /*2-� ������� ��������*/
+.tree ul ul ul .all {padding-right:30px;} /*3-� ������� ��������*/
+.tree ul ul ul ul .all {padding-right:45px;} /*4-� ������� ��������*/
+.tree ul ul ul ul ul .all {padding-right:60px;} /*5-� ������� ��������*/
+.tree ul ul ul ul ul ul .all {padding-right:75px;} /*6-� ������� ��������*/
+.tree ul ul ul ul ul ul ul .all {padding-right:90px;} /*7-� ������� ��������*/
+
+.controls {
+			
+	text-align:left;
+	margin:0;
+	padding:0;	
+	float:right;
+	width: 260px;
+	
+}
+#tree-ct {width:800px;}
+.tree_item_name {
+	float:left;
+}
+.tree  li {
+	width:100%;
+}
+.tree .ltr ins {
+	float:left;
+}
+
+.prava_dostupa td.options {
+	text-align:center;
+	width: 100px;
+}
+.prava_dostupa td.main {
+	text-align:left;
+}
+
+a.show_hide {
+	text-decoration:none;
+}
+.form_page input.checkbox {
+	width:30px;
+}
+
+.form_page input.checkbox, .form_page label {
+display:inline;
+float:none;
+margin-top:5px;
+text-align:left;
+}
+
+.content_block p.data_saved {
+	color: green;
+	font-weight: bolder;
+}
+
+.content_block .error {
+	color: red;
+	font-weight: bolder;
+}
+.leaf {display:block; width:100%;}
+
+.tags_list {width:32%; float: left;} 
+.prava_dostupa  .categories_table td {
+	padding: 3px;
+}
+.prava_dostupa td.category_child {
+	padding-left: 20px;
+}
+.prava_dostupa td {
+	padding: 5px;
+}
+
+.ui-datepicker-trigger {
+	margin-left: 3px;
+}
+
+.errors {
+	color: red;
+	padding:10px;
+}
+.active {
+	font-weight: bold;
+}
+
+
+#files_block {
+	margin-left: 15px;
+}
+
+.products_count {
+	cursor: pointer;
+}
+
+.titles {
+	width: 350px;
+	
+}
+#template {
+	width: 100%;
+	padding-top: 5px;
+}
+.padd_top_5 {
+	padding-top: 5px;
+
+}
+/* заказы */
+.form_page table.data {
+	border-collapse: collapse;
+	
+}
+.form_page table.data td {
+	padding: 5px;
+	color: black;
+	border: 1px solid #FAF6E7;
+}
+
+.form_page table.data td.caption {
+	font-weight: bolder;
+	width: 150px;
+}
+
+span.new {
+	font-weight: bolder;
+	color: red;
+	
+}
+span.complete {
+	font-weight: bolder;
+	color: green;
+}
+
+.overdue td {
+	background-color: #ed8313;
+}
+
+/* end заказы */
+
+
+
+
+
+
+
+.vtop {
+    vertical-align: top;
+}
+
+.vmid {
+    vertical-align: middle;
+}
+
+.constr_type, .constr_group_item {
+    border-bottom: 1px solid #fff;
+    height:21px;
+}
+
+.constr_type:hover{    
+    cursor: pointer;
+}
+.constr_type.active, .constr_group_item.active {
+    background: #bdbdbd;
+    color: #000;
+    font-weight: normal;
+}
+
+.constructor .ctable {
+	margin-top:20px;
+	margin-left:15px;
+	width:97%;
+	margin-bottom:10px;
+}
+.constructor .ctable th {
+	background-color:#b9ced3;
+	text-align:center;
+	font-weight:normal;
+	padding:5px;
+	color:#000000;
+	border:1px solid #faf6e7;
+	border-bottom:none;
+	border-left:none;
+}
+.constructor .ctable td {
+	background-color:#e2e6e7;
+	border:1px solid #faf6e7;
+	border-bottom:none;
+	border-left:none;
+	text-align:left;
+	font-weight:normal;
+}
+
+.constructor .stable {
+        border: none;
+	width:97%;
+}
+
+.constructor .stable td {
+	background-color:#e2e6e7;
+	border: none;
+	text-align:center;
+	font-weight:normal;
+}
+
+.pad_left_5 {
+    padding-left: 5px;
+}
+
+.constrsize {
+    width: 150px;
+    display:inline-block;
+}
+
+.inline-block {
+    display:inline-block;
+}
+
+.input {
+    border:1px solid #B9CED3;
+    height: 17px;
+    margin-right:5px;
+}
+
+.const_input_td {
+    height: 20px;
+    vertical-align: middle;
+}
+.const_input_td .input {
+    width: 140px;
+}
+
+.constr_group_size_set {
+    padding: 0;
+    margin: 0;
+}
+
+
+
+
+.show_ingr {cursor: pointer;}
+
+.ingr_title {
+    text-align: left;
+}
+
+.ingr_price_right {
+    float: right;
+}
+
+.ingr_list_item {
+   border-bottom: 1px dotted #000;
+}
+
+.ingr_list_item:hover {
+    background: #333;
+    color: #fff;
+}
+
+.ingr_header {
+    font-weight: bold;
+    font-size: 110%;
+    font-style: normal;
+    padding-bottom: 10px;
+}
+
+.ingr_list_item_group {
+    padding: 20px;
+    background: #ccc;
+    font-style:italic;
+}
+
+.ingr_list_item_header {
+    padding-bottom: 10px;
+}
+
+.margin_l_10px {
+    margin-left: 10px;
+}
+
+.rouble { position: absolute; font-size: 80%; line-height: 210%; }
+
+.gray ul.admin_option_ul {
+    padding-top: 0;
+}
+
+.gray ul li.admin_product_options_li {
+    background: none;
+    list-style: none;
+    margin-left: -15px;
+}
+
+.list_arrow {
+    background:url("/img/admin/pic_right_dotted.png") no-repeat scroll left center transparent;
+    line-height:20px;
+    padding-left:15px;
+}
+.new_order td {
+	background-color: #a6e098;
+}

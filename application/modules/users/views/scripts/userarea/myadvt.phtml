@@ -1,0 +1,89 @@
+<?$path = $this->layout()->page->path?>
+<h1 class="head_content"><?=$this->placeholder('h1')?></h1>
+
+
+<div class="main_vacansy">
+	
+    <div class="content_text">
+    	<?=$this->limit_message?>
+        <?if($this->items->count()){?>
+        <div class="overflow">
+            <div class="f_left">
+                найдено объявлений: <?=$this->total?>
+            </div>
+
+            
+        </div>
+
+        <!--table vacansy-->
+        <div class="table_vacansy">
+			<form action="/<?=$path?>" id="filter" method="get">
+		  		  			<div class="show">
+		  		  			 <div class="inner"><a class="button_red" href="/addadvt"><span>Разместить объявление</span></a></div>
+		  		  			<span class="f_right block_l">	
+		  		  			 <b>Сортировать по:&nbsp;</b>	
+		  		  				<select name="order" onchange="$('#filter').submit();">		  		  					
+		  		  					<option value="price_asc" <?=$this->order=='price_asc' ? 'selected' : ''?> >цене - по возрастанию</option>
+		  		  					<option value="price_desc" <?=$this->order=='price_desc' ? 'selected' : ''?> >цене - по убыванию</option>
+		  		  					<option value="date_desc" <?=$this->order=='added_desc' ? 'selected' : ''?> >дате - сначала новые</option>
+		  		  					<option value="date_asc" <?=$this->order=='added_asc' ? 'selected' : ''?> >дате - сначала старые</option>
+		  		  				
+		  		  				</select> 
+		  		  			</span>
+		  		  				
+		  		  			</div>
+	  		  			</form>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col">Регион</th>
+                    <th scope="col">Дата</th>
+                    <th scope="col">Статус</th>
+                </tr>
+                <?foreach($this->items as $item){?>
+                <tr>
+                    <td valign="top"><?=$item->price.'&nbsp;'.$item->currency_type?></td>
+                    <td valign="top"><a href="/<?=$this->edit_path?>/id_advt/<?=$item->id?><?=$this->params?>"><?=$item->title?></a></td>
+                    <td valign="top"><?=$this->cities[$item->id_city]?></td>
+
+                    <td valign="top">
+                    	<p>Подано: <?=$this->dateFromDb($item->added);?></p>
+                    	<p>Истекает: <?=$this->dateFromDb($item->expired);?> </p>
+                    	<?if ($item->status==4 || $item->prolong==1 && $this->allow_prolong){?>
+                    		<a href="/<?=$path?>/id_advt/<?=$item->id?>/prolong_advt/1<?=$this->params?>" class="button blue">Продлить</a>
+                    	<?php }?>
+                    </td>
+                   
+                    <td valign="top">
+                        <b 
+                        	<?if ($item->status==2){?>
+                        	class="opubl"
+                        	<?php } else{?>
+                        		class="moder"
+                        	<?php }?>
+                        	
+                        
+                         ><?=$this->status_messages[$item->status]?></b>
+                        <a href="/<?=$this->edit_path?>/id_advt/<?=$item->id?><?=$this->params?>">Редактировать</a><br />
+                        <a href="/<?=$path?>/id_advt/<?=$item->id?>/delete_advt/1<?=$this->params?>" onclick="return confirm('Вы действительно ходите удалить объявление &quot;<?=$item->title?>&quot; ?');">Удалить</a></td>
+
+                </tr>
+                <?}?>
+
+                
+            </table>
+
+
+        </div>
+         
+        <!--End table vacansy-->
+        <?} else {?>
+            <?=$this->message?>
+            <div class="inner"><a class="button_red" href="/addadvt"><span>Разместить объявление</span></a></div>
+        <?}?>
+        
+       
+    </div>
+    <?=$this->Pagination("/$path".$this->params, (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+</div>

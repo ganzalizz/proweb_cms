@@ -1,0 +1,82 @@
+<div class="block_l poll_block">
+  <div class="head">
+    <h3>Опрос</h3>
+  </div>
+  <div class="cont poll"> <span class="text"><?=$this->poll[0]->title?></span>
+    <form action="">
+       <?foreach($this->answers as $answer){?>
+      <div>
+      <input type="radio" value="<?=$answer->id?>" name="answers" class="answers" id="answer_<?=$answer->id?>"/>
+      <label for="answer_<?=$answer->id?>"><?=$answer->title?></label>
+      </div>
+        <?}?>
+
+        <div class="buttons overflow">
+                <a class="golos" id="golos_button" href="#">Голосовать</a>
+                <a class="result"  id="result_button" href="#">Результаты</a>
+        </div>
+    </form>
+  </div>
+</div>
+
+<script language="javascript">
+     var value = 0;
+    var res_url = '/';
+
+     function cl(){
+        $(".answers").each(function()
+            {
+                if($(this).attr('checked') == true)
+                {
+                    value = $(this).val();
+                }
+            }
+        );
+            
+        if(!value || value==0){
+            alert('Не выбран вариант ответа');
+            return false;
+        }
+        
+        $.get("/polls/index/index/vote/", {poll_id:<?=$this->poll[0]->id ?>, ansv_id:value}, function(data){
+            if(data!='ok'){
+                alert('Вы уже голосовали.');                
+            }
+            else{
+                alert('Ваш голос учтен!');
+            }
+            res();
+        });
+        return false;
+    }
+
+    function res(){
+        $(".poll_block").load("polls/index/index/result/", {poll_id:<?=$this->poll[0]->id ?>}, function(data){
+    });
+
+    }
+
+$(document).ready(function(){
+
+    $("#golos_button").click(function(){
+        cl();
+        return false;
+    });
+    $("#result_button").click(function(){
+        res();
+        return false;
+    });
+
+});
+
+
+</script>
+
+
+
+
+
+
+
+
+

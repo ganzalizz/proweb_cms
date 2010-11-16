@@ -1,0 +1,163 @@
+﻿<?php
+	$this->parent_name = "<a href='/admin/ru/news/' class='blue'>Инфоблок</a>";
+	$this->child_name = $this->modul_page->name;
+	$this->name = "Редактировать элемент";
+?>
+
+
+	
+<script type="text/javascript" src="/js/translit.js"></script>
+<script type="text/javascript">
+<!--
+	$(document).ready(function(){
+		$("#name").change(function(){
+			var url = translit($(this).val(), 'R_TO_E');			
+			$("#url").val(url);	
+			checkUrl(url, "<?=$this->new->id ?>" );	
+		});
+		
+		$("#url").change(function(){
+			var url = $(this).val();		
+			checkUrl(url, "<?=$this->new->id ?>" );
+			
+		
+		});
+		
+		function checkUrl(url, id){
+			$.get(
+					"<?=$this->currentModul?>/checkurl/",
+				 	 { url: url, id: id }, 
+					  function(data){
+						if(data=='ok'){
+							$("#warning").hide("fast");
+							$("#accept").show("fast");							
+						} else {
+							$("#accept").hide("fast");
+							$("#warning").show("fast");							
+							alert('Ошибка, Url '+url+' уже занят');
+						}
+									
+					  }
+			); 
+		}
+	
+	});
+//-->
+</script>
+
+
+
+<div id="top_menu_z">
+						<table cellspacing="0" cellpadding="0" border="0" class="head_change_table">
+						<tr>
+							<td class="normal"><a href="<?=$this->currentModul?>/items/pageid/<?=$this->modul_page->id?>"><?=$this->modul_page->name?></td>
+							<td class="active">Добавить</td>
+						</tr>
+					</table>
+				</div>
+				
+				<div id="company_main_head">
+						<div class="news_head">
+							<div class="left_y"><!-- --></div>
+							<div class="news_headbg_longer"><!-- --></div>
+							<div class="right_y"><!-- --></div>
+						</div>
+						<div class="clear"><!-- --></div>
+						<div id="redactor_content">
+							
+							<div class="clear"><!-- --></div>	
+				
+						<form  method="post">
+							<!--<table id="news_table" cellspacing="0" cellpadding="0" border="0">-->
+							<div style="padding-left:20px">
+							<div class="link"><a href="#" onclick="$('#seo').toggle('fast'); return false">seo</a></div>
+							<div id="seo" class="tab" style="display: none;">
+								<table width="700" class="item" >
+								 <tr>
+									 <td class="main" width="150">Title</td>
+									<td><input name="meta[title]" value="<?=isset($this->options) ? $this->options->title :'' ?>" class="text" /></td>
+									
+								  </tr>
+								  
+								  <tr class="main">
+									<td>Keywords</td>
+									<td><input name="meta[keywords]" value="<?=isset($this->options) ? $this->options->keywords :'' ?>" class="text" /></td>
+									
+								  </tr>
+								  <tr class="main">
+									<td>Descriptions</td>
+									<td><input name="meta[descriptions]" value="<?=isset($this->options) ? $this->options->descriptions :'' ?>" class="text" /></td>
+									<input type="hidden" name="meta[h1]" value="">
+									<input type="hidden" name="meta[pageId]" value="0">
+								  </tr>
+								  
+								</table>
+								
+							</div>			
+							<br>
+							<?if (isset($this->err)){ ?>
+								<p><font color="red"><b>Заполните поля помеченные звездочкой.</b></font></p>
+							<?} ?>
+								<table cellspacing="2" cellpadding="2" border="0">
+								<tr>
+									<td><b>Название*:</b></td>
+									<td><input type="text" id="name" name="new[name]" size="90" value="<?=$this->new->name?>" /></td>
+								</tr>
+								<tr >
+									<td ><b>Url*:</b></td>
+									<td >
+										<input type="text" style="float: left;" class="text" size="90" name="new[url]" id="url" value="<?=$this->new->url?>" />
+										<img id="accept" src="/images/alerts/accept.png" style="display: none;"> 
+										<img id="warning" src="/images/alerts/warning.png" style="display: none;" >										 
+									</td>
+								<tr >
+								<?if ($this->modul_page->id==170){ // вопрос ответ?>
+								<tr>
+									<td><b>Номер:</b></td>
+									<td><input type="text" name="new[number]" id="number" size="10" value="<?=$this->new->number; ?>" /></td>
+								</tr>
+								<?} ?>
+								<tr>
+									<td><b>Дата:</b></td>
+									<td><input type="text" name="new[created_at]" id="datepicker" size="10" value="<?=$this->new->created_at ?>" /></td>
+								</tr>
+								<tr>
+									<td><b>Активна:</b></td>
+									<td> <input type="checkbox"  name="new[pub]" <?=$this->new->pub==1 ? 'checked="checked"' : '' ?> /></td>
+								</tr>
+								<tr>
+									<td><b>Отображать на главной:</b></td>
+									<td> <input type="checkbox" name="new[main]" <?=$this->new->main ? 'checked="checked"' : '' ?> /></td>
+								</tr>
+								
+							</table>
+								<b>Анонс:</b><br/>
+									<div style="width: 750px;">
+                    <?$this->fck_intro->Value = $this->new->intro?>
+										<?php $this->fck_intro->Create();	?>	
+									</div>	
+								<div style='margin-left: 14px; margin-top:7px; width: 85%; height: 1px; background-color: #000;'><!-- --></div>
+								<b>Тело:</b><br/>
+								<div style="width: 750px;">
+                     <?$this->fck_content->Value = $this->new->content?>
+										<?php $this->fck_content->Create();	?>	
+									</div>
+									<div style="padding-left:70%"><input type="submit" value="Сохранить" /></div>
+									
+							</div>
+						</form>
+
+</div>
+						
+						<div class="clear"><!-- --></div>
+						<div class="redactor_footer">
+							<div class="left_y"><!-- --></div>
+							<div class="redactor_footerbg_longer">
+								
+							</div>
+							<div class="right_y"><!-- --></div>
+						</div>
+					</div>
+
+
+

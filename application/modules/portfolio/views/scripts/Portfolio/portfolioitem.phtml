@@ -1,0 +1,14 @@
+<?if(count($this->item)) {?>
+<div class="cont_inner news">
+    <div class="item">
+        <b class="date"><i><?=$this->dateFromDb($this->item['created_at']);?></i></b>
+        <?if($this->item['big_img']){?>
+            <div class="photo"><img src="/thumb.php?img=/pics/news/<?//=$this->item['big_img']?>&w=130&h=115" alt="" /></div>
+        <?}?>
+            <a href="<?=$this->item['url'] ?>" title="<?=$this->item['name'] ?>" target="_blank"><?=$this->item['url'] ?></a>
+            <?=$this->item['content']?>
+        
+    </div>
+
+</div>
+<?}?>

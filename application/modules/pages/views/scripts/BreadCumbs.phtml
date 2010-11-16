@@ -1,0 +1,11 @@
+
+<a href="/">Главная</a>	
+<?php if (isset($this->bread_cumbs) && sizeof($this->bread_cumbs)){?>
+    <?php foreach ($this->bread_cumbs as $bread){?>
+        <?php if (!isset($bread['end'])){?>
+            <a href="/<?=$bread['path']?>"><?=$bread['title']?></a>
+        <?php } else{?>
+            <?=$bread['title']?>
+        <?}?>
+    <?php }?>
+<?php }?>

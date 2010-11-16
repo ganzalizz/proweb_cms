@@ -1,0 +1,79 @@
+
+
+<div class="content">
+    <div id="left_block" class="form_page">
+        <?php if ($this->error) { ?>
+        <span style="color:red; margin-left: 16px"><strong><?=$this->error?></strong></span>
+            <?php } ?>
+        <form class="user_form" id="editform" method="post" action="<?=$this->currentModule?>/edit/id_advt/<?=$this->id_advt?>/<?=$this->item->id ? 'id/'.$this->item->id.'/' : ''?><?=$this->id_page ? 'id_page/'.$this->id_page.'/' : ''?>" enctype="multipart/form-data"  >
+            <?if ($this->ok==1) {?>
+            <p align="center"><font color="green"><b>Данные сохранены</b></font></p>
+                <?} ?>
+            <?if ($this->err==1) {?>
+            <p align="center"><font color="red"><b>Заполните поля помеченные звездочкой</b></font></p>
+                <?} ?>
+            <?$item = $this->item; ?>
+            <div class="content_block">
+                <p class="form_name">Название</p>
+                <p>
+                    <?=$this->formText('edit[name]', $item->name, array('class'=>'text')) ?>
+                </p>
+                <p class="form_name">Приоритет</p>
+                <p>
+                    <?=$this->formText('edit[priority]', $item->priority, array('size'=>'5')) ?>
+                </p>
+                <p class="form_name">Опубликовать на сайте</p>
+                <p>
+                <table>
+                    <tr>
+                        <td>
+                            <?=$this->formCheckbox('edit[active]', null, array('checked'=>$item->active), array(1,0)) ?>
+                            <label>Да</label>
+                        </td>
+                    </tr>
+                </table>
+                </p>
+                <p class="form_name">Опубликовать на главной</p>
+                <p>
+                <table>
+                    <tr>
+                        <td>
+                            <?=$this->formCheckbox('edit[main]', null, array('checked'=>$item->main), array(1,0)) ?>
+                            <label>Да</label>
+                        </td>
+                    </tr>
+                </table>
+                </p>
+                <p class="form_name">Картинка</p>
+                <p>
+                    <?if ($this->item->img_big!='') { ?>
+                <p align="center">
+                    <img src="/pics/advt/images/medium/<?=$this->item->img_medium ?>"><br>
+                    <input type="checkbox" name="delete_img_big" value="1">удалить изображение
+                </p>
+                <br>
+                    <?} ?>
+                <?=$this->formFile('img_big') ?>
+                </p>
+            </div>
+            <input style="display: none;" "type="hidden" name="id" value="<?=$this->item->id ?>">
+                  
+            <div class="right">
+                <button onclick="location.href='<?=$this->currentModule ?>/index/id_advt/<?=$this->id_advt?>'; return false;" class="orange"><span><em>Отменить</em></span></button>
+                <button onclick="getElementById('editform').submit()"><span><em>Сохранить</em></span></button>
+            </div>
+        </form>
+    </div>
+    <div id="right_block">
+        <div class="block_r gray">
+            <h3><b>Действия</b></h3>
+            <ul>
+                <li><a href="/advt/ru/admin_images/index/id_advt/<?=$this->id_advt?>">Фотографии</a></li>
+                <li><?if ($this->item->id) {
+                        echo 'Редактировать';
+                    } else echo 'Добавить';?></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<br class="clear"/>

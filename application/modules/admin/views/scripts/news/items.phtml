@@ -1,0 +1,173 @@
+<?php
+	$this->parent_name = "<a href='/admin/ru/news' class='blue'>Инфоблок</a>";
+	$this->child_name = "Инфоблок";
+	//$this->name = "Модуль управления содержимым сайта";
+?>
+<link rel="stylesheet" type="text/css" href="/extjs/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css" href="/extjs/my.css" />
+<!--<link rel="stylesheet" type="text/css" href="/extjs/examples.css" />-->
+
+<script type="text/javascript" src="/extjs/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="/extjs/ext-all.js"></script>
+<script type="text/javascript" src="/extjs/examples.js"></script>
+<style type="text/css">
+
+#msg-div {
+    position:absolute;
+    left:35%;
+    top:10px;
+    width:250px;
+    z-index:20000;
+}
+	</style>
+<script>
+var delid;
+var pageid
+
+Ext.MessageBox.buttonText.yes = "Да";
+Ext.MessageBox.buttonText.no = "Не знаю";
+Ext.MessageBox.buttonText.cancel = "Передумал";
+	
+	function go(id){
+		
+		delid=id;
+		
+		Ext.MessageBox.show({
+           title:'Удаление страницы ',
+           msg: 'Вы действительно хотите удалить страницу?',
+           buttons: Ext.MessageBox.YESNOCANCEL,
+           fn: showResult,
+           animEl: 'mb4',
+           icon: Ext.MessageBox.QUESTION
+       });
+	}
+
+	 function showResult(btn){
+							
+					       if(btn == 'yes'){
+					       		Ext.example.msg('Страница удалена', " ", btn);
+					       		window.location = "<?=$this->currentModul?>/delete/id/"+delid+"/pageid/"+pageid;
+					       }
+					       
+					       if(btn == 'no'){
+								Ext.example.msg('Подумайте еще.', " ", btn);
+					       		
+					       }
+					        
+					       if(btn == 'cancel'){
+					       		
+					       			
+					       }
+					        
+					    };
+
+
+
+					    
+						</script>
+	<h1><?php echo $this->escape($this->title); ?></h1>
+
+
+
+
+<div id="top_menu_z">
+						<table cellspacing="0" cellpadding="0" border="0" class="head_change_table">
+						<tr>
+							<td class="normal"><a href="<?=$this->currentModul?>/">Страницы</a></td>
+							<td class="active"><?=$this->modul_page->name?></td>
+							<td class="normal"><a href="<?=$this->currentModul?>/add/pageid/<?=$this->modul_page->id?>/">Добавить</a></td>
+						</tr>
+					</table>
+				</div>
+				
+				<div id="company_main_head">
+						<div class="news_head">
+							<div class="left_y"><!-- --></div>
+							<div class="news_headbg_longer"><!-- --></div>
+							<div class="right_y"><!-- --></div>
+						</div>
+						<div class="clear"><!-- --></div>
+						<div id="redactor_content">
+							
+							<div class="clear"><!-- --></div>	
+
+	<table id="news_table" cellspacing="0" cellpadding="0" border="0">
+		<tr class="head">
+			<td>
+				<b>Название <a href="<?=$this->currentModul ?>/items/pageid/<?=$this->modul_page->id?>/sort/nasc/page/<?=($this->page)?>" title="сортировать по возрастанию" /><img src="/images/Aup.gif"></a>&nbsp;  <a href="<?=$this->currentModul ?>/items/pageid/<?=$this->modul_page->id?>/sort/ndesc/page/<?=($this->page)?>" title="сортировать по убыванию" /><img src="/images/Adn.gif"></a></b>
+			</td>
+			<td style="width:150px;">
+				<b >операции: <a href="<?=$this->currentModul ?>/items/pageid/<?=$this->modul_page->id?>/sort/sasc/page/<?=($this->page)?>" title="отобразить не активные" /><img src="/images/prior_of.gif"></a>&nbsp;<a href="<?=$this->currentModul ?>/items/sort/sdesc/page/<?=($this->page)?>" title="отобразить активные" /><img src="/images/prior_on.gif"></b>
+			</td>
+		</tr>
+		
+		<? foreach($this->news as $data) {?>
+		<tr align="left">
+		<?$pub='unpub'; $title="заблокировать";
+		$main='unsetmain' ; $main_tit="Убрать с главной";
+    if ($data['pub']==0){$pub="pub";$title="Разблокировать";}
+    if ($data['main']==0){$main="setmain";$main_tit="Поместить на главную";}?>
+    
+			<td ><a href="<?=$this->currentModul?>/editp/id/<?echo ($data['id'] )?>/pageid/<?=$this->modul_page->id?>/" title="редактировать"><?=$data['name']?></a></td>
+			
+			<td>          
+				&nbsp;<a href="<?=$this->currentModul?>/editp/id/<?echo ($data['id'] )?>/pageid/<?=$this->modul_page->id?>/" title="редактировать"><img src="/images/redact.gif"></a>&nbsp;
+			<a href="<?=$this->currentModul?>/<?=$pub?>/id/<?=$data['id']?>/pageid/<?=$this->modul_page->id?>/" title="<?=$title?>"><img src="/images/<?=($data['pub']==0) ? 'krug_black': 'krug'?>.gif" />&nbsp;
+			<a href="<?=$this->currentModul?>/<?=$main?>/id/<?=$data['id']?>/pageid/<?=$this->modul_page->id?>/" title="<?=$main_tit?>"><img src="/images/<?=($data['main']==0) ? 'main_off': 'main_on'?>.gif" />&nbsp;	
+			<a href="<?=$this->currentModul?>/copy/id/<?echo ($data['id'] )?>/pageid/<?=$this->modul_page->id?>/" title="Копировать"><img src="/images/plus_b.gif"></a>&nbsp;				
+			<a href="#" onclick="go(<?=$data['id']?>,<?=$this->modul_page->id?>)" title="Удалить"><img src="/images/delete.gif"></a>
+				&nbsp;</td>
+		</tr>	
+		<?}?>
+		
+	</table>	
+	
+<!-- Навигация по страницам -->
+<div style="padding-left:20px;" >
+<b>Общее количество: </b><?=$this->newsCount?>
+<br>
+ <b>Страницы: </b>
+ <?php if($this->page > 1): ?>
+
+  
+ <a class="pnav-l" href="<?=$this->currentModul ?>/items/pageid/<?=$this->modul_page->id?>/page/<?=($this->page - 1) ?>/sort/<?=($this->sort)?>">предыдущая</a>
+ <?php endif; ?>
+ 
+		<?php $p=$this->page;  for ( $i=1; $i<$this->pagesCount+1; $i++)
+		{
+			if($i!=$p)
+			{
+			 	?>
+				<a href="<?=$this->currentModul ?>/items/pageid/<?=$this->modul_page->id?>/page/<?=$i ?>/sort/<?=($this->sort)?>"><?=$i ?></a>
+				<?				
+			}
+			 else echo (  "<span>".$i."</span>");
+			
+				
+		}
+?>
+<?php if($this->page < $this->pagesCount): ?>
+ <a class="pnav-r" href="<?=$this->currentModul ?>/items/pageid/<?=$this->modul_page->id?>/page/<?=($this->page + 1) ?>/sort/<?=($this->sort)?>">следующая</a>
+ <?php endif; ?>
+
+		
+			  <div class="clear"><!-- --></div>
+
+		</div>
+		<!-- / Навигация по страницам -->	
+
+
+</div>
+						
+						<div class="clear"><!-- --></div>
+						<div class="redactor_footer">
+							<div class="left_y"><!-- --></div>
+							<div class="redactor_footerbg_longer">
+								
+							</div>
+							<div class="right_y"><!-- --></div>
+						</div>
+					</div>
+				
+
+

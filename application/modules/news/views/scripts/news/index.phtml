@@ -1,0 +1,18 @@
+<?if(count($this->news)) {?>
+<div class="cont_inner news">
+        <?foreach($this->news as $new) {?>
+   <div class="item">
+        <b class="date"><i><?=$this->dateFromDb($new['created_at']);?></i></b>
+        <? //if($new['small_img']){?>
+           <!-- <div class="photo"><a href="/newslist/item/<?//=$new['id']?>"><img src="/pics/news/<?//=$new['small_img']?>" alt="" /></a></div> -->
+        <?//}?>
+        
+        <h3><a href="/newslist/item/<?=$new['id']?>" class="head_news"><?=$new['name']?></a></h3>
+            <p><?=$new['intro']?>&nbsp;<a href="/newslist/item/<?=$new['id']?>">читать...</a></p>
+            
+        </div>
+   
+  <?}?>
+ 
+</div><?}?>
+

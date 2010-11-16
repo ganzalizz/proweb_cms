@@ -1,0 +1,84 @@
+<script type="text/javascript" src="/js/jquery/messages_ru.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#submit_js").show("fast");
+        $("#form").validate();
+    });
+</script>
+
+<div class="cont_inner contact">
+   
+        <?=$this->page->content?>
+    <div class="clear"></div>
+    <div class="form">
+    <h3>Форма обратной связи</h3>
+
+
+    <div class="overflow pad_left_50">
+        <div class="f_left width_570">
+            <?if ($this->ok==1) {?>
+            <h4 class="message">Спасибо! Ваше сообщение отправлено администратору.</h4>
+                <?} ?>
+            <?if ($this->err==1) {?>
+                <h4 class="message">Заполните поля помеченные звездочкой</h4>
+            <?}?>
+            <?if ($this->err==2) {?>
+                <h4 class="message">Неправильно подсчитано выражение</h4>
+            <?}?>
+            <br>
+
+            <div class="form mar_b_30">
+                Символом <span class="red_star">*</span> отмечены поля, обязательные для заполнения
+                <form id="form" method="post" action="/contacts" enctype="multipart/form-data" >
+                <div class="bg"> 
+
+                    <div class="item">
+                        <label>Ваше имя<span class="red_star">*</span>:</label>
+                        
+                            <?=$this->formText('form[fio]', isset($this->form['fio']) ? $this->form['fio'] : '', array('class'=>'input width_170 required')) ?>
+                        
+                    </div>
+                    <div class="item">
+                        <label>E-mail<span class="red_star">*</span>:</label>
+                        
+                            <?=$this->formText('form[email]', isset($this->form['email']) ? $this->form['email'] : '', array('class'=>'input width_170 required email')) ?>
+                        
+                    </div>
+                    <div class="item">
+                        <label>Текст сообщения<span class="red_star">*</span>:</label>
+                        
+                            <?=$this->formTextarea('form[text]', isset($this->form['text']) ? $this->form['text'] : '', array('class'=>'height_100 textarea width_170 required', 'cols' => '1', 'rows' => '1')) ?>
+                        
+                    </div>
+                    
+                    </div> <!-- End div bg -->
+                    
+                        <div class="capcha">
+                           <label> Для защиты от спама посчитайте<span class="red_star">*</span></label>
+                               
+                            <div class="overflow"> <span class="cifr"> <?php echo $this->captcha?>=</span>
+                                
+                            <span><?=$this->formText('form[captcha]', '', array('class'=>'input required')) ?></span>
+                            <span>
+                            <a href="#" onclick="$('#form').submit(); return false;" class="button_send"><img src="img/send.gif" alt="Отправить"></a>    
+                            </span>
+                            <!--   <a href="" onclick="$('#form')[0].reset(); return false;" class="button_send"><img src="/img/button_clear.gif" alt="Очистить"></a> -->
+                        </div>
+
+                      </div>
+
+                    
+                           
+                         
+                       
+
+            </div>  
+                </form>
+                </div> 
+                
+            </div>
+        </div>
+        
+    </div>
+

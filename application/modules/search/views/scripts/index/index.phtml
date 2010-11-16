@@ -1,0 +1,27 @@
+<?if(isset($this->hits)) {?>
+<div class="text_cont news_cont">
+	<form action="/<?php echo $this->layout()->page->path?>" method="get">
+	<input type="text" name="keywords" value="<?=$this->layout()->search?>">
+	<input type="submit" value="Искать">
+	</form>
+    <p>по запросу "<?=$this->layout()->search?>" найдено результатов <?=(int)count($this->hits)?></p>
+        <?foreach($this->hits as $hit) {?>
+    <div class="news_item overflow">
+        <div class="text_news overflow">
+            <a href="/<?=$hit->url?>" class="head_news"><?=$hit->title?></a>
+                    <?=(strlen($hit->content) > 330)?substr($hit->content, 0, strpos($hit->content,' ', 330)).'...':$hit->content;?>
+            <div class="read_more"><a href="/<?=$hit->url?>">Подробнее</a></div>
+        </div>
+    </div>
+            <?}?>
+        <?=$this->pagination('/'.$this->layout()->page->path.'/keywords/'.$this->layout()->search.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+</div>
+    <?}else{?>
+        <div class="text_cont news_cont">
+        	<form action="/<?php echo $this->layout()->page->path?>" method="get">
+			<input type="text" name="keywords" value="<?=$this->layout()->search?>">
+			<input type="submit" value="Искать">
+			</form>
+            <p>по запросу "<?=$this->layout()->search?>" ничего не найдено.</p>
+        </div>
+    <?}?>

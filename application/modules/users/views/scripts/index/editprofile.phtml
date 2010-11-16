@@ -1,0 +1,143 @@
+<?php $path = $this->layout()->page->path?>
+
+<script type="text/javascript" src="/js/jquery/ui.datepicker-ru.js"></script>
+<script type="text/javascript" src="/js/jquery/ui.datepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/ui.datepicker-ru.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#registrationform").validate();
+
+
+        $.datepicker.setDefaults(
+        $.extend($.datepicker.regional["ru"])
+    );
+
+        $("input[id='datepicker']").datepicker({
+            changeMonth:true,
+            changeYear: true,
+            yearRange: '1940:<?=date('Y')?>'
+
+        });
+        $("#submit_js").show("fast");
+        $("#submit").hide("fast");
+    });
+</script>
+
+
+
+<div class="content_text form_cont">
+    <?php if ($this->ok==1) {?>
+    <p>Данные сохранены</p>
+    <?php }?>
+    <?php if ($this->ok==0 ) {?>
+        <?php if (isset($this->errors)) {?>
+    <div class="errors">
+        <p>Ошибка</p>
+                <?php foreach ($this->errors as $key=>$error) {?>
+        <p><strong><?=$key?></strong> : <?=$error?></p>
+                <?php }?>
+
+    </div>
+        <?php }?>
+    <div class="form registration-form">
+
+        Символом <span class="red_star">*</span> отмечены поля, обязательные для заполнения
+        <form method="post" action="" id="registrationform">
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Логин<span class="red_star">*</span>:</div>
+                <div class="f_right width_360">
+                    <span><?=$this->user->login?></span>
+                </div>
+            </div>
+             <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Новый пароль:</div>
+                <div class="f_right width_360">
+                    <input name="form[password]" id="password" value="" type="password" title="" minlength="5" class="input width_170"/>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Подтверждение пароля:</div>
+                <div class="f_right width_360">
+                    <input name="form[confirm]" id="confirm_password" value="" type="password" equalTo="#password" title="Неправильное подтверждение пароля" minlength="5" class="input width_170"/>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Имя<span class="red_star">*</span>:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[first_name]', isset($this->user->first_name) ? $this->user->first_name : '', array('class'=>'input width_170 required')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Фамилия:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[last_name]', isset($this->user->last_name) ? $this->user->last_name : '', array('class'=>'input width_170')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Телефон<span class="red_star">*</span>:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[mobile_phone]', isset($this->user->mobile_phone) ? $this->user->mobile_phone : '', array('class'=>'input width_170 digits required')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Улица <span class="red_star">*</span>:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[street]', isset($this->user->street) ? $this->user->street : '', array('class'=>'input width_170 required')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Дом <span class="red_star">*</span>:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[house]', isset($this->user->house) ? $this->user->house : '', array('class'=>'input width_170 required')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Корпус:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[house_block]', isset($this->user->house_block) ? $this->user->house_block : '', array('class'=>'input width_170')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Квартира:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[flat]', isset($this->user->flat) ? $this->user->flat : '', array('class'=>'input width_170')) ?>
+                </div>
+            </div>
+
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Пол:</div>
+                <div class="f_right width_360">
+                    <input name="form[gender]" type="radio" value="0" <?=$this->user->gender=='0'?'checked':''?>> Женский
+                    <input name="form[gender]" type="radio" value="1" <?=$this->user->gender=='1'?'checked':''?>> Мужской
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Дата рождения:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[birthdate]', isset($this->user->birthdate) ? $this->user->birthdate : NULL, array('class'=>'input width_170', 'id' => 'datepicker')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">E-mail<span class="red_star">*</span>:</div>
+                <div class="f_right width_360">
+                        <?=$this->formText('form[email]', isset($this->user->email) ? $this->user->email : '', array('class'=>'input width_170 required email')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_155">Подписаться на рассылку новостей:</div>
+                <div class="f_right width_360">
+                    <input type="checkbox" name="form[subscribe]" value="1" <?=$this->user->subscribe=='1'?'checked':''?>>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="item button_send">
+                    <a href="#" onclick="$('#registrationform').submit(); return false;" class="button_send"><img src="/img/button_send.gif" alt="Отправить" /></a>
+                    <a href="#" onclick="$('#registrationform')[0].reset(); return false;" class="button_send"><img src="/img/button_clear.gif" alt="Очистить" /></a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <?php }?>
+</div>

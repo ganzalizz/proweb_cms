@@ -1,0 +1,9 @@
+.overflow { zoom:1;}
+.width {
+	width: expression(
+	(document.compatMode && document.compatMode == 'CSS1Compat') ?
+	(document.documentElement.clientWidth < 998 ? "998px" :
+	(document.documentElement.clientWidth > 1300 ? "1400px" : "auto")) :
+	(document.body.clientWidth > 998 ? "998px" :
+	(document.body.clientWidth < 1300 ? "1400px" : "auto")));
+}

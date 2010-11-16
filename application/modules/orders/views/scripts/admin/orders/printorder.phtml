@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="/css/admin/printorder.css" type="text/css" media="screen" />
+        <title>Pokushat</title>
+
+    </head>
+    <body>
+        <?php $item  = $this->item?>
+        <table class="data" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td><h4>Номер заказа</h4></td>
+                <td colspan="3"><h4><?=$item->id?></h4></td>
+            </tr>
+            <tr>
+                <td>Статус</td>
+                <td colspan="3"><?=$this->status_titles[$item->status]?></td>
+            </tr>
+            <tr>
+                <td>Менеджер</td>
+                <td colspan="3"><?=$item->manager?></td>
+            </tr>
+            <?php if ($item->total_minutes>0) {?>
+            <tr>
+                <td>Время выполненения заказа</td>
+                    <?php $h =floor($item->total_minutes/60); ?>
+                    <?php $m = $item->total_minutes - $h*60?>
+
+                <td colspan="3"><?=$h ? $h."ч" : ''?> <?=$m ? $m."м" : ''?></td>
+            </tr>
+            <?php }?>            
+            <?php if ((int)$item->added_time) {?>
+            <tr>
+                <td>Заказ поступил</td>
+                <td colspan="3"><?=$item->added_time?></td>
+            </tr>
+            <?php }?>
+            <tr><td colspan="4">&nbsp;</td></tr>
+            <tr>
+                <td colspan="4">
+                    <b>Содержимое заказа</b>
+                </td>
+            </tr>
+            <?php if ($item->discount) {?>
+            <tr>
+                <td>
+                    Скидка клиента
+                </td>
+                <td colspan="3">
+                        <?=$item->discount?>%
+                </td>
+            </tr>
+            <?php }?>
+            <?if ($item->content && count($item->content)) {?>
+                <?$total = 0;?>
+            <tr>
+                <td>Название</td>
+                <td>Количество</td>
+                <td>Цена за ед.</td>
+                <td>Цена <?=$item->discount ? 'со скидкой' : ''?></td>
+            </tr>
+                <?php foreach ($item->content as $product) {?>
+                    <?$hasItems = (isset($product['order']['items']) && count($product['order']['items']));?>
+            <?if($hasItems){?>
+                <tr><td colspan="4">&nbsp;</td></tr>
+            <?}?>
+            <tr>
+                <td>
+                    <?=$product['title']?>
+                </td>
+                <td><?=$product['count']?></td>
+                <td><?=number_format($product['price'], 0, ',', ' ');?></td>
+                <td><?=number_format($product['total_price']- $product['total_price']*$item->discount/100, 0, ',', ' ');?></td>
+                        <?$total+=$product['total_price'];?>
+            </tr>
+                    <?if($hasItems) {?>
+            <tr>
+                <td>Размер</td>
+                <td><?=$product['order']['size']?></td>
+                <td colspan="2"><?=$product['order']['size_price']?> бр.</td>
+            </tr>
+            <tr>
+                <td colspan="4"><b>Ингредиенты</b></td>
+            </tr>
+                <?foreach($product['order']['items'] as $group_title=>$group) {?>
+            <tr>
+                <td colspan="4"><b class="ingr_title">&nbsp;&nbsp;<?=$group_title?></b></td>
+            </tr>
+                            <?foreach($group as $group_item) {?>
+            <tr>
+                <td class="pad_l">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$group_item['title']?></td>
+                <td colspan="3" class="ta_right"><?=number_format($group_item['price']*((100-$item->discount)/100), 2, ',', ' ');?> бр.</td>
+            </tr>
+                            <?}?>
+                        <?}?>
+            <tr><td colspan="4">&nbsp;</td></tr>
+
+                    <?}?>
+                <?php }?>
+            <tr>
+                    <?php if ($item->discount) {?>
+                <td colspan="4" class="ta_right pt_10px">Итого с учетом скидки: <?=number_format($total - $total*$item->discount/100, 0, ',', ' ');?> бр.</td>
+                    <?php }else {?>
+                <td colspan="4" class="ta_right pt_10px">Итого: <?=number_format($total, 2, ',', ' ');?> руб.</td>
+                    <?php }?>
+
+            </tr>
+            <?php }?>
+            <tr><td colspan="4">&nbsp;</td></tr>
+            <tr>
+                <td colspan="4">
+                    <b>Данные клиента</b>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Имя</td>
+                <td colspan="3"><?=$item->user_name?></td>
+            </tr>
+            <tr>
+                <td>Улица</td>
+                <td colspan="3"><?=$item->user_street?></td>
+            </tr>
+            <tr>
+                <td>Дом</td>
+                <td colspan="3"><?=$item->user_house?></td>
+            </tr>
+            <tr>
+                <td>Корпус</td>
+                <td colspan="3"><?=$item->user_house_block?></td>
+            </tr>
+            <tr>
+                <td>Квартира</td>
+                <td colspan="3"><?=$item->user_flat?></td>
+            </tr>
+            <tr>
+                <td>Телефон</td>
+                <td colspan="3"><?=$item->user_phone?></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td colspan="3"><?=$item->user_email?></td>
+            </tr>
+            <tr><td colspan="4">&nbsp;</td></tr>
+            <tr>
+                <td colspan="4">
+                    <b>Комментарии</b>
+                </td>
+            </tr>
+            <tr>
+                <td>Комментарий повару</td>
+                <td colspan="3" class="comment top"><i><?=$item->cook_comment?></i></td>
+            </tr>
+            <tr>
+                <td>Комментарий курьеру</td>
+                <td colspan="3" class="comment top"><i><?=$item->courier_comment?></i></td>
+            </tr>
+            <tr>
+                <td>
+                    Комментарий менеджера
+                </td>
+                <td colspan="3" class="comment top">
+                        <i><?=$item->manager_comment?></i>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,55 @@
+﻿<div class="bread">
+<?//echo $this->page->id;
+    
+    if(!isset($this->catalog_map)) { ?>
+     
+                        
+    
+  <?  
+    if ($this->page->level>1)
+     {
+    $nav_menu=$this->navigator($this->page->parentId);
+    //print_r($nav_menu);
+    
+      foreach ($nav_menu as $key => $data){
+       
+      
+     ?> 
+        <a href="/"><?=$this->translate('main_page')?></a><img src="/img/pic.gif" />
+        
+        <a href="/<?=$data['path'];?>"><?=$data['name']?></a><img src="/img/pic.gif" />
+        <?if (isset($this->novost)){?>
+       <a href="/<?=$this->page->path?>"><?=$this->page->name?></a></a><img src="/img/pic.gif" />
+       <?=$this->novost->name?>
+       <?}
+			else{?>
+			<?=$this->page->name?>
+			<?}?>
+        <?
+        }
+        
+        
+        }
+        else 
+        {
+           ?>
+           <a href="/"><?=$this->translate('main_page')?></a><img src="/img/pic.gif" />
+           <?if (isset($this->novost)){?>
+       <a href="/<?=$this->page->path?>"><?=$this->page->name?></a></a><img src="/img/pic.gif" />
+       <?=$this->novost->name?>
+       <?}
+			else{?>
+			<?=$this->page->name?>
+			<?}?>
+            <?
+            
+        
+        }
+        ?>
+        
+                            
+        
+        <?
+        
+        } ?>
+       </div>

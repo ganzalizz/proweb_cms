@@ -1,0 +1,51 @@
+<?$path = $this->layout()->page->path?>
+<script type="text/javascript" src="/js/jquery/messages_ru.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#submit_js").show("fast");
+        $("#login").validate();
+    });
+</script>
+
+<div class="content_text form_cont">
+    <?=$this->layout()->page->content?>
+    <?if ($this->ok==0 ) {?>
+
+     <?if (isset($this->errors)) {?>
+            <div class="errors">
+                        <?foreach ($this->errors as $key=>$error) {?>
+                <p><strong><?=$key?></strong> : <?=$error?></p>
+                            <?}?>
+
+            </div>
+                    <?}?>
+    <div class="form login-form">
+        <form id="login"  method="post" action="">
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_70">Логин:</div>
+                <div class="width_170">
+                    <?=$this->formText('login', $this->login, array('class'=>'login-input width_150 required')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_70">Пароль:</div>
+                <div class="width_170">
+                    <?=$this->formPassword('password', $this->password, array('class'=>'login-input width_150 required')) ?>
+                </div>
+                <div class="width_170 f_right">                
+            </div>
+                <div class="forgot_password f_right pad_top_15">
+                    <span class="f_right pad_left_10">
+                        <a href="/rememberpassword">Забыли пароль?</a>
+                    </span>
+                    <span class="f_right">
+                        <a href="#" onclick="$('#login').submit(); return false;" class="button_send"><img src="/img/button_send.gif" alt="Отправить" /></a>
+                    </span>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+        <?}?>
+</div>

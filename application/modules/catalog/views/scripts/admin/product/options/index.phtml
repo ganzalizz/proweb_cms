@@ -1,0 +1,84 @@
+
+<div id="news_main_head">
+    <div class="news_head">
+        <div class="left_y"><!-- --></div>
+        <div class="news_headbg_longer"><!-- --></div>
+        <div class="right_y"><!-- --></div>
+    </div>
+    <div class="clear"><!-- --></div>
+    <div class="content">
+        <div class="prava_dostupa">
+            <div class="clear"><!-- --></div>
+            
+            <div id="left_block">
+            	<form action="" method="post" enctype="multipart/form-data">
+                <table style="margin-top: 0px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                       
+                        <th>Название</th>
+                        <th><a href="" id="select_all"><small>все</small></a></th>
+                        <th>Операции </th>
+                    </tr>
+                    <?php
+                    foreach ($this->all as $key => $data) {
+                        ?>
+                    <tr>
+                        
+                        <td  >													
+							<a href="<?=$this->currentModule?>/edit/id/<?=$data->id?>" > <strong><?=$data->title?></strong>
+						</td>
+                        
+						<td   width="20"style="text-align: center;">													
+							<?=$this->formCheckbox('items[]',$data->id, array('class'=>'check_item'))?>
+						</td>
+						
+                        <td class="options">
+                        	
+                            <a title="Редактировать" href = '<?=$this->currentModule?>/edit/id/<?=$data->id?>' ><img src="/img/admin/redact.gif" /></a>
+                                                        
+                            <a onclick="return confirm('вы уверены?');"  href = '<?=$this->currentModule?>/delete/id/<?=$data->id?>'><img src="/img/admin/delete.gif"></a>
+                        </td>
+                    </tr>
+                        <?php
+                    }
+                    ?>
+                </table>  
+                 <div class="right">
+				   <strong>C отмеченными:</strong>
+			        
+			        <?=$this->formRadio('operation', null, null, array('delete'=> ' Удалить'), '&nbsp;');?>
+			        <button  type="submit"><span><em>Отправить</em></span></button>
+				</div>
+				<div id="files_block">
+	                <b>Добавить:</b>
+	                
+	                <div class="titles" id="title1">	                   
+	                    <label id="template" >Название <input type="text" name="titles[]"></label>
+	                    <input type="button" value="&nbsp;+&nbsp;" style="float: right;" id="add_title">
+	                </div>
+
+            	</div>
+				</form>		      
+                <div style="padding-left: 20px;padding-top: 10px;" >                   
+                    <?=$this->Pagination($this->currentModule.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+                </div>
+            </div>
+            <div id="right_block">
+                <div class="block_r gray">
+                    <h3><b>Действия</b></h3>
+                    <ul>
+                    	<li><a href="/catalog/<?=$this->lang?>/admin_division/">Разделы каталога</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"><!-- --></div>
+    <div class="redactor_footer">
+        <div class="left_y"><!-- --></div>
+        <div class="redactor_footerbg_longer">
+
+        </div>
+        <div class="right_y"><!-- --></div>
+    </div>
+</div>

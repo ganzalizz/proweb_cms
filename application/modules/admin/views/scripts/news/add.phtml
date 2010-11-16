@@ -1,0 +1,138 @@
+<?php
+	$this->parent_name = "<a href='/admin/all/' class='blue'>Главная</a>";
+	$this->child_name = "Инфоблок";
+	$this->name = "Добавить элемент";
+?>
+
+
+<script type="text/javascript" src="/js/translit.js"></script>
+<script type="text/javascript">
+<!--
+	$(document).ready(function(){
+		$("#name").change(function(){
+			var url = translit($(this).val(), 'R_TO_E');			
+			$("#url").val(url);	
+			checkUrl(url, "" );	
+		});
+		
+		$("#url").change(function(){
+			var url = $(this).val();		
+			checkUrl(url, "" );
+			
+		
+		});
+		
+		function checkUrl(url, id){
+			$.get(
+					"<?=$this->currentModul?>/checkurl/",
+				 	 { url: url, id: id }, 
+					  function(data){
+						if(data=='ok'){
+							$("#warning").hide("fast");
+							$("#accept").show("fast");							
+						} else {
+							$("#accept").hide("fast");
+							$("#warning").show("fast");							
+							alert('Ошибка, Url '+url+' уже занят');
+						}
+									
+					  }
+			); 
+		}
+	
+	});
+//-->
+</script>	
+
+
+
+
+<div id="top_menu_z">
+						<table cellspacing="0" cellpadding="0" border="0" class="head_change_table">
+						<tr>
+							<td class="normal"><a href="<?=$this->currentModul?>/items/pageid/<?=$this->page->id ?>"><?=$this->page->name ?></a></td>
+							<td class="active">Добавить</td>
+						</tr>
+					</table>
+				</div>
+				
+				<div id="company_main_head">
+						<div class="news_head">
+							<div class="left_y"><!-- --></div>
+							<div class="news_headbg_longer"><!-- --></div>
+							<div class="right_y"><!-- --></div>
+						</div>
+						<div class="clear"><!-- --></div>
+						
+						<div id="redactor_content">
+						
+						<form  method="post">
+							<!--<table id="news_table" cellspacing="0" cellpadding="0" border="0">-->
+							<div style="padding-left:20px">
+							<table cellspacing="2" cellpadding="2" border="0">
+								<tr>
+									<td><b>Название:</b></td>
+									<td><input type="text" id="name" name="new[name]" size="90" /></td>
+								</tr>
+								<tr >
+									<td ><b>Url*:</b></td>
+									<td >
+										<input type="text" style="float: left;" class="text" size="90" name="new[url]" id="url" value="" />
+										<img id="accept" src="/images/alerts/accept.png" style="display: none;"> 
+										<img id="warning" src="/images/alerts/warning.png" style="display: none;" >										 
+									</td>
+								<tr >
+								<?if ($this->modul_page->id==170){ // вопрос ответ?>
+								<tr>
+									<td><b>Номер:</b></td>
+									<td><input type="text" name="new[number]" id="number" size="10" value="" /></td>
+								</tr>
+								<?} ?>
+								<tr>
+									<td><b>Дата:</b></td>
+									<td><input type="text" name="new[created_at]" id="datepicker" size="10" /></td>
+								</tr>
+								<tr>
+									<td><b>Активна:</b></td>
+									<td> <input type="checkbox"  name="new[pub]" checked="checked" /></td>
+								</tr>
+								<tr>
+									<td><b>Отображать на главной:</b></td>
+									<td> <input type="checkbox" name="new[main]" <? (isset($this->new->main) && $this->new->main==1) ? 'checked="checked"' : '' ?> /></td>
+								</tr>
+								
+							</table>
+							 
+								<div style='margin-left: 14px; margin-top:7px; width: 80%; height: 1px; background-color: #000;'><!-- --></div>
+								
+								<b>Анонс:</b><br/>
+									<div style="width: 750px;">
+										<?php $this->fck_intro->Create();	?>	
+									</div>	
+									
+									<div style='margin-left: 14px; margin-top:7px; width: 80%; height: 1px; background-color: #000;'><!-- --></div>
+								<b>Тело:</b><br/>
+								<div style="width: 750px;">
+										<?php $this->fck_content->Create();	?>	
+									</div>
+									<div style="padding-left:60%"><input type="submit" value="Создать" /></div>
+							</div>
+							
+							<div class="clear"><!-- --></div>		
+				
+						
+  
+</div>
+		<div class="clear"><!-- --></div>
+
+						<div class="redactor_footer">
+							<div class="left_y"><!-- --></div>
+							<div class="redactor_footerbg_longer">
+								
+							</div>
+							<div class="right_y"><!-- --></div>
+						</div>
+					</div>
+    
+
+

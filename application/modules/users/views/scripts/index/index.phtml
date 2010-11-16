@@ -1,0 +1,18 @@
+ <h1 class="inner_head"><span><?=$this->placeholder('h1')?></span></h1>
+<div class="content">
+<p>по тэгу "<?=$this->layout()->tag_title?>" найдено материалов <?=(int)count($this->hits)?></p>
+<?php if (isset($this->hits)){?>
+	<?foreach ($this->hits as $hit){?>
+		<div class="search_item">
+				<div class="head_search"><strong><a href="/<? echo  $hit->url?>"><?php echo $hit->title?></a></strong></div>
+				<div class="text_search">					
+					<?=(strlen($hit->content) > 330)?substr($hit->content, 0, strpos($hit->content,' ', 330)).'...':$hit->content;?>
+					
+				</div>
+		</div>
+	<?}?>
+	
+	<?=$this->pagination('/'.$this->layout()->page->path.'/q/'.$this->layout()->search.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+	 
+<?php }?>
+</div>

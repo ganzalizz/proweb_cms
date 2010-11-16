@@ -1,0 +1,31 @@
+	<?php if (isset($this->id_user)) {?>
+<div class="register">
+    <span class="open_reg">
+        <a href="/profile">Страница клиента</a>        
+    </span>
+
+        <div class="cont">
+            <div class="inner">
+                <span class="logout"><a href="/editprofile">Личные данные</a></span>
+                <form action="/logout" method="post">
+                    <span class="logout"><a href="/logout">Выход</a></span>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php } else {?>
+        <div class="register"><span class="open_reg">Вход / Регистрация</span>
+            <div class="cont">
+                <div class="inner">
+                    <form action="/login" method="post">
+                        <div class="item"><input type="text" class="input" value="логин" onfocus="if(this.value=='логин'){this.value = '';}" onblur="if(this.value==''){this.value = 'логин';}" name="login" id="ua_login" /></div>
+                        <div class="item"><input type="password" class="input" value="пароль" onfocus="if(this.value=='пароль'){this.value = '';}" onblur="if(this.value==''){this.value = 'пароль';}" name="password" id="ua_password" /></div>
+                        <div class="overflow">
+                            <div class="link"><a href="/registration">Регистрация</a> <a href="/rememberpassword">Забыли пароль</a></div>
+                            <div class="button"><input name="" type="image" src="/img/button_login.gif" /></div>
+                        </div>
+                        </form>
+                </div>
+            </div>
+        </div>  
+    <?php }?>

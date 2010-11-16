@@ -1,0 +1,85 @@
+	
+	<script type="text/javascript" src="/js/jquery/tree/jquery.tree.js"></script>
+	<script type="text/javascript" src="/js/jquery/tree/jquery.tree.cookie.js"></script>
+<script type="text/javascript">
+	$(function () { 
+		$("#tree-ct").tree({
+			ui:{
+				theme_name : "classic"
+			},
+			plugins : { 
+				cookie : { prefix : "jstree_" }
+			},
+			callback : {
+				onmove : function (NODE,REF_NODE,TYPE,TREE_OBJ,RB) {
+					//alert(TREE_OBJ.get_text(NODE) + " " + TYPE + " " + TREE_OBJ.get_text(REF_NODE));				
+					 $.get("/pages/<?=$this->lang ?>>/admin_pages/move", { node_id: NODE.id, target_id: REF_NODE.id, type:TYPE },
+					   function(data){
+					     //alert("Data Loaded: " + data);
+					   });					
+				},
+				onselect:function (NODE, TREE_OBJ){	
+					$("#"+NODE.id).removeClass("hover");				
+					$("#"+NODE.id).addClass("click");
+				},
+				ondeselect:function (NODE, TREE_OBJ){					
+					$("#"+NODE.id).removeClass("click");
+				}
+				
+			}
+		});
+		
+		$("a[delete]").click(function(){			
+			if(confirm('Вы уверены?')){
+				var id_page = $(this).attr("id_page");			
+				 $.get("<?=$this->currentModule."/delete" ?>", { id: id_page },
+				   function(data){				    
+				     if(data=='ok'){
+				     	$.tree.focused().remove("#"+id_page);
+				     } else{
+				     	alert("Ошибка, страница не удалена");
+				     }
+				  });
+			}
+		});
+		
+		$("a[pub]").click(function(){			
+			var id_page = $(this).attr("id_page");	
+			var img = $(this).find("img");		
+			 $.get("<?=$this->currentModule."/pub" ?>", { id: id_page },
+			   function(data){
+			    
+			     if(data=='1' || data=="0"){
+			     	img.attr("src", "/img/admin/active_"+data+".gif");
+			     } else{
+			     	alert("Ошибка.");
+			     }
+			  });	
+		});
+		
+		$("li").hover(
+			function () {
+				
+		    	if($(this).hasClass("click")==false){
+		    		$(this).addClass("hover");		    		
+		    	}	 
+		    	  
+		    }, 
+		    function () {
+		    	$(this).removeClass("hover");
+		    }
+		);
+	});
+</script>
+
+<style>
+
+</style>
+<div id="tree-ct">
+   <?=$this->html_tree ?>
+   
+</div>
+
+
+
+

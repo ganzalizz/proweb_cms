@@ -1,0 +1,181 @@
+	
+	<script type="text/javascript" src="/js/jquery/tree/jquery.tree.js"></script>
+	<script type="text/javascript" src="/js/jquery/tree/jquery.tree.cookie.js"></script>
+	<script type="text/javascript" src="/js/jquery/tree/jquery.tree.contextmenu.js"></script>
+<script type="text/javascript">
+	$(function () { 
+		$("#catalog_tree").tree({
+			ui:{
+				theme_name : "default"
+			},
+			plugins : { 
+				cookie : { prefix : "catalogtree_" },
+				contextmenu : {
+					items : {					
+						rename : false,
+						create : false,
+						remove : false,
+						create_div : {
+							label	: "Создать Подраздел", 
+							icon	: "create",
+							visible	: function (NODE, TREE_OBJ) { 										 
+										if($(NODE).attr('products')=='1') return 0; 
+							}, 
+							action	: function (NODE, TREE_OBJ) {
+								location.href = "/catalog/<?=$this->lang ?>/admin_division/edit/parent_id/"+$(NODE).attr('id'); 
+							},
+							separator_after : true
+						},
+						create_product : {
+							label	: "Создать Товар", 
+							icon	: "create",
+							visible	: function (NODE, TREE_OBJ) {								 
+								if($(NODE).attr('childs')=='1') return 0; 
+							}, 
+							action	: function (NODE, TREE_OBJ) { 
+								location.href = "/catalog/<?=$this->lang ?>/admin_product/edit/id_division/"+$(NODE).attr('id'); 
+							},
+							separator_after : true
+						},		
+						go_to_products : {
+							label	: "Перейти к товарам", 
+							icon	: "folder",
+							visible	: function (NODE, TREE_OBJ) {								 
+								if($(NODE).attr('products')=='0') return 0; 
+							}, 
+							action	: function (NODE, TREE_OBJ) { 
+								location.href = "/catalog/<?=$this->lang ?>/admin_product/index/id_division/"+$(NODE).attr('id'); 
+							},
+							separator_after : true
+						},		
+						edit : {
+							label	: "Редактировать", 
+							icon	: "redact", // you can set this to a classname or a path to an icon like ./myimage.gif						
+							action	: function (NODE, TREE_OBJ) { 								 
+								location.href = "/catalog/<?=$this->lang ?>/admin_division/edit/id/"+$(NODE).attr('id');
+							},
+							separator_after : true						
+						},			
+						del : {
+							label	: "Удалить",
+							icon	: "remove",
+							action	: function (NODE, TREE_OBJ) { 
+								if(confirm('Вы Уверены? при удалении раздела удаляются вложенные элементы.')){
+									var item_id = $(NODE).attr('id');
+									 $.get("/catalog/<?=$this->lang ?>/admin_division/delete/", { id: item_id},
+											   function(data){
+												 if(data=="ok"){													
+													TREE_OBJ.remove(NODE);
+												 }  else{
+													alert("Ошибка. Элемент не удален");
+												 }       
+											   }
+									  );
+								}					
+							}
+						}
+					}	
+				} 
+			},
+			callback : {
+				onmove : function (NODE,REF_NODE,TYPE,TREE_OBJ,RB) {
+					//alert(TREE_OBJ.get_text(NODE) + " " + TYPE + " " + TREE_OBJ.get_text(REF_NODE));				
+					 $.get("/catalog/<?=$this->lang ?>/admin_division/move", { node_id: NODE.id, target_id: REF_NODE.id, type:TYPE },
+					   function(data){
+					     //alert("Data Loaded: " + data);
+					   });					
+				},
+				check_move : function (node, ref_node, move_type){					
+					var products_li = $(ref_node).attr("products");									
+					var products_a = $(ref_node).parent("li").attr("products");									
+					if(move_type=="inside" && (products_a=="1" ||products_li=="1")){
+						return false;
+					}
+					return true;					
+				},				
+				
+				onselect:function (NODE, TREE_OBJ){
+					
+				},
+				ondeselect:function (NODE, TREE_OBJ){					
+					
+				}
+				
+			}
+		});
+		
+		$("a[delete]").click(function(){			
+			if(confirm('Вы уверены?')){
+				var id_page = $(this).attr("id_page");			
+				 $.get("<?=$this->currentModule."/delete" ?>", { id: id_page },
+				   function(data){				    
+				     if(data=='ok'){
+				     	$.tree.focused().remove("#"+id_page);
+				     } else{
+				     	alert("Ошибка, страница не удалена");
+				     }
+				  });
+			}
+		});
+
+		// переход к товарам раздела из дерева		
+		$(".products_count").click(function(){
+			var id_div = $(this).parent("li").attr("id");
+			if (id_div) {
+				location.href= "/catalog/<?=$this->lang?>/admin_product/index/id_division/"+id_div;
+				id_division
+			} else {
+				alert ('Ошибка');	
+			}
+		});
+		
+		$("a[pub]").click(function(){			
+			var id_page = $(this).attr("id_page");	
+			var img = $(this).find("img");		
+			 $.get("<?=$this->currentModule."/pub" ?>", { id: id_page },
+			   function(data){
+			    
+			     if(data=='1' || data=="0"){
+			     	img.attr("src", "/img/admin/active_"+data+".gif");
+			     } else{
+			     	alert("Ошибка.");
+			     }
+			  });	
+		});
+
+		
+		
+		/*$("li").hover(
+			function () {				
+		    	if($(this).hasClass("click")==false){
+		    		$(this).addClass("hover");		    		
+		    	}
+		    }, 
+		    function () {
+		    	$(this).removeClass("hover");
+		    }
+		);*/
+	});
+</script>
+<div id="left_block"> 
+<div class="right" style="width: 40%">
+						        
+        <button  type="button" onclick="location.href='<?=$this->currentModule?>/edit'; return false;"><span><em>Создать корневой раздел</em></span></button>
+      </div>
+<div id="catalog_tree">
+   <?=$this->html_tree ?>
+   
+</div>
+</div>
+<div id="right_block">
+                <div class="block_r gray">
+                    <h3><b>Действия</b></h3>
+                    <ul>
+                    	 <li><a href="/catalog/<?=$this->lang?>/admin_product_options/">Список Параметров</a></li>  
+                    </ul>
+                </div>
+            </div>
+
+
+
+

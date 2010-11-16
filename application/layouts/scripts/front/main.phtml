@@ -1,0 +1,65 @@
+<?=$this->layout()->render('front/parts/mainheader');?>
+
+<div class="contentwrapper">
+<div class="contentcolumn">
+<div class="title_head">
+<?=$this->getBlockContent('main_banner') ?>    
+
+</div>
+
+<div class="cont_home">
+<?=$this->layout()->content?>    
+    
+
+<div class="action_bl">
+
+<div class="inner">
+
+<div class="block w_500">
+<div class="cont">
+<?=$this->getBlockContent('akciya_main')?>
+</div>
+<div class="ten"></div>
+</div>
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+<div class="leftcolumn">
+<div class="inner">
+<div class="contact_block">
+<?=$this->getBlockContent('contact_top_left') ?>    
+</div>
+
+
+
+<div class="uslug_bl">
+<div class="title"><h3>Наши услуги:</h3></div>
+
+<?= $this->Menu('vertical_menu', 'ru', $this->layout()->id_object);?>
+
+</div>
+
+
+
+
+<div class="news_bl">
+<div class="title"><h3>Новости:</h3></div>
+<div class="item">
+<?=$this->mainNews();?>
+</div>
+</div>
+
+<?=$this->mainArticlesLights() ?>
+
+
+</div>
+</div>
+<?=$this->layout()->render('front/parts/mainfooter');?>
+
+</div>
+</body>
+</html>

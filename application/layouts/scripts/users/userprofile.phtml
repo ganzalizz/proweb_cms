@@ -1,0 +1,67 @@
+<?=$this->layout()->render('front/parts/header');?>
+
+<div class="width content overflow">
+    <div class="left_col"><div class="inner">
+
+            <img src="/img/text_menu.gif" alt="" />
+            <?=$this->MenuDate();?>
+            <div class="menu">
+            <?=$this->CatalogMenu($this->layout()->id_division)?>
+            </div>
+            <div class="search">
+                <div class="inner">
+                    <form action="/search">
+                        <h4>Лень лазить по меню?</h4>
+                        <div class="item">
+                            <input name="keywords" type="text" class="input" />
+                            <button type="submit" src="/img/ico_search.gif" class="button"></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div></div>
+    <div class="head_col">
+        <h1><?=$this->placeholder('h1')?></h1>
+    </div>
+    <div class="userareaMenu">
+        <?if($this->layout()->current_menu=='editprofile'){?>
+            <span class="right_margin current_userprofile_menu">Персональные данные</span>
+        <?} else {?>
+            <span class="right_margin"><a href="editprofile" title="Персональные данные">Персональные данные</a></span>
+        <?}?>
+        <?if($this->layout()->current_menu=='ordershistory'){?>
+            <span class="right_margin current_userprofile_menu">История заказов</span>
+        <?} else {?>
+            <span class="right_margin"><a href="ordershistory" title="История заказов">История заказов</a></span>
+        <?}?>
+    </div>
+    <div class="center_col <?=isset($this->layout()->page_childs)?'center_column_nomenu':'center_column_menu';?>">
+        <div class="inner">
+            <div class="text_cont">
+                <?=$this->layout()->content;?>
+            </div>
+        </div>
+    </div>
+    <?if(isset($this->layout()->page_childs)) {?>
+	    <div class="clientam">
+	        <div class="right_col">
+	            <div class="inner">
+	                <div class="menu">
+	                    <ul>
+	                        <?foreach($this->layout()->page_childs as $title=>$url) {?>
+	                            <li><a href="/<?=$url?>"><?=$title?></a></li>
+	                        <?}?>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+    <?}?>
+
+
+</div>
+<?=$this->layout()->render('front/parts/footer');?>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+* {
+    font-size: 12px;
+}
+
+td {
+    vertical-align: top;
+}
+
+.ta_right {
+    text-align: right;
+}

@@ -1,0 +1,9 @@
+<?$arr = $this->layout();?>
+<?php $attribs = array('rows'=>5);?>
+<?php if ($arr->atribs){
+		array_merge($attribs, $arr->atribs);		
+	} else {
+		$arr->atribs = $attribs;
+	}
+?>
+<?php echo $this->formTextarea($arr->name, $arr->value, $arr->atribs)?>

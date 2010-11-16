@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Студия интернет-проектов PROWEB - CMS</title>
+	<meta http-equiv="content-type" content="text/html;charset = utf-8" />
+	<meta name="keywords" content="" />
+	<meta name="description" content="Студия интернет-проектов PROWEB - CMS" />
+	<link rel="stylesheet" type="text/css"  href="/css/admin.css" />
+</head>
+<body>
+
+	<div id="main_center_int">
+		<div id="main_bg">
+			<div id="intro_content">
+				<form class="intro_form" action="" method="POST">
+					<p><?=$this->escape($this->error);?>&nbsp</p>
+					<label for="login" name="login" maxlength="100">Login:</label>
+					<div class="clear"><!-- --></div>
+					<input type="text" class="txt" name="login" id="login" />
+					<div class="clear"><!-- --></div>
+					<label for="password" name="pwd" maxlength="80">Password:</label>
+					<div class="clear"><!-- --></div>
+					<input type="password" class="txt" name="pwd" id="pwd" />
+					<div class="clear"><!-- --></div>
+					<input type="image" class="btn" src="/images/hm_button_normal.gif" name="enter" />
+				</form>
+				<!-- begin footer -->
+				<div class="clear"><!-- --></div>
+				<div id="footer_intro">
+					<div id="robo_img"><!-- --></div>
+					<div id="text">
+						<p class="first_p">Copyright (C) <?=date('Y')?><br /><a href="http://www.proweb.by/">proweb.by</a></p>
+					</div>
+				</div>
+				<!-- end footer -->
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

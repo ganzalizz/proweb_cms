@@ -1,0 +1,88 @@
+<div id="left_block"  class="form_page">
+
+
+
+
+    <form method="post" id="edit_form" action="<?=$this->currentModule?>/edit/<?=$this->item->id ? 'id/'.$this->item->id.'/' : ''?><?=$this->peoples_id ? 'peoples_id/'.$this->peoples_id.'/' : ''?>" enctype="multipart/form-data"  >
+        <?if ($this->ok==1) {?>
+        <p align="center"><font color="green"><b>Данные сохранены</b></font></p>
+            <?} ?>
+        <?php if (isset($this->errors)) {?>
+        <div class="errors">
+            <h4>Ошибка</h4>
+                <?php foreach ($this->errors as $key=>$error) {?>
+            <p><strong><?=$key?></strong> : <?=$error?></p>
+                    <?php }?>
+
+        </div>
+            <?php }?>
+
+        <div class="content_block">
+
+            <p class="form_name">Имя <span class="ser_text size11">(отображается на сайте)</span><p>
+                <?=$this->formText('edit[first_name]', $this->item->first_name) ?>
+
+            <p class="form_name">Фамилия<p>
+                <?=$this->formText('edit[last_name]', $this->item->last_name) ?>
+
+            <p class="form_name">Дата рождения<p>
+                <?=$this->formText('edit[birthdate]', $this->item->birthdate, array('style'=>'width:100px;', 'id'=>'datepicker')) ?>
+
+            <p class="form_name">Логин<p>
+                <?=$this->formText('edit[login]', $this->item->login) ?>
+
+            <p class="form_name">Пароль<p>
+                <?=$this->formText('edit[password]', $this->item->password) ?>
+
+            <p class="form_name">Улица<p>
+                <?=$this->formText('edit[street]', $this->item->street) ?>
+
+            <p class="form_name">Дом<p>
+                <?=$this->formText('edit[house]', $this->item->house) ?>
+
+            <p class="form_name">Корпус<p>
+                <?=$this->formText('edit[house_block]', $this->item->house_block) ?>
+
+            <p class="form_name">Квартира<p>
+                <?=$this->formText('edit[flat]', $this->item->flat) ?>
+
+            <p class="form_name">Мибильный тел.<p>
+                <?=$this->formText('edit[mobile_phone]', $this->item->mobile_phone) ?>
+
+            <p class="form_name">Email<p>
+                <?=$this->formText('edit[email]', $this->item->email) ?>
+                
+            <p class="form_name">Персональная скидка (%)<p>
+                <?=$this->formText('edit[discount]', $this->item->discount) ?>
+
+            <p class="form_name">Подписка на рассылку</p>
+            <?=$this->formCheckbox('edit[subscribe]', null, array('class'=>'checkbox', 'checked'=>$this->item->subscribe)) ?> Да
+            
+            <p class="form_name">Постоянный клиент</p>
+            <?=$this->formCheckbox('edit[regular_customer]', null, array('class'=>'checkbox', 'checked'=>$this->item->regular_customer)) ?> Да
+
+
+            <p class="form_name">Активность <span class="ser_text size11">(На сайте отображаются только активные элементы)</span></p>
+            <?=$this->formCheckbox('edit[active]', null, array('class'=>'checkbox', 'checked'=>$this->item->active)) ?> Да
+
+            <input type="hidden" name="id" value="<?=$this->item->id ?>">
+        </div>
+        <div class="right">
+            <button class="orange" type="button" onclick="location.href='<?=$this->currentModule?>'"><span><em>Отменить</em></span></button>
+            <button  type="submit"><span><em>Сохранить</em></span></button>
+        </div>
+
+
+
+    </form>
+</div>
+<div id="right_block">
+    <div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>
+            <li><a href="<?=$this->currentModule?>/edit/">Создать элемент</a></li>
+            <li><a href="<?=$this->currentModule?>/unactive/">Не активные пользователи</a></li>
+            <li><a href="<?=$this->currentModule?>">Вернутся к списку</a></li>
+        </ul>        
+    </div>
+</div>							

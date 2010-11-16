@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <title>Proweb cms</title>
+            <link rel="stylesheet" href="/css/admin/setup.css" type="text/css" media="screen">
+                <link rel="stylesheet" href="/css/admin/style.css" type="text/css" media="screen">
+                    <link rel="stylesheet" href="/css/admin/coders.css" type="text/css" media="screen">
+                        <script type="text/javascript" src="/js/jquery/jquery.js"></script>
+                        <script type="text/javascript" src="/js/jquery/jquery.cookie.js"></script>
+                        <script type="text/javascript" src="/js/admin/main.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/jquery.fancybox-1.2.6.css" media="screen" />
+
+        <script type="text/javascript" src="/js/fancybox/jquery.fancybox-1.2.6.pack.js"></script>
+                        <script type="text/JavaScript">
+                            <!--
+                            function MM_jumpMenu(targ,selObj,restore){ //v3.0
+                                eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
+                                if (restore) selObj.selectedIndex=0;
+                            }
+                            //-->
+                        </script>
+                        </head>
+                        <body>
+                            <div id="minmax"></div>
+                            <div id="width">
+                                <div class="top">
+                                    <div class="top_left">
+                                        <div class="top_right"></div>
+                                    </div>
+                                </div>
+                                <div class="header">
+                                    <div class="logo"></div>
+                                    <div class="top_menu">
+                                        <ul>
+                                            <li <?=$this->layout()->controller!="users" ? 'class="active"' : ''?>><a href="/admin/">Управление сайтом</a></li>
+                                            <li <?=$this->layout()->controller =="users" ? 'class="active"' : ''?>><a href="/admin/<?=$this->layout()->lang ?>/users/">Управление профилями</a></li>
+                                            <!-- <li><a href="#">Помощь</a> </li> -->
+                                        </ul>
+                                    </div>
+                                    <div class="user"><b><?=$this->placeholder('user_login') ?></b> <i><a href="/admin/<?=$this->layout()->lang ?>/users/logout/" class="active">Выход</a> | <a href="#">Перелогиниться</a></i></div>
+                                    <?if($this->layout()->controller!="users") {?>
+                                    <div class="sub_menu">
+                                        <ul>
+                                            <li <?=$this->layout()->controller =="admin_pages" ? 'class="active"' : ''?>><a href="/pages/<?=$this->layout()->lang ?>/admin_pages/">Структура</a></li>
+                                            <li <?=$this->layout()->controller =="divtype" ? 'class="active"' : ''?> ><a href="/admin/<?=$this->layout()->lang ?>/divtype/">Типы разделов</a></li>
+                                            <!-- <li><a href="#">Журнал действий</a></li> -->
+                                        </ul>
+                                    </div>
+                                        <?}?>
+                                    <div class="ten">
+                                        <div class="ten_left">
+                                            <div class="ten_right"></div>
+                                        </div>
+                                    </div>
+                                </div>

@@ -1,0 +1,70 @@
+<?if(count($this->products)){?>
+<?php $path = $this->path?>
+<div class="right_col"><div class="inner">
+        <h2>Популярное</h2>
+        <div class="overflow">
+            <?foreach($this->products as $product){?>
+            <div class="product">
+                <div class="photo">
+                    <a href="/katalog/product/<?=$product->id?>">
+                        <img src="/thumb.php?img=/pics/catalog/product/<?=$product->img?>&w=120&h=120?>" alt="" />
+                    </a>
+                </div>
+                <div class="link">
+                    <a href="/katalog/product/<?=$product->id?>">
+                    	<?=$product->title?>
+                    </a>
+                </div>
+                
+               <?$options = $product->getOptions()?>
+               
+							<?php if ($options){?>
+								
+								
+								<div class="slider" >
+									<?php foreach ($options as $option){?>
+										<?php foreach ($option['values'] as $value){?>
+											<div price="<?=$value['price']?>" product="<?=$product->id?>" id_price="<?=$value['id_price']?>" class="option"><?=$value['title']?></div>
+										<?php }?>
+									<?php }?>
+								
+									<div class="prev"></div>
+										<div class="container" ></div>
+									<div class="next"></div>
+									<div class="clear"></div>
+									<div class="price overflow">
+										<span class="option_price"></span>
+									
+										<div class="ico">
+											<?php /*?><a href="/<?=$path?>/product/<?=$product->id?>" title="Подробнее">
+												<img src="/img/next.gif" alt="Подробнее" />
+											</a> <?*/?>
+											  <a href="#" id_product="<?=$product->id?>" id_price="" class="zakaz_btn" title="Добавить в корзину" >
+												<img src="/img/button-zakaz.gif" alt="Добавить в корзину" />
+											</a>
+										</div>
+									</div>	
+									
+								</div>
+								
+							<? } elseif ($product->price){?>
+								<div class="price overflow">
+									<span><?=$product->price?> <i>бр</i></span>
+								 
+									<div class="ico">
+										<a href="/<?=$path?>/product/<?=$product->id?>" title="Подробнее">
+											<img src="/img/next.gif" alt="Подробнее" />
+										</a> 
+										  <a href="#" id_product="<?=$product->id?>" class="zakaz_btn" title="Добавить в корзину" >
+											<img src="/img/cart.gif" alt="Добавить в корзину" />
+										</a>
+									</div>
+								</div>	
+							<?php }?>
+            </div>
+            <?}?>
+        </div>
+
+    </div>
+</div>
+<?}?>

@@ -1,0 +1,44 @@
+<div id="left_block">
+    <div class="prava_dostupa">
+        <table id="news_table" cellspacing="0" cellpadding="0" border="0">
+            <tr class="head">
+                <th>Название</th>
+                <th>Приоритет</th>
+                <th>Операции</th>
+            </tr>
+            <?foreach ($this->all as $key => $data) {?>
+            <tr>
+                <td class="main">
+                    <a  href ="<?=$this->currentModule?>/edit/id/<?=$data['id']?>/" title="редактировать"><strong><?=$data['title']?></strong></a>
+                </td>
+                <td class="options">
+                    <?=$data['priority']?>
+                </td>
+                <td class="options">
+                    <a href = '<?=$this->currentModule?>items/index/poll_id/<?=$data['id']?>'><img src="/img/admin/folder.gif"></a>
+                    <a href = '<?=$this->currentModule?>/active/id/<?=$data['id']?>'><img src="/img/admin/active_<?=$data['active'] ?>.gif" /></a>
+                    <a href = '<?=$this->currentModule?>/edit/id/<?=$data['id']?>'><img src="/img/admin/redact.gif" /></a>
+                    <a href = '<?=$this->currentModule?>/delete/id/<?=$data['id']?>'><img src="/img/admin/delete.gif" onclick="return confirm('Вы уверены?');"></a>
+                </td>
+            </tr>
+                <?php
+            }
+            ?>
+        </table>
+    </div>			
+    <div style="padding-left: 20px;padding-top: 10px;" >
+        <?=$this->Pagination($this->currentModule.'/index/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+    </div>
+</div>
+
+<div id="right_block">
+    <div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>
+            <li><a href="<?=$this->currentModule?>/edit/id/<?=$this->parent_id?>">Создать опрос</a></li>
+        </ul>        
+    </div>
+</div>
+
+
+

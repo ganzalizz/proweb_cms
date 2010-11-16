@@ -1,0 +1,19 @@
+<?
+    $menu1 = $this->menu['level1'];
+    $menu_level2 = $this->menu['level2'];//Зачем $menu_level2
+    $i=0;
+?>
+<div class="top_menu">
+    <ul>
+        <?foreach ($menu1 as $key => $data) { $i++;?>
+            <li>
+                <a href="/<?=$data->path?>" title="<?=$data->name?>" <?=$data->id==$this->current ? 'class="active"' : ''?>>
+                    <span><?=$data->name?></span>
+                </a>
+            </li>
+        <?}?>
+    </ul>
+</div>
+
+
+

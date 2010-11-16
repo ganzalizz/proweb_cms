@@ -1,0 +1,6 @@
+<?foreach($this->mainnews as $new){?>
+<div class="item"><b class="date"><?=$this->dateFromDb($new['created_at'])?> </b>
+<a href="/newslist/item/<?=$new['id']?>" class="head"><?=$new['name']?></a>
+<p><?=$new['intro']?></p>
+</div>
+<?}?>

@@ -1,0 +1,64 @@
+ 
+ <?$path = $this->layout()->page->path?>
+ <div class="center_col">
+        <div class="inner">
+            <div class="text_cont ser_block">
+               <?=$this->division->description?>
+            </div>
+        </div>
+    </div>
+    <?if(isset($this->childs)) {?>
+	   
+	        <div class="right_col">
+	        	<?php foreach ($this->childs as $child){?>
+        		    <div class="product_list overflow">
+        		    	<?php if ($child->img!=''){?>
+						<div class="photo"><a href="/<?=$path ?>/division/<?=$child->id?>"><img src="/pics/catalog/division/<?=$child->img?>" alt="<?=$child->name?>" /></a></div>
+						<?php } ?>
+						<div class="text"><a href="/<?=$path ?>/division/<?=$child->id?>" class="head_list"><?=$child->name?></a>
+						<?=$child->intro?>
+						</div>
+					</div>
+	        	
+	        	<?php } ?>
+ 
+	        </div>
+	   
+    <?}elseif (isset($this->products)){?>
+     <div class="right_col">
+    	<div class="inner">
+    		<div class="overflow">
+    		<?php foreach ($this->products as $product) {?>
+	    		
+					<div class="product">
+						<div class="photo">
+							<?if ($product->img!=''){?>
+							<a href="/<?=$path?>/product/<?=$product->id?>">
+								<img src="/thumb.php?img=/pics/catalog/product/<?=$product->img?>&w=130&h=115" alt="<?=$product->title?>" />
+							</a>
+							<?php }?>
+						</div>
+						<div class="link"><a href="/<?=$path?>/product/<?=$product->id?>"><?=$product->title?></a></div>
+						<div class="price overflow">
+							<?php if ($product->price){?>
+								<span><?=$product->price?> <i>бр</i></span>
+							<?php }?> 
+							<div class="ico">
+								<?/*<a href="/<?=$path?>/product/<?=$product->id?>" title="Подробнее">
+									<img src="/img/next.gif" alt="" />
+								</a> */?>
+								<a href="#">
+									<img src="/img/button-zakaz.gif" alt="" />
+								</a>
+							</div>
+						</div>
+					</div>
+				
+    		<?php }?>
+			</div>	
+		</div>	
+		</div>
+    <?php }?>
+
+
+

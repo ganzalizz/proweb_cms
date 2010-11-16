@@ -1,0 +1,17 @@
+ <h1 class="inner_head"><span><?=$this->placeholder('h1')?></span></h1>
+<div class="vopros_otvet">
+
+<?php if (isset($this->items)){?>
+	<?foreach ($this->items as $item){?>
+		  <div class="item">
+		  <div class="vopros overflow"><div class="left_v_o">Вопрос:</div><div class="cont_v_o"><?echo $item->question?></div></div>
+		   <div class="otvet overflow"><div class="left_v_o">Ответ:</div><div class="cont_v_o"><?echo $item->answer?></div></div>
+		  </div>
+		
+	<?}?>
+	
+	<?=$this->pagination('/'.$this->layout()->page->path.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+	
+	 <?=$this->action('port', 'forms', 'forms', $this->form_array)?>
+<?php }?>
+</div>

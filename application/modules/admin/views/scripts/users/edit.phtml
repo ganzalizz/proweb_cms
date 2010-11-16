@@ -1,0 +1,56 @@
+ <div id="left_block_user">
+ 	<form class="user_form" action="" method="post">
+ 		<?if (isset($this->errors)){?>
+	 		<div class="errors">
+	 			<?=$this->htmlList($this->errors) ?>
+	 		</div>
+ 		<?} ?>
+      <div class="content_blue">
+        <h3>Персональные данные администратора</h3>
+        
+          <div>
+            <label>Роль</label>
+             <?=$this->formSelect('role', $this->item->role, null, $this->roles) ?>
+          </div>
+          <div>
+            <label>Имя</label>
+             <?=$this->formText('firstName', $this->item->firstName) ?>
+          </div>
+          <div>
+            <label>Фамилия</label>
+            <?=$this->formText('lastName', $this->item->lastName) ?>
+          </div>          
+          <div>
+            <label>E-mail</label>
+            <?=$this->formText('email', $this->item->email) ?>
+          </div>
+          <div class="checkbox">            
+            <?=$this->formCheckbox('send_message', $this->item->send_message,array('checked'=>$this->item->send_message), array(1,0)) ?>
+            <label>Посылать уведомления</label>
+          </div>
+          <div class="checkbox">           
+            <?=$this->formCheckbox('activity', $this->item->activity,array('checked'=>$this->item->activity), array(1,0)) ?>
+            <label>Пользователь активен </label>
+          </div>
+          <div class="user_pass">
+	          	<div>
+		            <label>Логин</label>
+		            <?=$this->formText('username', $this->item->username) ?>
+	            
+	          </div>
+            <div>
+            	
+              <label>Пароль</label>
+              <?=$this->formText('password', $this->item->password) ?>
+            </div>            
+          </div>
+          <br class="clear" />
+       
+      </div>
+      <div class="right"><br class="clear" />
+        <button class="orange" onclick="location.href='<?=$this->currentModule ?>'; return false;"><span><em>Отменить</em></span></button>
+        <button type="submit"><span><em>Сохранить</em></span></button>
+        <br class="clear" />
+      </div>
+       </form>
+    </div>

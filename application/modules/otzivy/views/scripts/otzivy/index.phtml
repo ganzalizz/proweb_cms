@@ -1,0 +1,24 @@
+<?if(count($this->otzivy)) {?>
+<div class="cont_inner news">
+        <?foreach($this->otzivy as $otziv) {?>
+   <div class="item">
+        <b class="date"><i><?=$this->dateFromDb($otziv['created_at']);?></i></b>
+        <? //if($new['small_img']){?>
+           <!-- <div class="photo"><a href="/newslist/item/<?//=$new['id']?>"><img src="/pics/news/<?//=$new['small_img']?>" alt="" /></a></div> -->
+        <?//}?>
+        <?=$otziv['name'] ?><br/>
+        <?=$otziv['content'] ?>
+        
+            
+        </div>
+   
+  <?}?>
+ 
+<?}?>
+
+
+
+</div>
+
+
+<?=$this->form->render() ?> 

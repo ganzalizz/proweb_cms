@@ -1,0 +1,42 @@
+<?if ($this->count_pages>1){ ?>
+ 
+<div class="pagination">
+		
+		<div class="f_left">
+		<?if($this->current>1){?>
+			<a class="prev" href="<?=$this->url ?>page/<?=$this->current-1 ?>">&laquo; предыдущая</a>
+		<?} else{?>
+			<!-- <span class="disabled"><</span> -->
+		<?}?>
+		<?$start = $this->first!=0 ? $this->first : 1;?>
+		
+		<?php if ($start > 1){?>
+			<a href="<?=$this->url ?>page/1">1</a>
+			...			
+		<?php }?>
+		
+		<?for ($i=$start; $i<=min($this->end, $this->count_pages); $i++){ ?>
+			
+			<?if ($i==$this->current){ ?>
+				
+				<a href="<?=$this->url ?>page/<?=$i ?>" class="active" ><?=$i ?></a>	
+							
+			<?}else {?>
+				<a href="<?=$this->url ?>page/<?=$i ?>"><?=$i ?></a>
+			<?} ?>
+			<?if ($i<=$this->count_pages-1) {?>
+				
+			<?} ?>
+		<?} ?>
+		<?php if ($this->end<$this->count_pages){?>
+			...
+			<a href="<?=$this->url ?>page/<?=$this->count_pages ?>"><?=$this->count_pages ?></a>
+		<?php }?>
+		<?if($this->current<$this->count_pages){?>
+			<a class="next" href="<?=$this->url ?>page/<?=$this->current+1 ?>">следующая &raquo;</a>
+		<?} else{?>
+			<!--  <span class="disabled">></span>-->
+		<?}?>
+		</div>			
+</div>
+<?} ?>

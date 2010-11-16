@@ -1,0 +1,81 @@
+<?php
+                    //$menu = $this->Menu('horizontal_menu', $this->lang);
+                   
+                    $menu1 = $this->menu['level1'];
+                    $menu_level2 = $this->menu['level2'];
+					//print_r($menu1);
+					//print_r($menu_level2);
+                    $i=0;	?>
+                    <?if ($this->type=='horizontal_menu'){ ?>
+                  <ul>     
+                    <? foreach ($menu1 as $key => $data){
+                        $i++;		                       
+                        ?>
+                         <li <?=$data->id==$this->current ? 'class="active"' : ''?> >
+                         	<a href="/<?=$data->path?>" title="<?=$data->name?>" >
+                         		<span><?=$data->name?></span>
+                         	</a>
+                         <?/*if (!empty($menu_level2[$key])){ ?>
+                         	<ul class="inner1">
+                         	<?foreach($menu_level2[$key] as $lev2item){?>
+								 <li><a href="/<?=$lev2item->path?>"  title=""> <?=$lev2item->name?></a></li>
+							<?}?>
+                         		</ul>
+                         <?} */?>	 
+                         </li>		                      
+                        <?php
+                    }
+                ?> 
+               <!--  <li class="end"></li> --> 
+    </ul>
+    <?}elseif($this->type =="vertical_menu"    ) { ?>
+    	<? foreach ($menu1 as $key => $data){
+                        $i++;		                       
+                        ?>
+                         <!--block-->
+                        <div class="block">
+                        	  <div class="head"><span>
+						          <!--Иконки подгружать в стиле, поэтому прописал css на странице-->
+						          <h3 <?=$data->img!='' ? "style=\"background:url(/pics/default/$data->img) no-repeat right bottom;\"" : ''?>>
+						          	<a href="/<?=$data->path?>" title="<?=$data->name?>"><?=$data->name?></a>
+						          </h3>
+								  </span>
+						       </div>                         	
+                         <?if (!empty($menu_level2[$key])){ ?>
+                         	  <div class="cont">
+						          <ul>	
+		                         	<?foreach($menu_level2[$key] as $lev2item){?>
+										 <li><a href="/<?=$lev2item->path?>" <?=$lev2item->id==$this->current ? 'class="active"' : ''?> > <?=$lev2item->name?></a></li>
+									<?}?>
+                         		  </ul>
+						      </div>
+                         <?} ?>	 
+                         </div>	
+                          <!--End block-->	                      
+                        <?php
+                    }
+                ?> 
+    <?}elseif ($this->type=='menu_footer'){ ?>
+                  <ul class="menu_footer">     
+                    <? foreach ($menu1 as $key => $data){
+                        $i++;		                       
+                        ?>
+                         <li>
+                         	<a href="/<?=$data->path?>" title="<?=$data->name?>" <?=$data->id==$this->current ? 'class="active"' : ''?> >
+                         		<span><?=$data->name?></span>
+                         	</a>
+                         <?if (!empty($menu_level2[$key])){ ?>
+                         	<ul class="inner1">
+                         	<?foreach($menu_level2[$key] as $lev2item){?>
+								 <li><a href="/<?=$lev2item->path?>"  title=""> <?=$lev2item->name?></a></li>
+							<?}?>
+                         		</ul>
+                         <?} ?>	 
+                         </li>		                      
+                        <?php
+                    }
+                ?> 
+               <!--  <li class="end"></li> --> 
+    </ul>
+    <?}
+     

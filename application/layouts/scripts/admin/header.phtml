@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <title>Pokushat</title>
+            <link rel="stylesheet" href="/css/admin/setup.css" type="text/css" media="screen">
+                <link rel="stylesheet" href="/css/admin/style.css" type="text/css" media="screen">
+                    <link rel="stylesheet" href="/css/admin/coders.css" type="text/css" media="screen">
+                        <link rel="stylesheet" href="/css/admin/ui.all.css" type="text/css" media="screen">
+                            <script type="text/javascript" src="/js/jquery/jquery.js"></script>
+                            <script type="text/javascript" src="/js/jquery/ui.datepicker.js"></script>
+                            <script type="text/javascript" src="/js/jquery/ui.datepicker-ru.js"></script>
+                            <script type="text/javascript" src="/js/jquery/jquery.cookie.js"></script>
+                            <script type="text/javascript" src="/js/admin/main.js"></script>
+                            <script type="text/javascript" src="/js/jquery/jquery.validate.js"></script>
+                            <script type="text/javascript" src="/js/jquery/messages_ru.js"></script>
+                            </script>
+                            </head>
+                            <body>
+                                <div id="minmax"></div>
+                                <div id="width">
+                                    <div class="top">
+                                        <div class="top_left">
+                                            <div class="top_right"></div>
+                                        </div>
+                                    </div>
+                                    <div class="header">
+                                        <a href="/admin"><div class="logo"></div></a>
+                                        <div class="top_menu">
+                                            <ul>
+                                                <li <?=$this->layout()->controller!="users" ? 'class="active"' : ''?>><a href="/admin/">Управление сайтом</a></li>
+                                                <li <?=$this->layout()->controller =="users" ? 'class="active"' : ''?>><a href="/admin/<?=$this->layout()->lang ?>/users/">Управление профилями</a></li>
+                                                <!-- <li><a href="#">Помощь</a> </li> -->
+                                            </ul>
+                                        </div>
+                                        <div class="user"><b><?=$this->placeholder('user_login') ?></b> <i><a href="/admin/<?=$this->layout()->lang ?>/users/logout/" class="active">Выход</a> | <a href="/" target="_blank">На сайт</a> </i></div>
+                                        <?if($this->layout()->controller!="users") {?>
+                                        <div class="sub_menu">
+                                            <ul>
+                                                <li <?=$this->layout()->controller =="admin_pages" ? 'class="active"' : ''?>><a href="/pages/<?=$this->layout()->lang ?>/admin_pages/">Структура</a></li>
+                                                <li <?=$this->layout()->module =="catalog" ? 'class="active"' : ''?>><a href="/catalog/<?=$this->layout()->lang ?>/admin_division/">Каталог</a></li>
+                                               <!--  <li <?=$this->layout()->controller =="admin_polls" ||  $this->layout()->controller =="admin_pollsitems"? 'class="active"' : ''?> ><a href="/polls/<?=$this->layout()->lang ?>/admin_polls/">Опросы</a></li> -->
+                                                <li <?=$this->layout()->controller =="admin_blocks" ? 'class="active"' : ''?> ><a href="/blocks/<?=$this->layout()->lang ?>/admin_blocks/">Блоки</a></li>
+                                                
+                                                <li <?=$this->layout()->controller =="admin_users" ? 'class="active"' : ''?> ><a href="/users/<?=$this->layout()->lang ?>/admin_users/">Пользователи сайта</a></li>
+                                               
+                                            </ul>
+                                        </div>
+                                            <?}?>
+                                        <div class="ten">
+                                            <div class="ten_left">
+                                                <div class="ten_right"></div>
+                                            </div>
+                                        </div>
+                                    </div>

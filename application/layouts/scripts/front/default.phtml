@@ -1,0 +1,64 @@
+<?=$this->layout()->render('front/parts/header');?>
+
+
+                <?=$this->layout()->content;?>
+
+
+</div>
+</div>
+<div class="leftcolumn">
+<div class="inner">
+<div class="contact_block">
+<?=$this->getBlockContent('contact_top_left') ?> 
+</div>
+
+
+
+<div class="uslug_bl">
+<div class="title"><h3>Наши услуги:</h3></div>
+<?= $this->Menu('vertical_menu', 'ru', $this->layout()->id_object);?>
+</div>
+
+
+
+
+
+
+<div class="action_bl">
+
+<div class="inner">
+<div class="flag"></div>
+<div class="block">
+<div class="cont">
+<?=$this->getBlockContent('akciya_left') ?>
+</div>
+<div class="ten"></div>
+</div>
+</div>
+</div>
+
+
+
+
+
+<div class="title_head">
+<?=$this->getBlockContent('zamanuha_left') ?>
+</div>
+
+
+
+<?=$this->mainArticlesLights() ?>
+
+
+</div>
+</div>
+
+
+
+
+
+<?=$this->layout()->render('front/parts/footer');?>
+
+</div>
+</body>
+</html>

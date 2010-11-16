@@ -1,0 +1,73 @@
+<h1 class="head_content"><?=$this->h1?></h1>
+<div class="main_vacansy">
+    <div class="content_text">
+        <?if($this->vacancyCount){?>
+        <div class="overflow">
+            <div class="f_left">
+                <?=$this->vacancyCount<$this->onpage?$this->vacancyCount:$this->onpage?> из <?=$this->vacancyCount?> вакансий
+            </div>
+
+            <div class="f_right">
+                
+                <form id="sortuservacancies" action="" method="post" enctype="multipart/form-data">
+                    <a href="#" onclick="$('#sortuservacancies').submit(); return false;" class="button_red add_company"><span>Сортировать по </span></a>
+                    <noscript>
+                        <input type="submit" value="Сортировать по">
+                    </noscript>
+                <select name="sort" class="width_170">
+                    <option value="created_at">дате</option>
+                    <option value="speciality" <?=$this->order=='speciality'?'selected':''?>>специальности</option>
+                    <option value="activity" <?=$this->order=='activity'?'selected':''?>>разделу</option>
+                </select>
+                    
+                </form>
+            </div>
+        </div>
+
+        <!--table vacansy-->
+        <div class="table_vacansy">
+
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <th scope="col"> Должность	        	          	  	   	          		        </th>
+                    <th scope="col">Подано</th>
+                    <th scope="col">Истекает</th>
+                    <th scope="col">Зарплата</th>
+
+                    <th scope="col">Раздел</th>
+                    <th scope="col">Статус</th>
+                </tr>
+                <?foreach($this->vacancies as $vacancy){?>
+                <tr>
+                    <td valign="top"><a href="#"><?=$vacancy['specialityName']?></a></td>
+                    <td valign="top"><?=$this->dateFromDb($vacancy['created_at'])?></td>
+                    <td valign="top"><?=$this->dateFromDb($vacancy['finishDate'])?></td>
+
+                    <td valign="top">
+                        <?=$vacancy['zarplata_ot']!=0?'от '.$vacancy['zarplata_ot']:''?>
+                        <?=$vacancy['zarplata_do']!=999999999?'до '.$vacancy['zarplata_do']:''?>
+                    </td>
+                    <td valign="top"><?=$vacancy['activityName']?> </td>
+                    <td valign="top">
+                        <?=$vacancy['active']?'<b class="opubl">Опубликовано</b>':'<b class="opubl" style="color:red">Не опубликовано</b>'?>
+                        <a href="/myvacancies/edit/vacancyid/<?=$vacancy['id']?>">Редактировать</a><br />
+                        <a href="/users/ru/userarea/deletevacancy/vacancyid/<?=$vacancy['id']?>">Удалить</a></td>
+
+                </tr>
+                <?}?>
+
+
+            </table>
+
+
+        </div>
+        <!--End table vacansy-->
+        <?} else {?>
+            <?=$this->message?>
+        
+        <?}?>
+        <br><br>
+        <div class="inner"><a class="button_red" href="/dobavit_vakansiyu"><span>Добавить вакансию</span></a></div>
+    </div>
+</div>
+

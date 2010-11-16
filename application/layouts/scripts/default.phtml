@@ -1,0 +1,18 @@
+<?=$this->layout()->render('admin/header');?>
+<?$title = $this->layout()->title; ?>
+<?$description = $this->layout()->description; ?>
+<?$action_title= $this->layout()->action_title; ?>
+  <div class="description_page">
+    <h1><?=isset($title) ? $title : 'Управление сайтом' ?></h1>
+    <?if (isset($description)){?>
+    	 <i><?=$description ?></i>
+    <?} ?>
+    <?if (isset($action_title)){?>
+    	 <h2><?=$action_title ?></h2>
+    <?} ?>
+   </div>
+  <div class="content">
+	<?=$this->layout()->content?> 
+  </div>
+  <br class="clear" />
+<?=$this->layout()->render('admin/footer');?>  

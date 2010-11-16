@@ -1,0 +1,48 @@
+<div id="left_block">
+	<div class="prava_dostupa">
+	<table id="news_table" cellspacing="0" cellpadding="0" border="0">
+								<tr class="head">
+									<th>Модуль</th>
+									<th>Заголовок</th>
+									<th>Описание</th>	
+									<th>Операции</th>
+																	
+								</tr>
+								<?php
+									foreach ($this->items as $key => $data){
+										
+										?>
+											<tr>														
+												<td class="main">
+													<a  href ="<?=$this->currentModule?>/edit/name/<?=$data['name']?>/" title="редактировать"><strong><?=$data['name']?></strong></a>
+												</td>
+												<td class="main" >
+													<?=$data['title'] ?>
+												</td>											
+												<td class="main" >
+													<?=$data['description'] ?>
+												</td>										
+												<td class="options">
+													<a href = '<?=$this->currentModule?>/edit/name/<?=$data['name']?>'><img src="/img/admin/redact.gif" /></a>
+													<a href = '<?=$this->currentModule?>/delete/name/<?=$data['name']?>'><img src="/img/admin/delete.gif"></a>
+												</td>
+											</tr>
+										<?php
+									}
+								?>
+							</table>
+		</div>					
+							
+</div>
+
+  <div id="right_block">
+      <div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>
+          <li><a href="<?=$this->currentModule?>/add/">Установить модуль</a></li>
+        </ul>        
+      </div>      
+  </div>
+
+
+				

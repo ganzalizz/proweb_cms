@@ -1,0 +1,236 @@
+<div id="left_block"  class="form_page">
+
+
+    <?php $item  = $this->item?>
+
+    <form method="post" id="edit_form" action="<?=$this->currentModule?>/view/<?=$this->item->id ? 'item_id/'.$this->item->id.'/' : ''?>" enctype="multipart/form-data"  >
+		
+        <?if ($this->ok==1) {?>
+        <p align="center"><font color="green"><b>Данные сохранены</b></font></p>
+        <?} ?>
+
+
+        <div class="content_block">
+            <table class="data">
+                <tr>
+                    <td class="caption">Номер заказа</td>
+                    <td><?=$item->id?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Статус</td>
+                    <td><?=$this->status_titles[$item->status]?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Менеджер</td>
+                    <td><?=$item->manager?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Ресторан</td>
+                    <td>
+                    	<?php echo $this->formSelect('restoran_num', $item->restoran_num,null, array(1=>'Ресторан 1', 2=>'Ресторан 2'))?>
+                    	
+                    </td>
+                </tr>
+                <?php if ($item->total_minutes>0) {?>
+                <tr>
+                    <td class="caption">Время выполненения заказа</td>
+                        <?php $h =floor($item->total_minutes/60); ?>
+                        <?php $m = $item->total_minutes - $h*60?>
+
+                    <td><?=$h ? $h."ч" : ''?> <?=$m ? $m."м" : ''?></td>
+                </tr>
+                <?php }?>
+                <?php if ((int)$item->added_time) {?>
+                <tr>
+                    <td class="caption">Заказ поступил</td>
+                    <td><?=$item->added_time?></td>
+                </tr>
+
+                <?php }?>
+                <?php if ((int)$item->processed_time) {?>
+                <tr>
+                    <td class="caption">Заказ принят</td>
+                    <td><?=$item->processed_time?></td>
+                </tr>
+                <?php }?>
+                <?php if ((int)$item->completed_time) {?>
+                <tr>
+                    <td class="caption">Заказ выполнен</td>
+                    <td><?=$item->completed_time?></td>
+                </tr>
+                <?php }?>
+
+
+
+            </table>
+
+
+
+
+        </div>
+        <div class="content_block">
+            <h3><strong>содержимое заказа</strong></h3>
+            <?php if ($item->discount) {?>
+            <p class="form_name">Скидка клиента <?=$item->discount?>%</p>
+            <?php }?>
+
+            <?if ($item->content && count($item->content)) {?>
+            <div class="prava_dostupa">
+                    <?$total = 0;?>
+                <table id="news_table" class="data" cellspacing="0" cellpadding="0" border="0" >
+                    <tr class="head">
+                        <th>Название</th>
+                        <th>Количество</th>
+                        <th>Цена за ед.</th>
+                        <th >Цена <?=$item->discount ? 'со скидкой' : ''?></th>
+                        <th >Удалить</th>
+                    </tr>
+                        <?php foreach ($item->content as $key=> $product) {?>
+                    <?$hasItems = (isset($product['order']['items']) && count($product['order']['items']));?>
+                    <tr >
+                        <td>
+                            <?if($hasItems){?>
+                                <a href="#" class="<?=$hasItems?'show_ingr':''?>" id="<?=$product['id_product']?>"><?=$product['title']?></a>
+                            <?}else{?>
+                                <?=$product['title']?>
+                            <?}?>
+                        </td>
+                        <td class="options"><?php echo $this->formText("products_count[$key]", $product['count'])?></td>
+                        <td class="options"><?=number_format($product['price'], 0, ',', ' ');?></td>
+                        <td class="options"><?=number_format($product['total_price']- $product['total_price']*$item->discount/100, 0, ',', ' ');?></td>
+                        <td class="options"><?php echo $this->formCheckbox('products_delete[]', $key)?></td>
+                                <?$total+=$product['total_price'];?>
+                    </tr>
+                            <?if($hasItems) {?>
+                    <tr id="<?=$product['id_product']?>_list" class="hide">
+                        <td colspan="5" class="ingr_list">
+                            <ul class="ingr_list_item_group">
+                                <li class="ingr_list_item">
+                                    <div class="ingr_title">Размер/Цена
+                                        <div class="ingr_price_right"><?=$product['order']['size']?>/<?=$product['order']['size_price']?> бр.</div>
+                                        <div class="ingr_dots"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="ingr_list_item_group">
+                                <li class="ingr_header">Ингредиенты</li>
+                                <li>
+                            <?foreach($product['order']['items'] as $group_title=>$group) {?>
+                                <ul class="ingr_list_item_header">
+                                    <li><?=$group_title?></li>
+                                <?foreach($group as $id_item=> $group_item) {?>
+                                    <li class="ingr_list_item margin_l_10px">
+                                        <div class="ingr_title"><?=$group_item['title']?>
+                                            <div class="ingr_price_right">
+                                            	<?=number_format($group_item['price']*((100-$item->discount)/100), 2, ',', ' ');?> бр.
+                                            	<?php echo $this->formCheckbox('to_del_items[]',$id_item, array('style'=>'width:auto;')  )?>
+                                            </div>
+                                            <div class="ingr_dots"></div>
+                                        </div>
+                                        <div class="clear" />
+                                    </li>
+                                <?}?>
+                                </ul>
+                            <?}?>
+                            </li>
+                            </ul>
+                        </td>
+                    </tr>
+                            <?}?>
+                        <?php }?>
+                    <tr>
+                            <?php if ($item->discount) {?>
+                        <td colspan="5" style="text-align: right;">Итого с учетом скидки: <?=number_format($total - $total*$item->discount/100, 0, ',', ' ');?> бр.</td>
+                            <?php }else {?>
+                        <td colspan="5" style="text-align: right;">Итого: <?=number_format($total, 2, ',', ' ');?> руб.</td>
+                            <?php }?>
+
+                    </tr>
+                </table>
+            </div>
+            <?php }?>
+
+        </div>
+        <div class="content_block">
+            <h3><strong>Данные клиента</strong></h3>
+            <table class="data">
+                <tr>
+                    <td class="caption">Имя</td>
+                    <td><?=$item->user_name?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Улица</td>
+                    <td><?=$item->user_street?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Дом</td>
+                    <td><?=$item->user_house?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Корпус</td>
+                    <td><?=$item->user_house_block?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Квартира</td>
+                    <td><?=$item->user_flat?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Телефон</td>
+                    <td><?=$item->user_phone?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Email</td>
+                    <td><?=$item->user_email?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Комментарий повару</td>
+                    <td><?=$item->cook_comment?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Комментарий курьеру</td>
+                    <td><?=$item->courier_comment?></td>
+                </tr>
+                <tr>
+                    <td class="caption">Отзыв</td>
+                    <td>
+                        <p><?=$item->comment_title?></p>
+                        <p><?=$item->comment_text?></p>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="content_block">
+            <h3><strong>Комментарий Менеджера</strong></h3>
+            <?=$this->formTextarea('manager_comment', $item->manager_comment, array('rows'=>'4'))?>
+        </div>
+
+        <div class="right">
+            <input type="hidden" value="0" name="no_change_status" id="no_change_status">
+            <button class="orange" type="submit" onclick="$('#no_change_status').val('1');"><span><em>Сохранить</em></span></button>
+
+
+            <?if ($item->status=='1') { // заказ добавлен в базу но не обработан менеджером?>
+            <button  type="submit"><span><em>Принять заказ</em></span></button>
+            <?php } elseif ($item->status=='2') {?>
+            <button  type="submit"><span><em>Заказ готов</em></span></button>
+            <?php } elseif ($item->status=='3') {?>
+            <button  type="submit"><span><em>В архив</em></span></button>
+            <?php }?>
+
+        </div>
+
+
+
+    </form>
+</div>
+<div id="right_block">
+    <div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>          
+            <li><a href="<?=$this->currentModule?>">Вернутся к списку</a></li>
+            <li><a href="<?=$this->currentModule?>/view/item_id/<?=$item->id?>/print/order" target="blank">Версия для печати</a></li>
+        </ul>        
+    </div>
+</div>							

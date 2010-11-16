@@ -1,0 +1,158 @@
+/* ALERTS OPTIONS */
+
+html, body {
+	height: 100%;
+}
+
+div#alert_overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #666;
+	display: none;
+	z-index: 1300;
+}
+
+* html div#alert_overlay {
+	position: absolute;
+	height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}
+
+div#alert_wrap {
+	text-align: left;
+}
+
+div#alert_outer {
+	position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1900;
+    padding: 18px 18px 33px 18px;
+    margin: 0;
+    overflow: hidden;
+    background: transparent;
+    display: none;
+}
+
+div#alert_inner {
+	position: relative;
+	width:300px;
+	height:120px;
+	border: 1px solid #bbb;
+	background: #fff;
+	padding: 8px;
+}
+
+div#alert_content {
+	margin: 0;
+	z-index: 2000;
+	position: absolute;
+	color: #000;
+	font: bold 12px Arial;
+}
+
+div#alert_content img{
+	float: left;
+}
+
+div#alert_content ul{
+	margin: 8px 8px 8px 74px;
+}
+div#alert_content ul li {
+	list-style: none;
+	
+}
+div#alert_close {
+	position: absolute;
+	top: -12px;
+	right: -15px;
+	height: 30px;
+	width: 30px;
+	background: url('/img/alerts/closebox.png') top left no-repeat;
+	cursor: pointer;
+	z-index: 2810;
+}
+
+div#alert_bg {
+	position: absolute;
+	top: 0; left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1700;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+	
+div.alert_bg {
+	position: absolute;
+	display: block;
+	z-index: 1700;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+div.alert_bg_n {
+	top: -18px;
+	width: 100%;
+	height: 18px;
+	background: transparent url('/img/alerts/shadow_n.png') repeat-x;
+}
+
+div.alert_bg_ne {
+	top: -18px;
+	right: -13px;
+	width: 13px;
+	height: 18px;
+	background: transparent url('/img/alerts/shadow_ne.png') no-repeat;
+}
+
+div.alert_bg_e {
+	right: -13px;
+	height: 100%;
+	width: 13px;
+	background: transparent url('/img/alerts/shadow_e.png') repeat-y;
+}
+
+div.alert_bg_se {
+	bottom: -18px;
+	right: -13px;
+	width: 13px;
+	height: 18px;
+	background: transparent url('/img/alerts/shadow_se.png') no-repeat;
+}
+
+div.alert_bg_s {
+	bottom: -18px;
+	width: 100%;
+	height: 18px;
+	background: transparent url('/img/alerts/shadow_s.png') repeat-x;
+	
+	
+}
+
+div.alert_bg_sw {
+	bottom: -18px;
+	left: -13px;
+	width: 13px;
+	height: 18px;
+	background: transparent url('/img/alerts/shadow_sw.png') no-repeat;
+}
+
+div.alert_bg_w {
+	left: -13px;
+	height: 100%;
+	width: 13px;
+	background: transparent url('/img/alerts/shadow_w.png') repeat-y;
+}
+
+div.alert_bg_nw {
+	top: -18px;
+	left: -13px;
+	width: 13px;
+	height: 18px;
+	background: transparent url('/img/alerts/shadow_nw.png') no-repeat;
+}

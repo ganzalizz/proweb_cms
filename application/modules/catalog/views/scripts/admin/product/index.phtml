@@ -1,0 +1,65 @@
+<div id="left_block">
+	<div class="prava_dostupa">
+	<form action="" method="post">
+		<table id="news_table" cellspacing="0" cellpadding="0" border="0">
+								<tr class="head">
+									<th>Название</th>
+									<th>Приоритет</th>									
+									<th><a href="" id="select_all"><small>все</small></a></th>									
+									<th>Операции</th>									
+								</tr>
+								<?php
+									foreach ($this->items as $key => $data){
+										
+										?>
+											<tr>	
+												<td >
+													<a  href ="<?=$this->currentModule?>/edit/id/<?=$data->id?>/id_division/<?=$this->id_division?>" title="редактировать"><strong><?=$data->title?></strong></a>
+													
+												</td >													
+												<td class="options" >													
+													<?=$this->formText("priority[$data->id]",$data->priority, array('size'=>5) )?>
+												</td>	
+												<td   width="20" align="center" style="text-align: center;">													
+													<?=$this->formCheckbox('products[]',$data->id, array('class'=>'check_item'))?>
+												</td>																					
+												<td class="options">													
+													<a href = '<?=$this->currentModule?>/active/id/<?=$data->id?>/id_division/<?=$this->id_division?>'><img src="/img/admin/active_<?=$data->active ?>.gif" /></a>
+													<a href = '<?=$this->currentModule?>/edit/id/<?=$data->id?>/id_division/<?=$this->id_division?>' title="редактировать"><img src="/img/admin/redact.gif" /></a>
+													<a href = '/catalog/<?=$this->lang?>/admin_product_options_enabled/index/id_product/<?=$data->id?>/' title="Опции"><img src="/img/admin/ico_edit.png" /></a>
+													<!-- <a href = '/catalog/<?=$this->lang?>/admin_product_images/index/id_product/<?=$data->id?>' title="Фоторафии"><img src="/img/admin/img.jpg" /></a> -->
+													<a href = '<?=$this->currentModule?>/delete/id/<?=$data->id?>/id_division/<?=$this->id_division?>' title="удалить"><img src="/img/admin/delete.gif" onclick="return confirm('Вы уверены?');"></a>
+												</td>
+											</tr>
+										<?php
+									}
+								?>
+							</table>							
+							 <div class="right">
+							   <strong>C отмеченными:</strong>
+						        
+						        <?=$this->formRadio('operation', null, null, $this->options , '&nbsp;');?>
+						        <button  type="submit"><span><em>Отправить</em></span></button>
+						      </div>
+		</form>					
+		</div>					
+							<div style="padding-left: 20px;padding-top: 10px;" >								
+								<?=$this->Pagination($this->currentModule.'/index/id_division/'.$this->id_division.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+							</div>
+</div>
+
+  <div id="right_block">
+      <div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>
+          <li><a href="<?=$this->currentModule?>/edit/id_division/<?=$this->id_division?>">Создать элемент</a></li>
+          <li><a href="/catalog/<?=$this->lang?>/admin_division/">Вернутсья к дереву разделов</a></li>
+          <?if ($this->id_division){?>
+          	<li><a href="/catalog/<?=$this->lang?>/admin_division/edit/id/<?=$this->id_division?>">Редактироавть раздел</a></li>
+          <?php }?>
+        </ul>        
+      </div>      
+  </div>
+
+
+				

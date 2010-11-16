@@ -1,0 +1,40 @@
+<?php $path = $this->layout()->page->path?>
+<script type="text/javascript" src="/js/jquery/messages_ru.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#submit_js").show("fast");
+        $("#forgot").validate();
+    });
+</script>
+
+<div class="content_text form_cont">
+    <?=$this->layout()->page->content?>
+    <?if ($this->ok==1) {?>
+        <p>Данные для входа на сайт отправлены на ваш Email</p>
+    <?}?>
+    <?if(isset($this->errors) && count($this->errors)){
+        foreach($this->errors as $error) {?>
+            <p><?=$error?></p>
+        <?}
+    }?>
+    <?if ($this->ok==0 ) {?>
+    <div class="form login-form">
+        <form id="forgot" name="forgot" method="post" action="">
+            <div class="item overflow f_l pad_b_4">
+                <div class="f_left width_70">Email:</div>
+                <div class="width_170">
+                        <?=$this->formText('email', $this->email, array('class'=>'login-input width_150 required email')) ?>
+                </div>
+            </div>
+            <div class="item overflow f_l pad_b_4"> 
+                <div class="forgot_password f_right">
+                    <span class="f_right">
+                        <a href="#" onclick="$('#forgot').submit(); return false;" class="button_send"><img src="/img/button_send.gif" alt="Отправить" /></a>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+        <?}?>
+</div>

@@ -1,0 +1,104 @@
+ 
+ <?$path = $this->layout()->page->path?>
+ <div class="center_col">
+        <div class="inner">
+            <div class="text_cont ser_block">
+            	<?php if (isset($this->division)){?>
+               		<?=$this->division->description?>
+               <?php } else {?>
+               		<?=$this->layout()->page->content?>
+               <?php }?>
+            </div>
+        </div>
+    </div>
+    
+    <?if(isset($this->childs)) {?>
+	   
+	        <div class="right_col">
+	        	<?php foreach ($this->childs as $child){?>
+        		    <div class="product_list overflow">
+        		    	<?php if ($child->img!=''){?>
+						<div class="photo"><a href="/<?=$path ?>/division/<?=$child->id?>"><img src="/pics/catalog/division/<?=$child->img?>" alt="<?=$child->name?>" /></a></div>
+						<?php } ?>
+						<div class="text"><a href="/<?=$path ?>/division/<?=$child->id?>" class="head_list"><?=$child->name?></a>
+						<?=$child->intro?>
+						</div>
+					</div>
+	        	
+	        	<?php } ?>
+ 				<?=$this->pagination('/'.$path.'/division/'.$this->id_division.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+	        </div>
+	   
+    <?}elseif (isset($this->products)){?>
+    
+    
+     <div class="right_col">
+    	<div class="inner">
+    		<div class="overflow">
+    		<?php foreach ($this->products as $product) {?>
+	    		
+					<div class="product">
+						<div class="photo">
+							<?if ($product->img!=''){?>
+							<a href="/<?=$path?>/product/<?=$product->id?>">
+								<img src="/thumb.php?img=/pics/catalog/product/<?=$product->img?>&w=130&h=115" alt="<?=$product->title?>" />
+							</a>
+							<?php }?>
+						</div>
+						<div class="link"><a href="/<?=$path?>/product/<?=$product->id?>"><?=$product->title?></a></div>
+						<?$options = $product->getOptions()?>
+							<?php if ($options){?>
+								
+								
+								<div class="slider" >
+									<?php foreach ($options as $option){?>
+										<?php foreach ($option['values'] as $value){?>
+											<div price="<?=$value['price']?>" product="<?=$product->id?>" id_price="<?=$value['id_price']?>" class="option"><?=$value['title']?></div>
+										<?php }?>
+									<?php }?>
+								
+									<div class="prev"></div>
+										<div class="container" ></div>
+									<div class="next"></div>
+									<div class="clear"></div>
+									<div class="price overflow">
+										<span class="option_price"></span>
+									
+										<div class="ico">
+											<?/*<a href="/<?=$path?>/product/<?=$product->id?>" title="Подробнее">
+												<img src="/img/next.gif" alt="Подробнее" />
+											</a> */?>
+											  <a href="#" id_product="<?=$product->id?>" id_price="" class="zakaz_btn" title="Добавить в корзину" >
+												<img src="/img/button-zakaz.gif" alt="Добавить в корзину" />
+											</a>
+										</div>
+									</div>	
+									
+								</div>
+								
+							<? } elseif ($product->price){?>
+								<div class="price overflow">
+									<span><?=$product->price?> <i>бр</i></span>
+								 
+									<div class="ico">
+										<?/*<a href="/<?=$path?>/product/<?=$product->id?>" title="Подробнее">
+											<img src="/img/next.gif" alt="Подробнее" />
+										</a>*/?> 
+										  <a href="#" id_product="<?=$product->id?>" class="zakaz_btn" title="Добавить в корзину" >
+											<img src="/img/button-zakaz.gif" alt="Добавить в корзину" />
+										</a>
+									</div>
+								</div>	
+							<?php }?>
+						
+					</div>
+				
+    		<?php }?>
+			</div>	
+			<?=$this->pagination('/'.$path.'/division/'.$this->id_division.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+		</div>	
+		</div>
+    <?php }?>
+	
+
+	

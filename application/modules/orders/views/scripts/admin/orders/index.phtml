@@ -1,0 +1,150 @@
+<link rel="stylesheet" href="/css/admin/jquery.fancybox-1.3.1.css" />
+<script type="text/javascript" src="/js/fancybox/jquery.fancybox-1.3.1.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+	$(".comment").fancybox({
+		//'titlePosition'		: 'inside',
+		'transitionIn'		: 'none',
+		'transitionOut'		: 'none'
+	});
+	
+});
+</script>
+
+<div id="left_block">
+	
+	<div class="prava_dostupa">
+	<table id="news_table" cellspacing="0" cellpadding="0" border="0">
+								<tr class="head">
+									<th>Номер заказа</th>
+									<th>Сумма</th>
+									<th>Менеджер</th>
+									<th>Клиент</th>
+									<th>Дата размещения</th>									
+									<th>Статус</th>									
+									<th>Операции</th>									
+								</tr>
+								<?php
+									foreach ($this->all as $key => $data){
+										$overdue = 0;
+										if ($data->total_minutes>0 && $this->order_time>$data->total_minutes) {
+											$overdue = 1;
+										}
+										?>
+											<tr class="<?=($data->status==1 && $overdue!=1) ? 'new_order' : ''?> <?=$overdue? ' overdue' : ''?>" >	
+												<td >
+													<a  href ="<?=$this->currentModule?>/view/item_id/<?=$data->id?>/" title="редактировать"><strong><?=$data->id?></strong></a>
+													
+												</td >													
+												<td class="options" >
+													<strong>														
+														<?=number_format($data->price, 0, ',', ' ');?>
+													</strong>
+												</td>																						
+												<td class="options" >
+													<strong><?=$data->manager ? $data->manager : '&nbsp;'?></strong>
+												</td>																						
+												<td  >
+													улица: <?php echo $data->user_street?><br>
+													дом: <?php echo $data->user_house?><br>
+													корпус: <?php echo $data->user_house_block?><br>
+													к-ра: <?php echo $data->user_flat?><br>
+													тел: <?php echo $data->user_phone?><br>
+													<strong><?=$data->user_name ? $data->user_name : ''?></strong>
+												</td>																						
+												<td class="options" >
+													<strong><?=$data->added_time?></strong>
+												</td>																						
+												<td class="options" >
+													<?=$this->status_titles[$data->status]?>
+												</td>																						
+												<td class="options">
+													
+													<a href = '<?=$this->currentModule?>/view/item_id/<?=$data->id?>'>Открыть</a>
+													
+													<?php if ($data->manager_comment!=''){?>
+														<p>&nbsp;</p>
+													 	<small><a class="comment" href="#comment_<?=$data->id?>" title="заказ № <?=$data->id?>">Комментарий</a></small>
+													 	<div style="display: none;">
+													 		<div id="comment_<?=$data->id?>" style="width:400px;height:150px;overflow:auto; font-size: 12px;">
+													 			<?php echo $data->manager_comment ?>
+													 		</div>
+													 	
+													 	</div>
+													<?php }?>
+													
+													
+												</td>
+											</tr>
+										<?php
+									}
+								?>
+							</table>
+		</div>					
+							<div style="padding-left: 20px;padding-top: 10px;" >								
+								<?=$this->Pagination($this->currentModule.'/index/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+							</div>
+</div>
+
+  <div id="right_block">
+      <?php /*?><div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>
+          <li><a href="<?=$this->currentModule?>/add/">Создать элемент</a></li>
+        </ul>        
+      </div> <?*/?> 
+      <div class="prava_dostupa" >
+		<form method="post" action="<?=$this->currentModule.'/index/'?>">
+			<table style="width: 100%; margin-left: 0px;" class="data" cellspacing="0" cellpadding="0" border="0">
+				<th colspan="2"> 
+					Поиск
+				</th>
+				<tr>
+					<td >
+						Поступил от
+						<?=$this->formText('search[date_from]',$this->date_from , array('class'=>'datepicker', 'size'=>'10'))?>
+					</td>
+					<td>
+						Поступил до
+						<?=$this->formText('search[date_to]',$this->date_to , array('class'=>'datepicker', 'size'=>'10') )?>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align: center;">
+					Менеджер<br>
+					<?=$this->formSelect('search[id_manager]', $this->id_manager, array('style'=>'width:100%'), $this->managers)?></td>
+					
+				</tr>
+				<tr>
+					<td>
+						Цена от
+						<?=$this->formText('search[price_from]',$this->price_from,array('style'=>'width:100%') )?>
+					</td>
+					<td>
+						Цена до
+						<?=$this->formText('search[price_to]',$this->price_to ,array('style'=>'width:100%') )?>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align: center;">
+						клиент
+						<?=$this->formText('search[user]', $this->user, array('style'=>'width:100%'))?>
+						 
+					</td>
+					
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align: center;">
+						<a href="<?=$this->currentModule.'/index/clear_search/1'?>">Очистить результаты</a>
+						<input type="submit" value="Найти">
+						
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>    
+  </div>
+
+
+				

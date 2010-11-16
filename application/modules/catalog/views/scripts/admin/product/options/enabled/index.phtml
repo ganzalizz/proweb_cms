@@ -1,0 +1,72 @@
+<div id="news_main_head">
+    <div class="news_head">
+        <div class="left_y"><!-- --></div>
+        <div class="news_headbg_longer"><!-- --></div>
+        <div class="right_y"><!-- --></div>
+    </div>
+    <div class="clear"><!-- --></div>
+    <div class="content">
+        <div class="prava_dostupa">
+            <div class="clear"><!-- --></div>
+            
+            <div id="left_block">
+            	
+                <table style="margin-top: 0px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        
+                        <th>Название</th>
+                        <th>Приоритет</th>                        
+                        <th>Операции </th>
+                    </tr>
+                    <?php
+                    foreach ($this->all as $key => $data) {
+                        ?>
+                    <tr>
+                        
+                        <td  >			
+                        	<strong><?=$data->title?></strong>										
+							
+						</td>
+                        <td class="options" >													
+							<?=$data->priority?>
+						</td>						
+                        <td class="options">           
+                            <a title="Перейти к значениям" href = '/catalog/<?=$this->lang?>/admin_product_options_values/index/id_product/<?=$this->id_product?>/id_option/<?=$data->id_option?>'><img src="/img/admin/folder.gif"></a>
+                            <a title="Редактировать" href = '<?=$this->currentModule?>/edit/id_product/<?=$this->id_product?>/id/<?=$data->id?>/<?=$this->id_page ? 'id_page/'.$this->id_page.'/' : '' ?>'><img src="/img/admin/redact.gif"></a>
+                            <a title="Удалить" onclick="return confirm('вы уверены?');"  href = '<?=$this->currentModule?>/delete/id_product/<?=$this->id_product?>/id/<?=$data->id?>/<?=$this->id_page ? 'id_page/'.$this->id_page.'/' : '' ?>'><img src="/img/admin/delete.gif"></a>
+                        </td>
+                    </tr>
+                        <?php
+                    }
+                    ?>
+                </table>  
+                
+				
+					      
+                <div style="padding-left: 20px;padding-top: 10px;" >
+                    <?$peoples = $this->id_page ? 'id_page/'.$this->id_page.'/' : ''?>
+                    <?=$this->Pagination($this->currentModule.'/index/id_product/'.$this->id_product.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+                </div>
+            </div>
+            <div id="right_block">
+                <div class="block_r gray">
+                    <h3><b>Действия</b></h3>
+                    <ul>
+                        
+                        <li><a href="<?=$this->currentModule?>/add/id_product/<?=$this->id_product?>/">Добавить</a></li>
+                        <li><a href="/catalog/<?=$this->lang?>/admin_product/edit/id/<?=$this->id_product?>/id_division/<?=$this->product->id_division?>">Вернуться к товару</a></li>
+                        <li><a href="/catalog/<?=$this->lang?>/admin_product/index/id_division/<?=$this->product->id_division?>">Вернуться к списку товаров</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"><!-- --></div>
+    <div class="redactor_footer">
+        <div class="left_y"><!-- --></div>
+        <div class="redactor_footerbg_longer">
+
+        </div>
+        <div class="right_y"><!-- --></div>
+    </div>
+</div>

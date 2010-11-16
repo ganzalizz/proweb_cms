@@ -1,0 +1,36 @@
+<?=$this->layout()->render('front/parts/header');?>
+
+<div class="width content overflow <?=isset($this->layout()->id_product) ? 'v_korzine' : ''?>">
+    <div class="left_col"><div class="inner">
+
+            <img src="/img/text_menu.gif" alt="Меню" />
+            <?=$this->MenuDate();?>
+            <div class="menu">
+            <?=$this->CatalogMenu($this->layout()->id_division)?>
+            </div>
+            <div class="search">
+                <div class="inner">
+                    <form action="/search">
+                        <h4>Лень лазить по меню?</h4>
+                        <div class="item">
+                            <input name="keywords" type="text" class="input" />
+                            <button type="submit" src="/img/ico_search.gif" class="button"></button>
+                        </div>
+                    </form> 
+                </div>
+            </div>
+        </div></div>
+    <div class="head_col">
+        <h1><?=$this->placeholder('h1')?></h1>
+        <?=$this->layout()->content;?>
+    </div>
+     
+   
+
+
+</div>
+<?=$this->layout()->render('front/parts/footer');?>
+
+</div>
+</body>
+</html>

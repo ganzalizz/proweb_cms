@@ -1,0 +1,7 @@
+<?php $menu = $this->menu['level1'] ?>
+<ul>
+    <?php foreach ($menu as $key => $data) { ?>
+    <li><a href="/<?=$data->path?>" title="<?=$data->name?>"><?=$data->name?></a></li>
+    <?php }?>
+        
+ </ul>

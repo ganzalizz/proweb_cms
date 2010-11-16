@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Proweb CMS login</title>
+
+<link rel="stylesheet" href="/css/admin/setup.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/css/admin/style.css" type="text/css" media="screen">
+
+<style>
+.login {
+        width: 100%;
+        margin-top: 200px;
+        font-size:10px;
+}
+.login div {
+        width:374px;
+        font-size:10px;
+}
+div.login1 {height:16px}
+div.login2 {background-color:#006f95; text-align:right; padding: 20px 50px;     width: 274px; line-height: 26px; color: #FFFFFF; font-size: 12px;}
+.login2 input {width:200px; height:20px; border:none;}
+</style>
+</head>
+<body><div id="minmax"></div>
+<div id="width">
+<div class="top"><div class="top_left"><div class="top_right"></div></div></div>
+<form class="intro_form" action="" method="POST">					
+<table class="login">
+	<tr>
+		<td align="center" valign="middle">			
+			<img src="/img/admin/logo.gif" alt="Proweb CMS" width="277" height="42" /><br>
+			<div class="login1"><img src="/img/admin/f1.gif"  width="374" height="16" /></div>
+			<div class="login2">
+				<p><?=$this->escape($this->error);?>&nbsp;</p>
+				Логин <input type="text" class="txt" name="login" id="login" /><br>
+				Пароль <input type="password" class="txt" name="pwd" id="pwd" /><br>
+				<input type="image" class="btn" src="/img/admin/dut-login.gif" name="enter" style="width:96px; height:21px; margin-top:5px" />
+			</div>
+			<div class="login1"><img src="/img/admin/f2.gif"  width="374" height="16" /></div>
+			Copyright © <?=date('Y');?> <a href="http://www.proweb.by">Proweb</a> <br />
+			Copyright © <?=date('Y');?> <a href="http://www.proweb.by">ProwebCMS</a>
+		
+	</td>
+	</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

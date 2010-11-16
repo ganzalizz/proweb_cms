@@ -1,0 +1,72 @@
+<div class="center_col"><div class="inner">
+<div class="text_cont">
+<div class="big_photo">
+	<?if ($this->product->img!=''){?>
+		<img 
+			src="/thumb.php?img=/pics/catalog/product/<?=$this->product->img?>&w=459&h=349" 
+			alt="<?=$this->product->title?>"
+		 />
+	<?php }?>
+</div>
+
+<?php if ($this->product->price) {?>
+	<div class="overflow item_tovar">
+		<div class="f_right">
+			<span class="price"><?=$this->product->price?> <i>рублей</i></span>
+			<div class="zakaz">
+				 <input name="zakaz" id_product="<?=$this->product->id?>" class="zakaz_btn" type="image" src="/img/button_zakaz.gif" />
+			</div>	
+		</div>					
+	</div>
+
+<?php }elseif (isset($this->options) && count($this->options)){?>
+	<?php foreach ($this->options as $option){?>
+		<?php if (isset($option['values'])){?>
+			<?php foreach ($option['values'] as $value){?>
+				<div class="overflow item_tovar">
+				<div class="f_left width_330">
+				<a name="<?=$value['id_price']?>"></a>
+				<b class="head"><?=$value['title']?></b>
+				<?=$value['description']?>				
+				</div>
+				<?php if ($value['price']!=''){?>
+					<div class="f_right width_120">
+						<span class="price"><?=$value['price']?> <i>рублей</i></span>
+						<div class="zakaz">
+							<input name="zakaz" id_product="<?=$this->product->id?>" id_price="<?=$value['id_price']?>" class="zakaz_btn" type="image" src="/img/button_zakaz.gif" />
+						</div>	
+					</div>
+				<?php }?>
+				 
+				
+				
+				
+								
+				</div>
+			<?php }?>
+		<?php }?>
+	<?php }?>
+
+<?php }?>
+
+
+
+
+</div>
+</div></div>
+<div class="right_col"><div class="inner">
+
+<h3>Состав блюда</h3>
+<div class="sostav">
+<?=$this->product->description?>
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>

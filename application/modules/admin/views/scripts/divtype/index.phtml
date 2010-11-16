@@ -1,0 +1,62 @@
+<div id="left_block">
+	<div class="prava_dostupa">
+	<table id="news_table" cellspacing="0" cellpadding="0" border="0">
+								<tr class="head">
+									<th>Название</th>
+									<th>Операции</th>
+								</tr>
+								<?php
+                                                                foreach($this->all as $key => $data)
+                                                                    {?>
+                                                                      <tr>
+									<td >
+                                                                            <strong><?=$data->title?></strong>
+                                                                        </td>
+                                                                        <td class="options">
+                                                                            <a href = "/admin/ru/modules/active/id/<?=$data->id?>">
+                                                                                <?if($data->active){?>
+                                                                                    <img src="/img/admin/active_1.gif" alt="" />
+                                                                                <?}else{?>
+                                                                                   <img src="/img/admin/active_0.gif" alt="" />
+                                                                                <?}?>
+                                                                            </a>
+                                                                            <a href = '<?=$this->currentModule?>/edit/mod/<?=$data->name?>'><img src="/img/admin/plus_krug.gif" alt="" /></a>
+                                                                        </td>
+                                                                      </tr>
+
+                                                                          <?php $div = SiteDivisionsType::getInstance()->getDivisions($data->name);
+                                                                          foreach($div as $key => $divisions)
+                                                                              {?>
+                                                                      <tr>
+                                                                      <td class="category_child">
+                                                                          -- <strong><a  href ="<?=$this->currentModule?>/edit/id/<?=$divisions->id?>/" title="редактировать"><?=$divisions->title?></a></strong>
+                                                                      </td>
+                                                                      <td class="options">
+                                                                          <a href = '<?=$this->currentModule?>/active/id/<?=$divisions->id?>' title="Включить/Выключить"><img src="/img/admin/active_<?=$divisions->active ?>.gif" alt="" /></a>
+                                                                      <a href = '<?=$this->currentModule?>/edit/id/<?=$divisions->id?>' title="Изменить"><img src="/img/admin/redact.gif" alt="" /></a>
+                                                                      <a href = '<?=$this->currentModule?>/delete/id/<?=$divisions->id?>' title="Удалить"><img src="/img/admin/delete.gif" alt="" onclick="return confirm('Вы уверены?');" /></a>
+                                                                      </td>
+                                                                      </tr>
+                                                                           <?}?>
+
+                                                                    <?php
+                                                                    }?>
+
+								</table>
+		</div>
+							<div style="padding-left: 20px;padding-top: 10px;" >
+								<?=$this->Pagination($this->currentModule.'/index/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+							</div>
+</div>
+
+  <div id="right_block">
+      <div class="block_r gray">
+        <h3><b>Действия</b></h3>
+        <ul>
+          <li><a href="<?=$this->currentModule?>/edit/">Создать элемент</a></li>
+        </ul>
+      </div>
+  </div>
+
+
+

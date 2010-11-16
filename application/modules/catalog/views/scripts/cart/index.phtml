@@ -1,0 +1,169 @@
+
+
+<div class="head_col">
+<div class="text_cont">
+<?php if (isset($this->ok)){?>
+	<p>Ваш заказ успешно размещен. В течении 10-15 минут наш менеджер свяжется с вами.</p>
+<?php }?>
+<?php if (count($this->products)){?>
+
+	<script type="text/javascript">
+	<!--
+
+	// this one requires the value to be the same as the first parameter
+	$.validator.methods.equal = function(value, element, param) {
+		return value == param;
+	};
+	
+	$(document).ready(function() {	
+		$("#order").validate({
+			errorElement: "p",
+			rules : {
+				captcha: {
+					equal: eval($("#cap_text").text())
+				}
+			},
+			messages: {
+				captcha: "Неправильно подсчитано выражение"	
+			}	
+		});
+	});
+	//-->
+	</script>
+	<div id="discount" style="display: none;"><?=(int)$this->order->discount?></div>
+	<table cellpadding="0" cellspacing="0" width="100%" class="cart">
+	  <tr>
+	    <th>№</th>
+	    <th>Название товара	</th>
+	    <th>Кол-во</th>
+	    <th>Цена (руб.)</th>
+	    <th>Итого (руб.)</th>
+	    <th></th>
+	  </tr>
+	  <?$index = 1;
+	  	  $total = 0;	
+	  	?>
+	  <?php foreach ($this->products as $id_product=> $product){?>
+	  	
+	  	<tr class="product_row" id="row_<?=$index?>">
+		    <td class="index"><?=$index?>.</td>
+		    <td>
+                        <?
+                            if (substr_count($product['id_product'], "constr_")!=0) {
+                                $href = "/dishmake/dish/".$product['id_product'];
+                            }
+                            else {
+                                $href = "/".$this->catalog_path."/product/".$product['id_product'];
+                                $href .= $product['id_price'] ? '#'.$product['id_price'] : '';
+                            }
+                        ?>
+                        <a href="<?=$href?>">
+                            <?=$product['title']?>
+                        </a>
+                    </td>
+		    <td class="align_center"><input name="count[<?=$id_product?>]" type="text" class="input" id_product="<?=$id_product?>" value="<?=$product['count']?>" /></td>
+		    <td><span class="price pr_price"><?=$product['price']?></span></td>
+		    <td><span class="price total_price"><?=$product['total_price']?></span></td>
+		    <td class="align_center"><a href="#" delete="<?=$id_product?>" row="row_<?=$index?>"><img src="/img/unchecked.gif"></a></td>
+		  </tr>
+		  
+		  <?php $index++; $total = $total+$product['total_price'];?>
+	  
+	  <?php }?>
+	  <tr>
+	  <?php if ($this->order->discount>0){?>
+	  <td colspan="6" class="itogo">
+	  	Ваша скидка: <?=$this->order->discount?>%. Итого с учетом скидки: <span class="big_price" ><span id="total"><?=$total - ceil($total*$this->order->discount/100)?></span> <i>рублей</i></span>
+	  </td>
+	  
+	  <?php } else{?>
+	    <td colspan="6" class="itogo">Итого: <span class="big_price" ><span id="total"><?=$total?></span> <i>рублей</i></span></td>
+	  <?php }?>  
+	  </tr>
+	</table>  
+
+
+
+
+
+<div class="button_cart"><input name="" type="image" src="/img/button_pereschet.gif" /> <input name="" type="image" src="/img/button_clear.gif" onclick="location.href='/cart/act/clear';"/> <input name="" type="image" src="/img/button_next_pokupki.gif" /></div>
+<?php $order = $this->order?>
+<h3>Контактная информация</h3>
+	
+
+<form action="" method="post" id="order">
+<div class="overflow pad_left_50">
+	<?php if (isset($this->errors)) {?>
+    	<div class="errors">
+       		<p>Ошибка</p>
+	        	<?php foreach ($this->errors as $key=>$error) {?>
+	        		<p><strong><?=$key?></strong> : <?=$error?></p>
+	            <?php }?>
+
+    	</div>
+            <?php }?>
+<div class="f_left width_570">
+<div class="form" >
+	
+	Символом <span class="red_star">*</span> отмечены поля, обязательные для заполнения
+	<div class="overflow item">
+	<div class="f_left width_155">Ваше имя <span class="red_star">*</span></div>
+	<div class="f_right width_360"><input name="user_name" value="<?=$order->user_name?>" type="text" class="input required" /></div>
+	</div>
+	
+	
+	<div class="overflow item">
+	<div class="f_left width_155">Улица <span class="red_star">*</span></div>
+	<div class="f_right width_360"><input name="user_street" type="text" value="<?=$order->user_street?>" class="input required" /></div>
+	</div>
+
+        <div class="overflow item">
+	<div class="f_left width_155">Дом <span class="red_star">*</span></div>
+	<div class="f_right width_360"><input name="user_house" type="text" value="<?=$order->user_house?>" class="input required" /></div>
+	</div>
+
+        <div class="overflow item">
+	<div class="f_left width_155">Корпус</div>
+	<div class="f_right width_360"><input name="user_house_block" type="text" value="<?=$order->user_house_block?>" class="input" /></div>
+	</div>
+
+        <div class="overflow item">
+	<div class="f_left width_155">Квартира</div>
+	<div class="f_right width_360"><input name="user_flat" type="text" value="<?=$order->user_flat?>" class="input" /></div>
+	</div>
+
+	<div class="overflow item">
+	<div class="f_left width_155">Телефон <span class="red_star">*</span></div>
+	<div class="f_right width_360"><input name="user_phone" type="text" value="<?=$order->user_phone?>" class="input required" /></div>
+	</div>
+		
+	<div class="overflow item">
+	<div class="f_left width_155">E-mail</div>
+	<div class="f_right width_360"><input name="user_email" type="text" value="<?=$order->user_email?>" class="input email" /></div>
+	</div>	
+	
+	<div class="overflow item">
+	<div class="f_left width_155">Коментарий для
+	повара</div>
+	<div class="f_right width_360"><textarea name="cook_comment" cols="" rows="" class="textarea"><?=$order->cook_comment?></textarea></div>
+	</div>
+	
+	<div class="overflow item">
+	<div class="f_left width_155">Коментарий для
+	курьера (код домофона, этаж)</div>
+	<div class="f_right width_360"><textarea name="courier_comment" cols="" rows="" class="textarea"><?=$order->courier_comment?></textarea></div>
+	</div>
+	
+	
+	<div class="item button_send"><input name="" onclick="$('#order').submit();" type="image" src="/img/button_send.gif" /></div>
+	</div>
+	</div>
+	<div class="f_right width_160 text_b3a58f pad_top_35">Коментарии к оформлению заказа, замечания, рекомендации и прочая текстовка...</div>
+	
+	</div>
+</form>
+<?php } elseif(!isset($this->ok)) {?>
+	<p>Ваша корзина пуста</p>
+<?php }?>
+</div>
+</div>

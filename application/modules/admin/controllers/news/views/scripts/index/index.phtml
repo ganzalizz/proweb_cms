@@ -1,0 +1,11 @@
+<!--навигация-->
+<?if (isset($this->novost)){?>
+		<?//=$this->partial('sitenav.phtml', array('page'=>$this->page, 'novost'=>$this->novost))?>
+<?} else{?>
+		<?//=$this->partial('sitenav.phtml', array('page'=>$this->page))?>
+	 <?}?>
+<!--/навигация-->
+<?if ($this->page->template!='main' && $this->page->template!='catalog'):?>
+<h1><?=$this->options->h1?></h1>
+<?endif;?>
+<?=$this->content;?>

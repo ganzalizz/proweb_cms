@@ -1,0 +1,113 @@
+    <?php if (isset($this->ok)) {?>
+        <p>Ваш заказ добавлен <a href="/cart">в корзину</a>.</p>
+            <?php }?>
+    <div class="text_cont">
+        
+        <?php if (count($this->order->content)) {?>
+
+        <div id="discount" style="display: none;"><?=(int)$this->order->discount?></div>
+        <table cellpadding="0" cellspacing="0" width="100%" class="cart ordershistory">
+            <tr>
+                <th>№</th>
+                <th>Название товара	</th>
+                <th>Кол-во</th>
+                <th>Цена (руб.)</th>
+                <th>Итого (руб.)</th>
+            </tr>
+                <?$index = 1;
+                $total = 0;
+                ?>
+                <?php foreach ($this->order->content as $id_product=> $product) {?>
+
+            <tr id="row_<?=$index?>">
+                <td>
+                    <span class="index">
+                        <?=$index++?>.
+                    </span>
+                </td>
+                <td>
+                            <?
+                            if (substr_count($product['id_product'], "constr_")!=0) {
+                                $href = "/dishmake/dish/".$product['id_product'];
+                            }
+                            else {
+                                $href = "/katalog/product/".$product['id_product'];
+                                $href .= $product['id_price'] ? '#'.$product['id_price'] : '';
+                            }
+                            ?>
+                    <span class="link"><a href="<?=$href?>">
+                                <?=$product['title']?>
+                    </a></span>
+                </td>
+                <td>
+                    <span class="index"><?=$product['count']?></span>
+                </td>
+                <td><span class="index"><?=$product['price']?></span></td>
+                <td><span class="index"><?=$product['total_price']?></span></td>
+            </tr>
+
+                    <?php
+                    $total = $total+$product['total_price'];?>
+
+                    <?php }?>
+            <tr>
+                    <?php if ($this->order->discount>0) {?>
+                <td colspan="6" class="itogo">
+	  	Ваша скидка: <?=$this->order->discount?>%. Итого с учетом скидки: <span class="big_price" ><span id="total"><?=$total - ceil($total*$this->order->discount/100)?></span> <i>рублей</i></span>
+                </td>
+
+                        <?php } else {?>
+                <td colspan="6" class="itogo">Итого: <span class="big_price" ><span id="total"><?=$total?></span> <i>рублей</i></span></td>
+                        <?php }?>
+            </tr>
+        </table>
+        <div class="button_orderdetails">
+            <form action="" method="post" id="order">
+                <input name="" type="image" src="/img/button_repeat.gif" />
+                <input type="hidden" value="repeat" name="repeat">
+            </form>
+        </div>
+            <?php $order = $this->order?>
+        
+
+            <a name="comment"></a>
+            <?if($this->order->id_manager){?>
+        <?if(!trim($this->order->comment_text)){?>
+        <h3 >Ваш отзыв по данному заказу</h3>
+        <form action="" method="post" id="order" class="order_comment_form">
+            <div class="overflow pad_left_50">
+                <div class="f_left width_570">
+                    
+                    <div class="form" >
+
+                        <div class="overflow item">
+                            <div class="f_left width_155">Тема</div>
+                            <div class="f_right width_360"><input name="comment_title" type="text" value="" class="input required email" /></div>
+                        </div>
+                        <div class="overflow item">
+                            <div class="f_left width_155">Отзыв</div>
+                            <div class="f_right width_360"><textarea name="comment_text" cols="" rows="" class="textarea"></textarea></div>
+                        </div>
+                        <div class="item button_send"><input name="" onclick="$('#order').submit();" type="image" src="/img/button_send.gif" /></div>
+                    </div>
+                </div>
+                <div class="f_right width_160 text_b3a58f"><?=$this->getBlockContent('orderdetails_comment')?></div>
+
+            </div>
+        </form>
+        <?} else {?>
+        <div class="f_left width_570">
+            <h3>Ваш отзыв:</h3>
+            <?if(trim($this->order->comment_title)){?>
+                <p class="comment_title"><?=$this->order->comment_title?></p>
+            <?}?>
+            <p class="comment_text"><?=$this->order->comment_text?></p>
+            <p class ="comment_user"><?=$this->user->first_name?> <?=$this->user->last_name?></p>
+        </div>
+        <div class="f_right width_160 text_b3a58f"><?=$this->getBlockContent('orderdetails_comment')?></div>
+        <?}?>
+        <?}?>
+            <?php } elseif(!isset($this->ok)) {?>
+        <a href="/ordershistory">Назад</a>
+            <?php }?>
+    </div>

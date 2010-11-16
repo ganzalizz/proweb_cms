@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+ <title><?=$this->placeholder('title');?></title>
+ <meta name="keywords" content="<?=$this->placeholder('keywords');?>" />
+ <meta name="description" content="<?=$this->placeholder('descriptions');?>" />
+<!-- CSS -->
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="shortcut icon" href="favicon.ico" />
+<!--[if IE 6]>
+<link rel="stylesheet" type="text/css" href="css/ie6.css"/>
+<script  language="JavaScript" src="js/png.js" type="text/JavaScript"></script>
+
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="css/ie.css"/>
+<![endif]-->
+<!-- Javascript -->
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+</head>
+<body>
+<div class="width">
+<div class="top_bg">
+<div class="top_block">
+<?=$this->getBlockContent('zamanuha_main') ?>    
+<div class="icons"><i class="home_i"><a href="/">главная</a></i> <i class="sitemap_i"><a href="#">карта сайта</a></i> <i class="contact_i"> <a href="#">обратная связь</a></i></div>
+</div>
+
+<div class="header">
+<div class="logo">
+<div class="img_logo"><a href="#"><img src="/img/logo.gif" alt="" width="259" height="51" /></a></div>
+<span class="text_logo">Лёгкий старт для вашего бизнеса</span>
+</div>
+
+<div class="top_menu">
+  <?=$this->Menu('horizontal_menu', 'ru', $this->layout()->id_object);?> 
+  </div>
+
+</div>

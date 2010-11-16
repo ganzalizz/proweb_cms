@@ -1,0 +1,34 @@
+<table cellpadding="0" cellspacing="0" width="100%" class="cart ordershistory">
+  <tr>
+    <th>Заказ</th>
+    <th>Дата</th>
+    <th>Время</th>
+    <th>Стоимость (руб.)</th>
+    <th>Статус</th>
+    <th>Функции</th>
+  </tr>
+  <?foreach ($this->orders as $order){?>
+      <tr>        
+        <td><span class="link"><a href="/orderdetails/order_id/<?=$order->id?>"><?=$order->id?></a></span></td>
+        <td><span class="index"><?=$order->added_date?></span></td>
+        <td><span class="index"><?=$order->added_time?></span></td>
+        <td><span class="price"><?=$order->price?></span></td>
+        <td><span class="index"><?=$this->statuses[(int)$order->status]?></span></td>
+        <td>
+            <span class="price">                
+                <a href="/orderdetails/order_id/<?=$order->id?>"><img src="/img/order-look.gif" /></a>
+                <?if($order->id_manager){?>
+                <a href="/orderdetails/order_id/<?=$order->id?>#comment">                
+                <?if(trim($order->comment_text)){?>
+                    <img src="/img/button_order_look.gif" />
+                <?}else{?>
+                    <img type="image" src="/img/button_order_remake.gif" />
+                <?}?>
+                </a>
+                <?}?>
+            </span>
+        </td>
+      </tr>
+  <?}?>
+</table>
+

@@ -1,0 +1,84 @@
+<?php
+$this->parent_name = "<a href='$this->currentModul/' class='blue'>Инфоблок</a>";
+$this->child_name = "Страницы";
+$this->name = "Модуль управления содержимым сайта";
+?>
+<div id="top_menu_z">
+						<table cellspacing="0" cellpadding="0" border="0" class="head_change_table">
+						<tr>
+							<td class="active">Страницы</td>
+							
+							<td class="normal"><a href="<?=$this->currentModul?>/addp/">Добавить</a></td> 
+						</tr>
+					</table>
+					</div>
+					<div id="news_main_head">
+						<div class="news_head">
+							<div class="left_y"><!-- --></div>
+							<div class="news_headbg_longer"><!-- --></div>
+							<div class="right_y"><!-- --></div>
+						</div>
+						<div class="clear"><!-- --></div>
+						<div id="redactor_content">
+							
+							<div class="clear"><!-- --></div>
+							<table id="news_table" cellspacing="0" cellpadding="0" border="0">
+								<tr class="head">
+									<td>Название</td>
+									<td>Документы</td>
+									<td>Операции</td>
+								</tr>
+								<?php
+									foreach ($this->all as $key => $data){
+										if($data->published == '0')
+											continue;
+										?>
+											<tr>
+												<td class="le_config">
+													<a href ='/admin/<?=$this->lang?>/news/edit/id/<?=$data->id?>/' title="редактировать"><strong><?=$data->name?></strong></a>
+													<br />
+													<?=$data->pubDate?>
+												</td>
+												<td class="le_config">
+													<a href ='/admin/<?=$this->lang?>/news/items/pageid/<?=$data->id?>/' title="Перейти к документам"><strong>Документы</strong></a>
+												</td>
+												<td class="del_config">
+													<?php
+													if($data->published == 1)
+													{
+														?>
+															<a href = '/admin/<?=$this->lang?>/news/unactivate/id/<?=$data->id?>/' title="Скрыть"><img src="/images/krug.gif"></a>
+														<?php
+													}
+													else
+													{
+														?>
+															<a href = '/admin/<?=$this->lang?>/news/activate/id/<?=$data->id?>/' title="Опубликовать"><img src="/images/black_krug.gif"></a>
+														<?php
+													}
+													?>&nbsp;		
+													<a href = '/admin/<?=$this->lang?>/news/edit/id/<?=$data->id?>/' title="Редактировать"><img src="/images/redact.gif" /></a>
+													&nbsp;
+													<?if ($data->deletable){ ?>
+													<a href = '/admin/<?=$this->lang?>/news/deletep/id/<?=$data->id?>/' title="Удалить"><img src="/images/delete.gif"></a>
+													<?} else{ ?>
+														&nbsp;&nbsp;&nbsp;
+													<?} ?>
+												</td>
+											</tr>
+										<?php
+									}
+								?>
+							</table>
+							
+						</div>
+						<div class="clear"><!-- --></div>
+						<div class="redactor_footer">
+							<div class="left_y"><!-- --></div>
+							<div class="redactor_footerbg_longer">
+								
+							</div>
+							<div class="right_y"><!-- --></div>
+						</div>
+					</div>
+				

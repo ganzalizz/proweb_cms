@@ -1,0 +1,78 @@
+<script>
+    var delid;
+    var pageid
+
+    function go(id,page){
+
+        delid=id;
+        pageid = page;
+
+        var sure = confirm("Вы действительно хотите удалить страницу?");
+        if (sure) {
+            window.location = "<?=$this->currentModule?>/delete/id/"+delid+"/id_page/"+"<?=$this->id_page?>";
+            alert("Страница удалена");
+        }
+    }
+</script>
+
+
+<div id="company_main_head">
+    <div class="clear"><!-- --></div>
+    <div id="content">
+
+        <div class="clear"><!-- --></div>
+        <div id="left_block">
+            <div class="prava_dostupa">
+                <table style="margin-top: 0px; width: 750;" border="0" cellspacing="0" cellpadding="0">
+                    <tr class="head">
+                        <th>
+                            <b>Название</b>
+                        </th>
+                        <th style="width:150px;">
+                            <b>Приоритет</b>
+                        </th>
+                        <th style="width:150px;">
+                            <b>Операции</b>
+                        </th>
+                    </tr>
+
+                    <? foreach($this->all as $item) {?>
+                    <tr align="left">
+                        <td>
+                            <a href="<?=$this->currentModule?>/edit/type_id/<?=$this->type_id?>/id/<?=$item['id']?>" title="редактировать">
+                                <strong>
+                                        <?=$item['title']?>
+                                </strong>
+                            </a>
+                        </td>
+                        <td>
+                            <?=$item['priority']?>
+                        </td>
+                        <td>
+                            &nbsp;<a href="/constructor/ru/admin_groups_items/index/type_id/<?=$this->type_id?>/group_id/<?=$item['id']?>" title="Перейти к ингредиентам">Ингредиенты</a>&nbsp;
+                            &nbsp;<a href="<?=$this->currentModule?>/edit/type_id/<?=$this->type_id?>/id/<?=$item['id']?>" title="редактировать"><img src="/img/admin/redact.gif"></a>&nbsp;
+                            <a href="<?=$this->currentModule?>/active/type_id/<?=$this->type_id?>/id/<?=$item['id']?>" title="<?=$item['title']?>"><img src="/img/admin/active_<?=$item['active']?>.gif" /></a>&nbsp;
+                                <a href = '<?=$this->currentModule?>/delete/id/<?=$item->id?>/type_id/<?=$this->type_id?>' title="Удалить"><img src="/img/admin/delete.gif" onclick="return confirm('Вы уверены?');"></a>
+                                &nbsp;</td>
+                    </tr>
+                        <?}?>
+
+                </table>
+            </div>
+            <div>Всего <?=$this->total?></div>
+            <?=$this->pagination($this->currentModule.'/index/id_page/'.$this->id_page.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+
+            <!-- / Навигация по страницам -->
+        </div>
+        <div id="right_block">
+            <div class="block_r gray">
+                <h3><b>Действия</b></h3>
+                <ul>
+                    <li class="active"><a href="/constructor/ru/admin_types/">Типы блюд</a></li>
+                    <li><a href="<?=$this->currentModule?>/edit/type_id/<?=$this->type_id?>/">Добавить</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>

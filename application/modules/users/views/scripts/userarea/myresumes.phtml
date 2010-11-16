@@ -1,0 +1,73 @@
+<h1 class="head_content"><?=$this->h1?></h1>
+<div class="main_vacansy">
+    <div class="content_text">
+        <?if($this->resumeCount){?>
+        <div class="overflow">
+            <div class="f_left">
+                <?=$this->resumeCount<$this->onpage?$this->resumeCount:$this->onpage?> из <?=$this->resumeCount?> вакансий
+            </div>
+
+            <div class="f_right">
+                
+                <form id="sortuserresumes" action="" method="post" enctype="multipart/form-data">
+                    <a href="#" onclick="$('#sortuserresumes').submit(); return false;" class="button_red add_company"><span>Сортировать по </span></a>
+                    <noscript>
+                        <input type="submit" value="Сортировать по">
+                    </noscript>
+                <select name="sort" class="width_170">
+                    <option value="created_at">дате</option>
+                    <option value="speciality" <?=$this->order=='speciality'?'selected':''?>>специальности</option>
+                    <option value="activity" <?=$this->order=='activity'?'selected':''?>>разделу</option>
+                </select>
+                    
+                </form>
+            </div>
+        </div>
+
+        <!--table vacansy-->
+        <div class="table_vacansy">
+
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <th scope="col"> Должность	        	          	  	   	          		        </th>
+                    <th scope="col">Подано</th>
+                    <th scope="col">Истекает</th>
+                    <th scope="col">Зарплата</th>
+
+                    <th scope="col">Раздел</th>
+                    <th scope="col">Статус</th>
+                </tr>
+                <?foreach($this->resumes as $resume){?>
+                <tr>
+                    <td valign="top"><a href="#"><?=$resume['specialityName']?></a></td>
+                    <td valign="top"><?=$this->dateFromDb($resume['created_at'])?></td>
+                    <td valign="top"><?=$this->dateFromDb($resume['finishDate'])?></td>
+
+                    <td valign="top">
+                        <?=$resume['zarplata_ot']!=0?'от '.$resume['zarplata_ot']:''?>
+                        <?=$resume['zarplata_do']!=999999999?'до '.$resume['zarplata_do']:''?>
+                    </td>
+                    <td valign="top"><?=$resume['activityName']?> </td>
+                    <td valign="top">
+                        <?=$resume['active']?'<b class="opubl">Опубликовано</b>':'<b class="opubl" style="color:red">Не опубликовано</b>'?>
+                        
+                        <a href="/myresumes/edit/resumeid/<?=$resume['id']?>">Редактировать</a><br />
+                        <a href="/users/ru/userarea/deleteresume/resumeid/<?=$resume['id']?>">Удалить</a></td>
+
+                </tr>
+                <?}?>
+
+                
+            </table>
+
+
+        </div>
+        <!--End table vacansy-->
+        <?} else {?>
+            <?=$this->message?>
+        
+        <?}?>
+        <br><br>
+        <div class="inner"><a class="button_red" href="/dobavit_rezyume"><span>Добавить резюме</span></a></div>
+    </div>
+</div>
