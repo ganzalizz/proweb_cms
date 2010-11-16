@@ -132,7 +132,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     private static function getConfigSection()
     {
-        return $config = new Zend_Config_Ini('/../configuration/configuration.ini', 'config');
+       // return $config = new Zend_Config_Ini('/../configuration/configuration.ini', 'config');
     }
 
     /**
