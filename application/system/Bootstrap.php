@@ -1,6 +1,4 @@
 <?php
-//require_once '/../library/Zend/Application/Bootstrap/Bootstrap.php';
-//require_once '/../library/Zend/Application/Bootstrap/BootstrapAbstract.php';
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {                      
 
@@ -123,15 +121,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
     } 
     
-    /**
-     * 
-     */
-    private static function getConfigSection()
-    {
-       // return $config = new Zend_Config_Ini('/../configuration/configuration.ini', 'config');
-    }
-
-    /**
+   /**
      * Нахождение директорий всех существующих модулей
      *
      * @return array
