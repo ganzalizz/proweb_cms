@@ -1,7 +1,10 @@
 <?php
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {                      
-
+	/**
+	 * @todo вынести пути к хелперам и 
+	 * скриптам хелперов в плагин
+	 */
     public function init() {
         Bootstrap::defineDirectoriesConstants();
         Bootstrap::setIncludePath(array(
@@ -18,66 +21,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ));
        require_once(ROOT_DIR . 'application/library/Zend/Loader.php');
        require_once(ROOT_DIR . 'application/library/Zend/Loader/Autoloader.php');
+       
+       /**
+        * временный вариант для того чтоб работала адинка
+        * @todo в дальнейшем предлагаю перенести этот контроллер в EXT
+        */
+       require_once (ROOT_DIR.'application/common/controllers/MainAdminController.php');
         Zend_Loader_Autoloader::getInstance()->setFallbackAutoloader(true);
         Bootstrap::registerGlobals(array(
             'helpersPaths' => Bootstrap::getAllHelpersDirectories(),
-            'scriptsPaths' => array_merge(array('.', DIR_LAYOUTS), Bootstrap::getAllHelpersScriptsDirectories()),
-            'config' => Bootstrap::getConfigSection()
+            'scriptsPaths' => array_merge(array('.', DIR_LAYOUTS), Bootstrap::getAllHelpersScriptsDirectories())           
         ));
-//        
-//        Loader::loadCommon('controllers/MainAdminController');
-//        include_once DIR_COMMON.'Functions.php';
-        
         
              
     }
       
 	
 
-//     protected function _initZFDebug()
-//    {
-//        
-//        $autoloader = Zend_Loader_Autoloader::getInstance();
-//        $autoloader->registerNamespace('ZFDebug');
-//
-//        $options = array(
-//            'plugins' => array(
-//                'Variables',
-//                'File' => array('base_path' => 'd:\\Web\\WWW\\EasyStart\\application'),
-//                'Memory',
-//                'Time',
-//                'Registry',
-//                'Exception',
-//                'Html',
-//            ),
-//            'image_path' => 'd:\\Web\\WWW\\EasyStart\\images\\debugbar',
-//            'jquery_path' => 'd:\\Web\\WWW\\EasyStart\\js\\jquery\\jquery.js'
-//            
-//        );
-//         
-//        // Настройка плагина для адаптера базы данных
-//        if ($this->hasPluginResource('db')) {
-//            $this->bootstrap('db');
-//            $db = $this->getPluginResource('db')->getDbAdapter();
-//            $options['plugins']['Database']['adapter'] = $db;
-//        }
-//
-//        // Настройка плагина для кеша
-//        if ($this->hasPluginResource('cache')) {
-//            $this->bootstrap('cache');
-//            $cache = $this-getPluginResource('cache')->getDbAdapter();
-//            $options['plugins']['Cache']['backend'] = $cache->getBackend();
-//        }
-//
-//        $debug = new ZFDebug_Controller_Plugin_Debug($options);
-//       
-//        $this->bootstrap('frontController');
-//        $frontController = $this->getResource('frontController');
-//        $frontController->registerPlugin($debug);
-//      
-//        
-//    }
-//    
        
     /**
      * Определение констант с путями к используемым директориям
@@ -189,54 +149,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     
     public static function _initStart() {
         
-                Bootstrap::init(); 
-		Zend_Session::start();
-       // $frontController = Zend_Controller_Front::getInstance()
-       //         ->addModuleDirectory(DIR_MODULES)
-       //         ->setDefaultModule($module)
-       //         ->throwExceptions(true)
-       //         ->registerPlugin(new Zend_Controller_Plugin_ErrorHandler());
+        Bootstrap::init(); 
+		Zend_Session::start();    
        
         Configurator::setupDatabase();
         Configurator::setupView(Zend_Registry::get('helpersPaths'), Zend_Registry::get('scriptsPaths'));
         Configurator::setupRoutes(Zend_Controller_Front::getInstance()->getRouter());
-        Configurator::tuneEnvironment();
-        
-        
+        Configurator::tuneEnvironment(); 
         
         Security::getInstance()->init();
-        SiteAuth::getInstance()->init();
-        
-        
+        SiteAuth::getInstance()->init();  
         
 		Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive( ) );
 		Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding( Ext_Search_Lucene::ENCODING );
 		
-//        $exeption=0;
-//        if ($exeption) {
-//            try {
-//                $frontController->dispatch();
-//            }
-//            catch (Exception $e)
-//            {
-//                header('Location: /404');
-//                //	exit();
-//
-//            }
-//        } else {
-//        	$frontController->dispatch();
-//        	//$url = $_SERVER['REQUEST_URI'];
-//        	//echo $url;
-//        	/*$frontController->returnResponse(true);
-//        	$response = $frontController->dispatch();
-//        	
-//        	//$html = implode('',);
-//        	$html = Bootstrap::email_replace($response->getBody());
-//        	$response->setBody($html);
-//        	$response->sendResponse();*/
-//           //echo $frontController->getResponse();
-//            
-//        }
+//        
         
         
 

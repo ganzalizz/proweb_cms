@@ -102,11 +102,7 @@ class Pages extends Zend_Db_Table {
 	public function addVersion($version) {
 		$where = array ($this->getAdapter ()->quoteInto ( 'version = ?', 'ru' ) );
 		$cur_version = $this->fetchAll ( $where, 'level' );
-		$user = Security::getInstance ()->getUser ();
-		Loader::loadPublicModel ( 'Templates' );
-		Loader::loadPublicModel ( 'PagesOptions' );
-		Loader::loadPublicModel ( 'Menu' );
-		Loader::loadCommon ( 'Router' );
+		$user = Security::getInstance ()->getUser ();		
 		
 		foreach ( $cur_version as $key => $data ) {
 			$conformParent = $this->getConformParent ( ( int ) $data->parentId, $version );
@@ -456,8 +452,7 @@ class Pages extends Zend_Db_Table {
 	 * @param string $module
 	 * @return int
 	 */
-	public function addPage($data, $module = 'default') {
-		//Loader::loadPublicModel ( 'PagesOptions' );
+	public function addPage($data, $module = 'default') {		
 		
 		$id=null;
 		if (is_array ( $data )) {
@@ -476,8 +471,7 @@ class Pages extends Zend_Db_Table {
 		
 		}
 		
-		if (is_array ( $data ) && isset ( $data ['menu'] )) {
-			Loader::loadPublicModel ( 'Menu' );
+		if (is_array ( $data ) && isset ( $data ['menu'] )) {			
 			Menu::getInstance ()->addMenu ( $id, $data ['menu'] );
 		}
 		
@@ -489,16 +483,14 @@ class Pages extends Zend_Db_Table {
 	 *
 	 * @param unknown_type $data
 	 */
-	public function editPage($data) {
-		Loader::loadPublicModel ( 'PagesOptions' );
+	public function editPage($data) {		
 		$new_data = $this->getUpdateDataPage ( $data );		
 		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $data ['id'] );
 		$page = $this->find($data ['id'])->current();
 		$page->setFromArray(array_intersect_key($data, $page->toArray()));
 		$page->save();
 		//$this->update ( $new_data, $where );
-		PagesOptions::getInstance ()->editOptionsPage ( $data );
-		Loader::loadPublicModel ( 'Menu' );
+		PagesOptions::getInstance ()->editOptionsPage ( $data );		
 		Menu::getInstance ()->editMenu ( $data );
 	}
 	
@@ -509,8 +501,7 @@ class Pages extends Zend_Db_Table {
 		$where = $this->getAdapter ()->quoteInto ( "id IN (?)", $ids );
 		$this->delete ( $where );
 		$this->deleteMenu ( $ids );
-		$this->deletePageOptions ( $ids );
-		Loader::loadCommon ( 'Router' );
+		$this->deletePageOptions ( $ids );		
 		
 		foreach ( $ids as $key => $id ) {
 			if ($this->hasChild ( $id )) {
@@ -532,13 +523,12 @@ class Pages extends Zend_Db_Table {
 	
 	public function deletePageOptions($ids) {
 		$where = $this->getAdapter ()->quoteInto ( "pageId IN (?)", $ids );
-		Loader::loadPublicModel ( 'PagesOptions' );
+		//Loader::loadPublicModel ( 'PagesOptions' );
 		PagesOptions::getInstance ()->deleteOptions ( $where );
 	}
 	
 	public function deleteMenu($ids) {
-		$where = $this->getAdapter ()->quoteInto ( "pageId IN (?)", $ids );
-		Loader::loadPublicModel ( 'Menu' );
+		$where = $this->getAdapter ()->quoteInto ( "pageId IN (?)", $ids );		
 		Menu::getInstance ()->deleteMenu ( $where );
 	}
 	

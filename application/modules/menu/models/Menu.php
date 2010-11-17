@@ -61,29 +61,36 @@ class Menu extends Zend_Db_Table {
 	}
 	
 	/**
-	 * Получение меню языковой версии
+	 * Получение меню 
 	 *
 	 * @param string $type
-	 * @param string $version
-	 * @return object
+	 * @param int $depth глубина меню
+	 * @return Zend_Db_Table_Rowset|null
 	 */
-	public function getMenu($type, $version) {
-		//$this->getAdapter()->setFetchMode(Zend_Db::FETCH_OBJ);
-		//echo $version;
+	public function getMenu($type, $depth = 1) {
+		
 		$type = $this->getType ( $type );
-		$result = $this->getAdapter ()->query ( "SELECT sc.version, sc.name, sc.path, sc.level, sc.sortId,
-			sc.parentId, sm.* FROM $this->_name as sm, site_content as sc WHERE sc.version = '$version' AND sm.typeId='$type->id' 
-			AND sm.pageId=sc.id AND sc.published = 1 AND sc.deleted=0 ORDER BY level, sortId" );
+		if (!is_null($type)){		
 		
-		$result = $result->fetchAll ();
+			$select = $this->select()
+				->setIntegrityCheck(false)
+				->from(array('sm'=>$this->_name), array())
+				->joinInner(
+					array('sc'=>'site_content'),
+					'sc.id=sm.pageId',
+					array('sc.name', 'sc.path', 'sc.level', 'sc.sortId', 'sc.parentId', 'sc.id')
+				)
+				->where('sm.typeId = ?', $type->id)
+				->where('sc.published = ?', 1)
+				->where('sc.deleted = ?', 0)
+				->where('sc.level <= ?', $depth)
+				->order(array('sc.level', 'sc.sortId'));
+				
+			return $this->fetchAll($select);
 		
-		if ($version != 'ru') {
-			foreach ( $result as $key => $data ) {
-				$result [$key] ['path'] = $data ['version'] . '/' . $data ['path'];
-			}
 		}
-		//$this->getAdapter()->setFetchMode(Zend_Db::FETCH_ASSOC);
-		return $result;
+		
+		return null;
 	}
 	
 	/**

@@ -1,7 +1,23 @@
-<?php $menu = $this->menu['level1'] ?>
 <ul>
-    <?php foreach ($menu as $key => $data) { ?>
-    <li><a href="/<?=$data->path?>" title="<?=$data->name?>"><?=$data->name?></a></li>
-    <?php }?>
-        
- </ul>
+        <?foreach ($this->menu as $key => $data) { ?>
+        	<?php $item = $data['item'];?>
+            <li>
+                <a href="/<?=$item->path?>" title="<?=$item->name?>" <?=$item->id==$this->current ? 'class="active"' : ''?>>
+                    <span><?=$item->name?></span>
+                </a>
+                <?php if (isset($data['childs']) && count($data['childs'])){ ?>
+                	<ul>
+                		<?php foreach ($data['childs'] as $child){?>
+                			<li>
+                				<a href="/<?=$child->path?>" title="<?=$child->name?>" <?=$child->id==$this->current ? 'class="active"' : ''?>>
+				                    <span><?=$child->name?></span>
+				                </a>
+                			</li>
+                		
+                		<?php }?>
+                		
+                	</ul>
+                <?php }?>
+            </li>
+        <?}?>
+    </ul>

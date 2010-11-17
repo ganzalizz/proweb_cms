@@ -128,7 +128,6 @@ class Pages_Admin_PagesController extends MainAdminController {
 		}
 		$this->view->page = $page;
 		$this->view->options = $options;
-		Loader::loadPublicModel('MenuTypes');
 		$fck = $this->getFck('content', '90%', '400');
 		$this->view->fck = $fck;
 		$this->view->introText = $this->getFck('introText', '90%', '150','Basic');
@@ -336,7 +335,7 @@ class Pages_Admin_PagesController extends MainAdminController {
      * @return bool
      */
     private function editRoute($data) {
-        Loader::loadCommon('Router');
+        //Loader::loadCommon('Router');
         if ($data['id_div_type']) {
             $division_type = SiteDivisionsType::getInstance()->find($data['id_div_type'])->current();
             if ($division_type!=null) {
@@ -356,7 +355,7 @@ class Pages_Admin_PagesController extends MainAdminController {
      * @return bool
      */
     private function addRoute($data) {
-        Loader::loadCommon('Router');
+        //Loader::loadCommon('Router');
         if ($data['id_div_type']) {
             $division_type = SiteDivisionsType::getInstance()->find($data['id_div_type'])->current();
             if ($division_type!=null) {

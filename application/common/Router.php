@@ -88,7 +88,7 @@ class Router
 	 * @return string
 	 */
 	public function replaceRoute($data, $action = 'index', $controller = 'page', $module = 'default'){
-		Loader::loadPublicModel('Pages');
+		//Loader::loadPublicModel('Pages');
 		$old = Pages::getInstance()->getPage($data['id']);
 		$this->deleteRoute($old->name, $old->id);
 		

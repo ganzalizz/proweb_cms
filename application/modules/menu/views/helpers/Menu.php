@@ -31,11 +31,34 @@ class View_Helper_Menu extends Zend_View_Helper_Abstract {
     public function Menu($type, $version, $current=0) {
         $this->init();
 
-        $menus = Menu::getInstance()->getMenu($type, $version);
+        $menu_rowset = Menu::getInstance()->getMenu($type);
         $result = array();
         $infor = array();
         
-        foreach ($menus as  $data) {
+        $menu = array();
+        
+        
+        if ($menu_rowset!=null){
+        	// формируем первый уровень меню
+        	foreach ($menu_rowset as $key=> $item){
+        		if ($item->level ==1){
+        			$menu[$item->id]['item'] = $item;
+        			unset($menu_rowset[$key]);
+        		}
+        	}
+        	// формируем второй уровень меню
+        	foreach ($menu_rowset as $key=>$second_level_item){
+        		if ($second_level_item->level == 2){
+        			$menu[$second_level_item->parentId]['childs'][] = $second_level_item;
+        			unset($menu_rowset[$key]);
+        		}
+        	}
+        	
+        }
+        
+      // print_r($menu); exit;
+        
+       /* foreach ($menus as  $data) {
             if($data['level'] == 1) {
                 $result[$data['pageId']] = $this->getPage($data['pageId'], $version);
 
@@ -44,13 +67,14 @@ class View_Helper_Menu extends Zend_View_Helper_Abstract {
             elseif($data['level'] == 2) {
                 $infor[$data['parentId']][] = $this->getPage($data['pageId'], $version);
             }
-        }
+        }*/
 
         $this->_view->lang = $version;
-        $this->_view->menu = array(
+        /*$this->_view->menu = array(
                 'level1' => $result,
                 'level2' => $infor
-        );
+        );*/
+        $this->_view->menu = $menu;
         
         $this->_view->current = $current;
         /* Изменил для простоты в дальнейшем при создании меню из CMS надо сразу генерировать файл шаблона с названием идентификатора меню

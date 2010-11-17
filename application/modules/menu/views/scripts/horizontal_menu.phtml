@@ -1,15 +1,27 @@
-<?
-    $menu1 = $this->menu['level1'];
-    $menu_level2 = $this->menu['level2'];//Зачем $menu_level2
-    $i=0;
-?>
+
 <div class="top_menu">
     <ul>
-        <?foreach ($menu1 as $key => $data) { $i++;?>
+        <?foreach ($this->menu as $key => $data) { ?>
+        	<?php $item = $data['item'];?>
             <li>
-                <a href="/<?=$data->path?>" title="<?=$data->name?>" <?=$data->id==$this->current ? 'class="active"' : ''?>>
-                    <span><?=$data->name?></span>
+                <a href="/<?=$item->path?>" title="<?=$item->name?>" <?=$item->id==$this->current ? 'class="active"' : ''?>>
+                    <span><?=$item->name?></span>
+                   
                 </a>
+                <?php if (isset($data['childs']) && count($data['childs'])){ ?>
+                	 
+                	<ul>
+                		<?php foreach ($data['childs'] as $child){?>
+                			<li>
+                				<a href="/<?=$child->path?>" title="<?=$child->name?>" <?=$child->id==$this->current ? 'class="active"' : ''?>>
+				                    <span><?=$child->name?></span>
+				                </a>
+                			</li>
+                		
+                		<?php }?>
+                		
+                	</ul>
+                <?php }?>
             </li>
         <?}?>
     </ul>
