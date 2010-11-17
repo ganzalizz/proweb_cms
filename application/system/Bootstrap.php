@@ -21,8 +21,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Loader_Autoloader::getInstance()->setFallbackAutoloader(true);
         Bootstrap::registerGlobals(array(
             'helpersPaths' => Bootstrap::getAllHelpersDirectories(),
-            'scriptsPaths' => array_merge(array('.', DIR_LAYOUTS), Bootstrap::getAllHelpersScriptsDirectories()),
-            'config' => Bootstrap::getConfigSection()
+            'scriptsPaths' => array_merge(array('.', DIR_LAYOUTS), Bootstrap::getAllHelpersScriptsDirectories())
+            
         ));
 //        
 //        Loader::loadCommon('controllers/MainAdminController');
@@ -31,6 +31,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         
              
     }
+     
+    
       protected function _initControlerDirectory()
       {
           $front = Zend_Controller_Front::getInstance();
@@ -38,50 +40,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
       }   
 
 
-//     protected function _initZFDebug()
-//    {
-//        
-//        $autoloader = Zend_Loader_Autoloader::getInstance();
-//        $autoloader->registerNamespace('ZFDebug');
-//
-//        $options = array(
-//            'plugins' => array(
-//                'Variables',
-//                'File' => array('base_path' => 'd:\\Web\\WWW\\EasyStart\\application'),
-//                'Memory',
-//                'Time',
-//                'Registry',
-//                'Exception',
-//                'Html',
-//            ),
-//            'image_path' => 'd:\\Web\\WWW\\EasyStart\\images\\debugbar',
-//            'jquery_path' => 'd:\\Web\\WWW\\EasyStart\\js\\jquery\\jquery.js'
-//            
-//        );
-//         
-//        // Настройка плагина для адаптера базы данных
-//        if ($this->hasPluginResource('db')) {
-//            $this->bootstrap('db');
-//            $db = $this->getPluginResource('db')->getDbAdapter();
-//            $options['plugins']['Database']['adapter'] = $db;
-//        }
-//
-//        // Настройка плагина для кеша
-//        if ($this->hasPluginResource('cache')) {
-//            $this->bootstrap('cache');
-//            $cache = $this-getPluginResource('cache')->getDbAdapter();
-//            $options['plugins']['Cache']['backend'] = $cache->getBackend();
-//        }
-//
-//        $debug = new ZFDebug_Controller_Plugin_Debug($options);
-//       
-//        $this->bootstrap('frontController');
-//        $frontController = $this->getResource('frontController');
-//        $frontController->registerPlugin($debug);
-//      
-//        
-//    }
-//    
+
        
     /**
      * Определение констант с путями к используемым директориям
