@@ -4,7 +4,7 @@
 
 class Menu extends Zend_Db_Table {
 	protected $_name = 'site_menu';
-	protected $_primary = array ('id' );
+	
 	protected static $_instance = null;
 	
 	/**

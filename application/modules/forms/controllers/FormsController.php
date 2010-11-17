@@ -34,7 +34,7 @@ class Forms_FormsController extends Zend_Controller_Action {
         }
     }
     public function feedbackAction() {
-        Loader::loadCommon('Captcha');
+      
         $captcha = new Captcha;
         $this->view->addHelperPath(Zend_Registry::get('helpersPaths') , 'View_Helper');
         if ($this->_request->isPost()) {

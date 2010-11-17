@@ -247,7 +247,7 @@ $new->save();
         $select = new Zend_Db_Select($this->getAdapter());
         $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
                 ->where($this->getAdapter()->quoteInto('main= ?',1))
-                ->where($this->getAdapter()->quoteInto('type= ?',$type))
+               // ->where($this->getAdapter()->quoteInto('type= ?',$type))
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('RAND()', null))
                 ->limit($limit);
@@ -262,7 +262,7 @@ $new->save();
     public function getActiveNews($type='news', $limit=0) {
         $select = new Zend_Db_Select($this->getAdapter());
         $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
-                ->where($this->getAdapter()->quoteInto('type= ?',$type))
+               // ->where($this->getAdapter()->quoteInto('type= ?',$type))
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('created_at DESC', null))
                 ->limit($limit);
@@ -270,6 +270,7 @@ $new->save();
     }
 
 
+    
     public function search($search) {
         $dbAdapter = Zend_Registry::get('db');
         $sql = $dbAdapter->quoteInto("SELECT DISTINCT *, 'news' AS TYPE FROM site_news WHERE site_news.name LIKE '%".$search."%'
