@@ -29,14 +29,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
        require_once (ROOT_DIR.'application/common/controllers/MainAdminController.php');
         Zend_Loader_Autoloader::getInstance()->setFallbackAutoloader(true);
         Bootstrap::registerGlobals(array(
-            'helpersPaths' => Bootstrap::getAllHelpersDirectories(),
-            'scriptsPaths' => array_merge(array('.', DIR_LAYOUTS), Bootstrap::getAllHelpersScriptsDirectories())           
+            'helpersPaths' => Bootstrap::getAllHelpersDirectories(), 
+            'scriptsPaths' => array_merge(array('.', DIR_LAYOUTS), Bootstrap::getAllHelpersScriptsDirectories())
+            
+
         ));
         
              
     }
-      
-	
+
+     
 
        
     /**
