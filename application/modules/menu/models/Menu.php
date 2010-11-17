@@ -69,7 +69,7 @@ class Menu extends Zend_Db_Table {
 	 */
 	public function getMenu($type, $depth = 1) {
 		
-		$type = $this->getType ( $type );
+		//$type = $this->getType ( $type );
 		if (!is_null($type)){		
 		
 			$select = $this->select()
@@ -80,7 +80,12 @@ class Menu extends Zend_Db_Table {
 					'sc.id=sm.pageId',
 					array('sc.name', 'sc.path', 'sc.level', 'sc.sortId', 'sc.parentId', 'sc.id')
 				)
-				->where('sm.typeId = ?', $type->id)
+				->joinInner(
+					array('smt'=>'site_menu_types'),
+					'smt.id=sm.typeId',
+					array()
+				)
+				->where('smt.name = ?', $type)
 				->where('sc.published = ?', 1)
 				->where('sc.deleted = ?', 0)
 				->where('sc.level <= ?', $depth)

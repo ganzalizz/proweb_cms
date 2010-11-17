@@ -162,8 +162,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Security::getInstance()->init();
         SiteAuth::getInstance()->init();  
         
-		Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive( ) );
-		Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding( Ext_Search_Lucene::ENCODING );
+		//Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive( ) );
+		//Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding( Ext_Search_Lucene::ENCODING );
 		
 //        
         
