@@ -24,8 +24,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
        
        /**
         * временный вариант для того чтоб работала адинка
-        * @todo в дальнейшем предлагаю перенести этот контроллер в EXT
+        * @
         */
+       //TODO: в дальнейшем предлагаю перенести этот контроллер в EXT
        require_once (ROOT_DIR.'application/common/controllers/MainAdminController.php');
         Zend_Loader_Autoloader::getInstance()->setFallbackAutoloader(true);
         Bootstrap::registerGlobals(array(
@@ -152,7 +153,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     public static function _initStart() {
         
         Bootstrap::init(); 
-		Zend_Session::start();    
+	Zend_Session::start();    
        
         Configurator::setupDatabase();
         Configurator::setupView(Zend_Registry::get('helpersPaths'), Zend_Registry::get('scriptsPaths'));

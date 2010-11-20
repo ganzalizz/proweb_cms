@@ -1,0 +1,37 @@
+<?php
+/**
+ * PunBB pagination style
+ * 
+ * @preview  Pages: 1 … 4 5 6 7 8 … 15
+ */
+?>
+
+<p class="pagination">
+
+  pagina's:
+
+  <?php if ($this->current_page > 3): ?>
+    <a href="<?php echo $this->url(array('page' => 1)); ?>">1</a>
+    <?php if ($this->current_page != 4) echo '&hellip;' ?>
+  <?php endif ?>
+
+
+  <?php for ($i = $this->current_page - 2, $stop = $this->current_page + 3; $i < $stop; ++$i): ?>
+
+    <?php if ($i < 1 OR $i > $this->total_pages) continue ?>
+
+    <?php if ($this->current_page == $i): ?>
+      <strong><?php echo $i ?></strong>
+    <?php else: ?>
+      <a href="<?php echo $this->url(array('page' => $i)); ?>"><?php echo $i ?></a>
+    <?php endif ?>
+
+  <?php endfor ?>
+
+
+  <?php if ($this->current_page <= $this->total_pages - 3): ?>
+    <?php if ($this->current_page != $this->total_pages - 3) echo '&hellip;' ?>
+    <a href="<?php echo $this->url(array('page' => $this->total_pages)); ?>"><?php echo $this->total_pages ?></a>
+  <?php endif ?>
+
+</p>

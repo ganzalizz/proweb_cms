@@ -1,0 +1,27 @@
+<?php
+/**
+ * Extended pagination style
+ * 
+ * @preview  « Previous | Page 2 of 11 | Showing items 6-10 of 52 | Next »
+ */
+?>
+
+<p class="pagination">
+
+  <?php if ($this->previous_page): ?>
+    <a href="<?php echo $this->url(array('page' => $this->previous_page)); ?>">&laquo;&nbsp;vorige</a>
+  <?php else: ?>
+    &laquo;&nbsp;vorige
+  <?php endif ?>
+
+  | pagina <?php echo $this->current_page ?> van <?php echo $this->total_pages ?>
+
+  | items <?php echo $this->current_first_item ?>&ndash;<?php echo $this->current_last_item ?> van <?php echo $this->total_items ?>
+
+  | <?php if ($this->next_page): ?>
+    <a href="<?php echo $this->url(array('page' => $this->next_page)); ?>">volgende&nbsp;&raquo;</a>
+  <?php else: ?>
+    volgende&nbsp;&raquo;
+  <?php endif ?>
+
+</p>

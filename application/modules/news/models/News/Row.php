@@ -11,15 +11,15 @@ class News_Row extends Zend_Db_Table_Row {
      * @return string
      */
     public function getUrl() {
-        return Pages::getInstance()->find($this->page_id)->current()->getPath();
+       // return Pages::getInstance()->find($this->page_id)->current()->getPath();
     }
 
     public function getPath() {
-        $page = Pages::getInstance()->find($this->page_id)->current();
-        if (!is_null($page)) {
-            return $page->getPath();
-        }
-        return '';
+//        $page = Pages::getInstance()->find($this->page_id)->current();
+//        if (!is_null($page)) {
+//            return $page->getPath();
+//        }
+//        return '';
     }
     /**
      * Gets date by format
@@ -31,12 +31,9 @@ class News_Row extends Zend_Db_Table_Row {
         $format='';
         switch ($param) {
             case 'day': $format ="%d";// Day of the month, numeric (0..31)
-
                 break;
             case 'month': $format ="%b"; //Abbreviated month name (Jan..Dec)
-
                 break;
-
             default: $format =  $param;
                 break;
         }
@@ -96,5 +93,9 @@ class News_Row extends Zend_Db_Table_Row {
         $doc->setContent ( strip_tags ( $this->content ) );
         $doc->setId ( $this->id );
         $index->addDocument ( $doc );
+    }
+    
+    protected function  _insert() {
+        parent::_insert();
     }
 }

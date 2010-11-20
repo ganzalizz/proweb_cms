@@ -49,20 +49,7 @@ class News extends Zend_Db_Table {
 
 
 
-    /**
-     * Reference map.
-     *
-     * @var array
-     */
-    protected $_referenceMap = array(
-            'Pages' => array(
-                            'columns'           => array('id_page'),
-                            'refTableClass'     => 'Pages',
-                            'refColumns'        => array('id'),
-                            'onDelete'          => self::CASCADE,
-                            'onUpdate'          => self::RESTRICT
-            )
-            ) ;
+    
 
     /**
      * Class to use for rows.
@@ -106,73 +93,146 @@ class News extends Zend_Db_Table {
         return $this->getAdapter()->fetchOne($sql);
     }
 
-    /*
-	*Возвращает все опбликованные новости
-	*
-    */
-    public function getAllPub($page_id, $ofset = null, $count = null) {
-        $where=array();
-        if (is_array($page_id)) {
-            $where[] =$this->getAdapter()->quoteInto('pub= ?',1);
-//            foreach ($page_id as $id) {
-//                $where[] = $this->getAdapter()->quoteInto('page_id= ?',$id);
-//            }
-        } else {
-            $where =array(
-                    $this->getAdapter()->quoteInto('pub= ?',1),
-                    $this->getAdapter()->quoteInto('id_page= ?',(int)$page_id)
-            );
-            //$where =array( $this->getAdapter()->quoteInto('pub= ?',1));
-        }
-
-        $order =array( $this->getAdapter()->quoteInto('created_at DESC',null),
-                $this->getAdapter()->quoteInto('name ASC',null)
-        );
-        return $this->fetchAll($where,$order,$count,$ofset);
+    /**
+     * @name getAllActive Получить все is_active = true новости
+     *
+     * @param $is_main =
+     *
+     * @return mixed|false 
+     *
+     * @see
+     */
+    public function getAllActive() 
+    {
+       
+        $select = $this->select();
+        $select->where('is_active = ?', true)
+               ->order('created_at DESC');
+        return $result = $this->fetchAll($select);
     }
-
+    
+    public function getAllActivePage($item_per_page, $offset)
+    {
+        $select =   $this->select()
+                         ->from($this->_name)
+                         ->where('is_active = ?', true)
+                         ->order('created_at DESC')
+                         ->limit($item_per_page, $offset);
+        return $result = $this->fetchAll($select);
+                
+    }        
+    
+    /**
+     * @name getAllActiveExt Получить все is_active = true новости
+     *       
+     *                       
+     *
+     * @param $is_main = false
+     * @param $is_hot = false
+     * $is_main=false $is_hot=false только новости is_active
+     * $is_main=true $is_hot=false только новости is_active and is_main
+     * $is_main=false $is_hot=true только новости is_active and is_hot
+     * $is_main=true $is_hot=true только новости is_active and is_hot and is_true
+     *
+     * @return mixed|false 
+     *
+     * @see
+     */
+    public function getAllActiveExt($is_main = false, $is_hot= false) 
+    {
+        
+        $select = $this->select()
+                 ->from('site_news')
+                 ->where('is_active = ?', true)
+                 ->where('is_main = ?', $is_main)
+                 ->where('is_hot = ?', $is_hot)
+                 ->order('created_at DESC');
+      return $result = $this->fetchAll($select);
+    }
+    
+        
+    /**
+     * @name getIsMain Получить все is_main новости
+     *
+     * @param 
+     *
+     * @return mixed|false 
+     *
+     * @see
+     */
+     public function getIsMain()
+     {
+         $select = $this->select()
+                 ->from('site_news')
+                 ->where('is_active = ?', true)
+                 ->where('is_main = ?', true)
+                 ->order('created_at DESC');
+        return $result = $this->fetchAll($select);
+     }
+     
+    /**
+     * @name getIsHot Получить все is_hot новости
+     *
+     * @param 
+     *
+     * @return mixed|false 
+     *
+     * @see
+     */
+      public function getIsHot()
+     {
+         $select = $this->select()
+                 ->from('site_news')
+                 ->where('is_hot = ?', true)
+                 ->where('is_main = ?', true)
+                 ->order('created_at DESC');
+        return $result = $this->fetchAll($select);
+     }  
+     
+    
 
     /**
-     * Добавить новость
-     * @param  $data
-     * @return $id
+     * @name addNews Добавить новость
+     * 
+     * @param  $data mixed
+     * 
+     * @return $id inserted news
      */
-    public function addNew($data) {
-        if (!isset($data['created_at'])) {
-            $data['created_at'] =new Zend_Db_Expr('NOW()'); //date("d-m-Y H:i:s");
-        }
-
-        if (isset($data['pub']) && $data['pub']==1) {
-            $data['pub_date'] =new Zend_Db_Expr('NOW()'); //date("d-m-Y H:i:s");
-        }
-        $id=$this->createRow()->setFromArray($data)->save();
-        return $id;
+    public function addNews($data) 
+    {
+        
+        $data['created_at'] = (!isset($data['created_at'])) ? new Zend_Db_Expr('NOW()'): $data['created_at'];
+        $data['date_news'] = (!isset($data['date_news'])) ? new Zend_Db_Expr('NOW()') : $data['date_news']; 
+        return $this->insert($data);
     }
 
-    /*
-	*получение новости по $id
-	*@param $id int
-	*
+    /**
+     * @name getNewById($id) получение новости по $id
+     *
+     *@param $id int
+     * 
+     *@return mixed|false
+     *
     */
-    public function getNewById($id) {
+    public function getNewsById($id) 
+    {
         $where = $this->getAdapter()->quoteInto('id= ?',$id);
-        return $this->fetchRow($where);
+        return $result = $this->fetchRow($where);
     }
 
 
-    public function pubNew($id) {
-        $array = array('pub'=>1,'pub_date'=>new Zend_Db_Expr('NOW()'));
-        $new = $this->find($id)->current();
-        $new->setFromArray(array_intersect_key($array, $new->toArray()));
-        $new->save();
-
-    }
+    public function setNewsIsActive($id) {
+        
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        return $this->update(array('is_active' => 1), $where);
+     }
     /*
     *заблокировать новость
     *@param $id int
     *
     */
     public function unpubNew($id) {
+        $this->
         $array = array('pub'=>0);
         $new = $this->find($id)->current();
         $new->setFromArray(array_intersect_key($array, $new->toArray()));
@@ -184,12 +244,11 @@ class News extends Zend_Db_Table {
     *@param $id int
     *
     */
-public function editNew($data,$id) {
-
-$new = $this->find($id)->current();
-$new->setFromArray(array_intersect_key($data, $new->toArray()));
-$new->save();
-}
+    public function editNews($data,$id) 
+    {
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        return $this->update($data, $where);
+    }
 
 
 
@@ -216,7 +275,7 @@ $new->save();
      * Удалить новость
      * @param <type> $id
      */
-    public function deleteNew($id) {
+    public function deleteNews($id) {
         $new = $this->find($id)->current();
         if($new!=null) $new->delete();
     }
@@ -345,6 +404,15 @@ $new->save();
         }
         return false;
     }
+    
+public function getPaginatorRows ($pageNumber = 1)
+{
+  $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($this->select()));
+  $paginator->setCurrentPageNumber($pageNumber);
+  $paginator->setItemCountPerPage(1);
+  $paginator->setPageRange(1);
+  return $paginator;
+}
 
 
 

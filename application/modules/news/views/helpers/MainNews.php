@@ -26,7 +26,7 @@ class View_Helper_mainNews extends Zend_View_Helper_Abstract {
      */
     public function mainNews() {
         $this->init();
-        $this->view->mainnews = News::getInstance()->getMain('news', 1);
+        $this->view->mainnews = News::getInstance()->getIsMain();
         return $this->_view->render('mainnews.phtml') ;
     }
 }
