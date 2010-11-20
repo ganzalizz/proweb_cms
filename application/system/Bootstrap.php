@@ -150,7 +150,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	} 
     
     public static function _initStart() {
-        
+        //Zend_Controller_Front::getInstance()
+        	//->registerPlugin(new Zend_Controller_Plugin_ErrorHandler())
+        	//->throwExceptions(true);
         Bootstrap::init(); 
 		Zend_Session::start();    
        
