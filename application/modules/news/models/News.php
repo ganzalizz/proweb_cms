@@ -325,7 +325,7 @@ class News extends Zend_Db_Table {
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('created_at DESC', null))
                 ->limit($limit);
-        return $this->getAdapter()->query($select);
+        return $this->fetchAll($select);
     }
 
 
