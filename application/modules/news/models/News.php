@@ -404,15 +404,29 @@ class News extends Zend_Db_Table {
         }
         return false;
     }
+     /**
+     * @name addNews Добавить новость
+     * 
+     * @param  $data mixed
+     * 
+     * @return Zend_Paginator
+     */
+    public function getNewsPaginator($item_per_page, $page)
+    { 
+        $adapter = new Zend_Paginator_Adapter_DbTableSelect(
+                $this->select()
+                     ->from($this->_name)
+                     ->where('is_active = ?', true)
+                     ->order('created_at DESC'));
+
+                $paginator = new Zend_Paginator($adapter);
+                $paginator->setCurrentPageNumber($page);
+         return $paginator->setItemCountPerPage($item_per_page);
+                
+       
+    }
     
-public function getPaginatorRows ($pageNumber = 1)
-{
-  $paginator = new Zend_Paginator(new Zend_Paginator_Adapter_DbSelect($this->select()));
-  $paginator->setCurrentPageNumber($pageNumber);
-  $paginator->setItemCountPerPage(1);
-  $paginator->setPageRange(1);
-  return $paginator;
-}
+
 
 
 

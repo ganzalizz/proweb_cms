@@ -105,13 +105,13 @@ class Pages extends Zend_Db_Table {
 		$user = Security::getInstance ()->getUser ();		
 		
 		foreach ( $cur_version as $key => $data ) {
-			$conformParent = $this->getConformParent ( ( int ) $data->parentId, $version );
+			$conformParent = $this->getConformParent ( ( int ) $data->id_parent, $version );
 			$oldId = $data->id;
 			$data->id = '';
 			$data->version = $version;
 			$data->createdBy = $user->id;
 			$data->pubDate = date ( "Y-m-d H:i:s" );
-			$data->parentId = empty ( $conformParent ) ? 0 : $conformParent->id;
+			$data->id_parent = empty ( $conformParent ) ? 0 : $conformParent->id;
 			$this->insert ( $data->toArray () );
 			$new = $this->getVersionPage ( $data );
 			PagesOptions::getInstance ()->addVersion ( $oldId, $new->id );
@@ -169,7 +169,7 @@ class Pages extends Zend_Db_Table {
 		}
 		
 		$page = $this->getPage ( $id );
-		$where = array ($this->getAdapter ()->quoteInto ( 'level = ?', $page->level ), $this->getAdapter ()->quoteInto ( 'sortId = ?', $page->sortId ), $this->getAdapter ()->quoteInto ( 'version = ?', $version ) );
+		$where = array ($this->getAdapter ()->quoteInto ( 'level = ?', $page->level ), $this->getAdapter ()->quoteInto ( 'priority = ?', $page->priority ), $this->getAdapter ()->quoteInto ( 'version = ?', $version ) );
 		$conform = $this->fetchRow ( $where );
 		
 		return $conform;
@@ -221,28 +221,36 @@ class Pages extends Zend_Db_Table {
 	 * Построение дерева для ExtJS
 	 *
 	 * @param string $version
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @param int $level
 	 * @return array
 	 */
-	public function getTree($version, $parentId = 0, $level = 0) {
+	public function getTree($id_parent = null) {
 		$return = array ( );
 		$nodes = array ( );
-		$where = array ($this->getAdapter ()->quoteInto ( 'version = ?', $version ), $this->getAdapter ()->quoteInto ( 'level = ?', $level ), $this->getAdapter ()->quoteInto ( 'parentId = ?', $parentId ), $this->getAdapter ()->quoteInto ( 'deleted = ?', 0 ) );
-		$nodes = $this->fetchAll ( $where, 'sortId' );
+		
+		$select = $this->select();	
+		if (is_null($id_parent)){
+			$select->where('ISNULL(id_parent)', null);
+		} else {
+			$select->where('id_parent = ?', (string)$id_parent);	
+		}	
+		$select->order('priority');
+		
+		$nodes = $this->fetchAll ( $select );
 		$html = '';
 		if ($nodes->count()){
 			$html = '<ul>';
 			foreach ( $nodes as $data ) {
 				
 				if ($this->getCountOfChildren ( $data->id ) > 0) {
-					$html.="<li id=\"$data->id\" ><div class=\"all\"><ins>&nbsp;</ins><a href=\"#\" class=\"tree_item_name\">$data->name</a><div class=\"controls\">".$this->getDuration ( $data )."</div></div>";
-					$html.=$this->getTree ( $version, $data->id, $data->level + 1 );
+					$html.="<li id=\"$data->id\" ><div class=\"all\"><ins>&nbsp;</ins><a href=\"#\" class=\"tree_item_name\">$data->title</a><div class=\"controls\">".$this->getDuration ( $data )."</div></div>";
+					$html.=$this->getTree ($data->id );
 					$html.="</li>";
-					//$return [] = array ('task' => $data->name, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'cls' => 'master-task', 'iconCls' => 'task-folder', 'children' => $this->getTree ( $version, $data->id, $data->level + 1 ) );
+					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'cls' => 'master-task', 'iconCls' => 'task-folder', 'children' => $this->getTree ( $version, $data->id, $data->level + 1 ) );
 				} else {
-					//$return [] = array ('task' => $data->name, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'leaf' => 'true', 'iconCls' => 'task' );
-					$html.="<li id=\"$data->id\"><div class=\"all\" ><ins>&nbsp;</ins><a href=\"#\" class=\"tree_item_name\">$data->name</a><div class=\"controls\">".$this->getDuration ( $data )."</div></div>";
+					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'leaf' => 'true', 'iconCls' => 'task' );
+					$html.="<li id=\"$data->id\"><div class=\"all\" ><ins>&nbsp;</ins><a href=\"#\" class=\"tree_item_name\">$data->title</a><div class=\"controls\">".$this->getDuration ( $data )."</div></div>";
 					
 					$html.="</li>";
 				}
@@ -256,34 +264,34 @@ class Pages extends Zend_Db_Table {
 	 * Построение дерева для ExtJS
 	 *
 	 * @param string $version
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @param int $level
 	 * @return array
 	 */
-	public function getSitemap($version, $parentId = 1, $level = 1) {
+	public function getSitemap($version, $id_parent = 1, $level = 1) {
 		$return = array ( );
 		$nodes = array ( );
 		$where = array (
 			$this->getAdapter ()->quoteInto ( 'version = ?', $version ), 
 			$this->getAdapter ()->quoteInto ( 'level = ?', $level ), 
-			$this->getAdapter ()->quoteInto ( 'parentId = ?', $parentId ), 
+			$this->getAdapter ()->quoteInto ( 'id_parent = ?', $id_parent ), 
 			$this->getAdapter ()->quoteInto ( 'deleted = ?', 0 ),
 			$this->getAdapter ()->quoteInto ( 'sitemap = ?', 1 )
 		 );
-		$nodes = $this->fetchAll ( $where, 'sortId' );
+		$nodes = $this->fetchAll ( $where, 'priority' );
 		$html = '';
 		if ($nodes->count()){
 			$html = '<ul>';
 			foreach ( $nodes as $data ) {
 				
 				if ($this->getCountOfChildren ( $data->id ) > 0) {
-					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->name</a>";
+					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->title</a>";
 					$html.=$this->getSitemap ( $version, $data->id, $data->level + 1 );
 					$html.="</li>";
-					//$return [] = array ('task' => $data->name, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'cls' => 'master-task', 'iconCls' => 'task-folder', 'children' => $this->getTree ( $version, $data->id, $data->level + 1 ) );
+					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'cls' => 'master-task', 'iconCls' => 'task-folder', 'children' => $this->getTree ( $version, $data->id, $data->level + 1 ) );
 				} else {
-					//$return [] = array ('task' => $data->name, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'leaf' => 'true', 'iconCls' => 'task' );
-					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->name</a>";
+					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'leaf' => 'true', 'iconCls' => 'task' );
+					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->title</a>";
 					
 					$html.="</li>";
 				}
@@ -301,10 +309,10 @@ class Pages extends Zend_Db_Table {
 	private function addLevel($id) {
         $db = $this->getAdapter ();
 
-        $all = $this->fetchAll("parentId = $id");
+        $all = $this->fetchAll("id_parent = $id");
         $parentRow = $this->fetchRow("id = $id");
 
-        $this->update(array('level' => $parentRow->level+1), "parentId = $id");
+        $this->update(array('level' => $parentRow->level+1), "id_parent = $id");
         
         foreach($all as $value) {
             $this->addLevel($value->id);
@@ -317,18 +325,18 @@ class Pages extends Zend_Db_Table {
 	 * результата
 	 *
 	 * @param int $id
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @param string $point
 	 */
-	public function replace($id, $parentId, $point) {
+	public function replace($id, $id_parent, $point) {
 		/*if ($point == 'above')
-			$this->replaceAbove ( $id, $parentId, $point ); elseif ($point == 'below')
-			$this->replaceBelow ( $id, $parentId, $point ); elseif ($point == 'append')
-			$this->replaceAppend ( $id, $parentId, $point );*/
+			$this->replaceAbove ( $id, $id_parent, $point ); elseif ($point == 'below')
+			$this->replaceBelow ( $id, $id_parent, $point ); elseif ($point == 'append')
+			$this->replaceAppend ( $id, $id_parent, $point );*/
 		if ($point == 'before')
-			$this->replaceAbove ( $id, $parentId, $point ); elseif ($point == 'after')
-			$this->replaceBelow ( $id, $parentId, $point ); elseif ($point == 'inside')
-			$this->replaceAppend ( $id, $parentId, $point );
+			$this->replaceAbove ( $id, $id_parent, $point ); elseif ($point == 'after')
+			$this->replaceBelow ( $id, $id_parent, $point ); elseif ($point == 'inside')
+			$this->replaceAppend ( $id, $id_parent, $point );
 			
 		$this->addLevel($id);	
 	}
@@ -337,14 +345,14 @@ class Pages extends Zend_Db_Table {
 	 * Проверка действительности события dnd
 	 *
 	 * @param int $id
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @return boolean
 	 */
-	public function isReplace($id, $parentId) {
+	public function isReplace($id, $id_parent) {
 		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
 		$node = $this->fetchRow ( $where );
 		
-		return $node->parentId == $parentId ? false : true;
+		return $node->id_parent == $id_parent ? false : true;
 	}
 	
 	/**
@@ -355,9 +363,11 @@ class Pages extends Zend_Db_Table {
 	 * @return object
 	 */
 	public function getRoot($lang = 'ru') {
-		$where = array ($this->getAdapter ()->quoteInto ( 'type = ?', 'root' ), $this->getAdapter ()->quoteInto ( 'version = ?', $lang ) );
+		$select = $this->select()
+			->where('ISNULL(id_parent)', null);
+		//$where = array ($this->getAdapter ()->quoteInto ( 'type = ?', 'root' ), $this->getAdapter ()->quoteInto ( 'version = ?', $lang ) );
 		
-		return $this->fetchRow ( $where );
+		return $this->fetchRow ( $select );
 	}
 	
 	/**
@@ -369,12 +379,12 @@ class Pages extends Zend_Db_Table {
 	 *//*
 	public function getSiteMap($lang, $id = 1) {
 		$where = array (
-			$this->getAdapter ()->quoteInto ( 'parentId = ?', $id ),
+			$this->getAdapter ()->quoteInto ( 'id_parent = ?', $id ),
 			$this->getAdapter ()->quoteInto ( 'version = ?', $lang ),
 			$this->getAdapter ()->quoteInto ( 'sitemap = ?', 1 )
 			 );
 		$nodes = array ( );
-		$nodes = $this->fetchAll ( $where, "sortId" );
+		$nodes = $this->fetchAll ( $where, "priority" );
 		
 		foreach ( $nodes as $data ) {
 			$data->path = $lang == 'ru' ? $data->path : $lang . '/' . $data->path;
@@ -415,34 +425,31 @@ class Pages extends Zend_Db_Table {
 	 * @return array
 	 */
 	public function getChildren($id) {
-		$where = $this->getAdapter ()->quoteInto ( 'parentId = ?', $id );
+		$where = $this->getAdapter ()->quoteInto ( 'id_parent = ?', $id );
 		$nodes = $this->fetchAll ( $where );
 		
 		$array = array ( );
 		
 		foreach ( $nodes as $key => $data ) {
-			$array [$data->name] = $data->id;
+			$array [$data->title] = $data->id;
 		}		
 		return $array;
 	}
 
-        /**
+    /**
 	 * Получение дочерних элементов и их адресов для меню
-	 *
+	 * TODO нужно изменить незвание метода либо удалить его
 	 * @param int $id
-	 * @return array
+	 * @return Zend_Db_Table_Rowset
 	 */
 	public function getChildrenAndURLs($id) {
-		$where[] = $this->getAdapter ()->quoteInto ( 'parentId = ?', $id );
-                $where[] = $this->getAdapter ()->quoteInto ( 'published = ?', 1 );
-		$nodes = $this->fetchAll ( $where, 'sortId ASC' );
-
-		$array = array ( );
-
-		foreach ( $nodes as $key => $data ) {
-			$array [$data->name] = $data->path;
-		}
-		return $array;
+		
+		$select = $this->select()
+			->where('is_active = ?', 1 )
+			->where('id_parent = ?', $id)
+			->order('priority');
+		
+		return $this->fetchAll($select);
 	}
 	
 	/**
@@ -513,12 +520,12 @@ class Pages extends Zend_Db_Table {
 	
 	public function unpubPage($id) {
 		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
-		$this->update ( array ('published' => '0', 'unpubDate' => date ( "Y-m-d H:i:s" ) ), $where );
+		$this->update ( array ('is_active' => '0', 'unpubDate' => date ( "Y-m-d H:i:s" ) ), $where );
 	}
 	
 	public function pubPage($id) {
 		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
-		$this->update ( array ('published' => '1', 'pubDate' => date ( "Y-m-d H:i:s" ) ), $where );
+		$this->update ( array ('is_active' => '1', 'pubDate' => date ( "Y-m-d H:i:s" ) ), $where );
 	}
 	
 	public function deletePageOptions($ids) {
@@ -548,12 +555,12 @@ class Pages extends Zend_Db_Table {
 	/**
 	 * Получение пути для страницы с переданным разделителем
 	 *
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @param string $separator
 	 * @return string
 	 */
-	public function generateStringPath($parentId, $separator) {
-		$reverse = $this->generateReversePath ( $parentId );
+	public function generateStringPath($id_parent, $separator) {
+		$reverse = $this->generateReversePath ( $id_parent );
 		$result = '';
 		
 		for($i = count ( $reverse ) - 1; $i >= 0; $i --) {
@@ -590,9 +597,9 @@ class Pages extends Zend_Db_Table {
 	
 	public function search($search){
 		 $dbAdapter = Zend_Registry::get('db');
-		 $sql = $dbAdapter->quoteInto("SELECT name, id, 'pages' as TYPE, path FROM site_content WHERE (site_content.name LIKE '%".$search."%' OR
+		 $sql = $dbAdapter->quoteInto("SELECT title, id, 'pages' as TYPE, path FROM site_content WHERE (site_content.title LIKE '%".$search."%' OR
 		 	 site_content.introText LIKE '%".$search."%'
-		 	OR site_content.content LIKE '%".$search."%' ) AND (site_content.deleted=0 AND site_content.published =1)  ; ",null);
+		 	OR site_content.content LIKE '%".$search."%' ) AND (site_content.deleted=0 AND site_content.is_active =1)  ; ",null);
 				
 		 $result = $dbAdapter->query($sql);
 		 return  $result->fetchAll();
@@ -602,7 +609,7 @@ class Pages extends Zend_Db_Table {
 	public function remove($id){
 		$page= $this->find($id)->current();
 		if ($this->getCountOfChildren($id)){
-			$childs = $this->fetchAll('parentId='.(int)$id);
+			$childs = $this->fetchAll('id_parent='.(int)$id);
 			foreach ($childs as $child){
 				$this->remove($child->id);
 			}
@@ -616,10 +623,10 @@ class Pages extends Zend_Db_Table {
 	
 	public function reindex(){
 		$index = New Ext_Search_Lucene(Ext_Search_Lucene::PAGES, true);
-		//$pages_rowset = $this->fetchAll('published=1')
+		//$pages_rowset = $this->fetchAll('is_active=1')
 		$count = 10 ;
 		$offset = 0 ;
-		while( ( $rowset = $this->fetchAll( 'published=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
+		while( ( $rowset = $this->fetchAll( 'is_active=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
 			while( $rowset->valid() ) {
 				$row = $rowset->current() ;
 				//
@@ -627,7 +634,7 @@ class Pages extends Zend_Db_Table {
 				//
 				$doc = new Ext_Search_Lucene_Document();
 				$doc->setUrl($row->path);
-				$doc->setTitle($row->name);
+				$doc->setTitle($row->title);
 				$doc->setId($row->id);
                                 $doc->setContent(strip_tags($row->content));
 				
@@ -685,20 +692,20 @@ class Pages extends Zend_Db_Table {
 	 * на том же уровне
 	 * 	 
 	 * @param int $id
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @param string $point
 	 */
-	private function replaceAbove($id, $parentId, $point) {
+	private function replaceAbove($id, $id_parent, $point) {
 		$page = $this->getPage ( $id );
-		$parent = $this->getPage ( $parentId );
-		$this->getAdapter ()->query ( "UPDATE $this->_name SET parentId = :parentId, level = :level, sortId = sortId + 1 WHERE parentId = :id AND sortId >= :sort", array ('parentId' => $parent->parentId, 'level' => $parent->level, 'id' => $parent->parentId, 'sort' => $parent->sortId ) );
+		$parent = $this->getPage ( $id_parent );
+		$this->getAdapter ()->query ( "UPDATE $this->_name SET id_parent = :id_parent, level = :level, priority = priority + 1 WHERE id_parent = :id AND priority >= :sort", array ('id_parent' => $parent->id_parent, 'level' => $parent->level, 'id' => $parent->id_parent, 'sort' => $parent->priority ) );
 		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
 		$this->update ( 
 			array (
-				'parentId' => $parent->parentId, 
+				'id_parent' => $parent->id_parent, 
 				'level' => $parent->level, 
-				'sortId' => $parent->sortId//, 
-				//'path' => $this->generateStringPath ( $parent->parentId, '/' ) . $page->path 
+				'priority' => $parent->priority//, 
+				//'path' => $this->generateStringPath ( $parent->id_parent, '/' ) . $page->path 
 			),
 			
 			 $where );
@@ -709,20 +716,20 @@ class Pages extends Zend_Db_Table {
 	 * при котором страница выше является родительской
 	 *
 	 * @param int $id
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @param string $point
 	 */
-	private function replaceBelow($id, $parentId, $point) {
+	private function replaceBelow($id, $id_parent, $point) {
 		$page = $this->getPage ( $id );
-		$parent = $this->getPage ( $parentId );
+		$parent = $this->getPage ( $id_parent );
 		
-		$this->getAdapter ()->query ( "UPDATE $this->_name SET parentId = :parentId, level = :level, sortId = sortId + 1 WHERE parentId = :id AND sortId > :sort", array ('parentId' => $parent->parentId, 'level' => $parent->level, 'id' => $parent->parentId, 'sort' => $parent->sortId ) );
+		$this->getAdapter ()->query ( "UPDATE $this->_name SET id_parent = :id_parent, level = :level, priority = priority + 1 WHERE id_parent = :id AND priority > :sort", array ('id_parent' => $parent->id_parent, 'level' => $parent->level, 'id' => $parent->id_parent, 'sort' => $parent->priority ) );
 		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
 		$this->update ( array (
-						'parentId' => $parent->parentId, 
+						'id_parent' => $parent->id_parent, 
 						'level' => $parent->level, 
-						'sortId' => $parent->sortId + 1//, 
-						//'path' => $this->generateStringPath ( $parent->parentId, '/' ) . $page->path
+						'priority' => $parent->priority + 1//, 
+						//'path' => $this->generateStringPath ( $parent->id_parent, '/' ) . $page->path
 		 ), $where );
 	}
 	
@@ -732,17 +739,17 @@ class Pages extends Zend_Db_Table {
 	 * в конец списка вложенных
 	 *
 	 * @param int $id
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @param string $point
 	 */
-	private function replaceAppend($id, $parentId, $point) {
+	private function replaceAppend($id, $id_parent, $point) {
 		$page = $this->getPage ( $id );
-		$parent = $this->getPage ( $parentId );
-		$max_sort = $this->getMaxSort ( $parentId );
+		$parent = $this->getPage ( $id_parent );
+		$max_sort = $this->getMaxSort ( $id_parent );
 		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
 		$this->update ( array (
-			'parentId' => $parentId, 'level' => $parent->level + 1, //на 1 больше родительского уровня
-			'sortId' => $max_sort + 1, //на 1 больше максимального- добавляется в конец
+			'id_parent' => $id_parent, 'level' => $parent->level + 1, //на 1 больше родительского уровня
+			'priority' => $max_sort + 1, //на 1 больше максимального- добавляется в конец
 			/*'path' => $this->generateStringPath ( $parent->id, '/' ) . $page->path*/ )
 		, $where );
 	}
@@ -760,7 +767,7 @@ class Pages extends Zend_Db_Table {
 	}
 	
 	/**
-	 * Получение минимального sortId 
+	 * Получение минимального priority 
 	 * родительской страницы
 	 *
 	 * @param int $id
@@ -771,7 +778,7 @@ class Pages extends Zend_Db_Table {
 	}
 	
 	/**
-	 * Получение максимального sortId 
+	 * Получение максимального priority 
 	 * родительской страницы
 	 *
 	 * @param int $id
@@ -782,7 +789,7 @@ class Pages extends Zend_Db_Table {
 	}
 	
 	/**
-	 * Получение sortId 
+	 * Получение priority 
 	 * родительской страницы,
 	 * определенным образом сортируя(asc, desc)
 	 *
@@ -790,11 +797,11 @@ class Pages extends Zend_Db_Table {
 	 * @return int
 	 */
 	private function getSort($id, $type) {
-		$order = "sortId $type";
-		$where = $this->getAdapter ()->quoteInto ( 'parentId = ?', $id );
+		$order = "priority $type";
+		$where = $this->getAdapter ()->quoteInto ( 'id_parent = ?', $id );
 		$page = $this->fetchRow ( $where, $order );
 		
-		return $page ? $page->sortId : 0;
+		return $page ? $page->priority : 0;
 	}
 	
 	/**
@@ -805,7 +812,7 @@ class Pages extends Zend_Db_Table {
 	 */
 	private function hasChild($id) {
 		try {
-			$where = $this->getAdapter ()->quoteInto ( 'parentId = ?', $id );
+			$where = $this->getAdapter ()->quoteInto ( 'id_parent = ?', $id );
 			$root = $this->fetchRow ( $where );
 		} catch ( Exception $e ) {
 			echo $e->getMessage ();
@@ -819,16 +826,16 @@ class Pages extends Zend_Db_Table {
 	 * Получение "перевернутого" пути страницы, 
 	 * так как первоначально путь формируется от детей - к отцу
 	 *
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @return string
 	 */
-	private function generateReversePath($parentId) {
-		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $parentId );
+	private function generateReversePath($id_parent) {
+		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id_parent );
 		$parent = $this->fetchRow ( $where );
 		
 		if ($parent && $parent->type != 'root') {
 			$this->_path [] = $parent->path;
-			$this->generateReversePath ( $parent->parentId );
+			$this->generateReversePath ( $parent->id_parent );
 		}
 		
 		return $this->_path;
@@ -837,11 +844,11 @@ class Pages extends Zend_Db_Table {
 	/**
 	 * Получение пути страницы в виде массива
 	 *
-	 * @param int $parentId
+	 * @param int $id_parent
 	 * @return array
 	 */
-	private function generateArrayPath($parentId) {
-		$reverse = $this->generateReversePath ( $parentId );
+	private function generateArrayPath($id_parent) {
+		$reverse = $this->generateReversePath ( $id_parent );
 		$result = array ( );
 		
 		for($i = count ( $reverse ) - 1; $i >= 0; $i --) {
@@ -874,7 +881,7 @@ class Pages extends Zend_Db_Table {
 			//'id' => $maxId + 1,
 			'type' => 'page',
 			'version' => isset ( $data ['lang'] ) ? $data ['lang'] : $parent->version,
-			'published' => isset ( $data ['published'] ) ? '1' : '0',
+			'is_active' => isset ( $data ['is_active'] ) ? '1' : '0',
 			'pubDate' => date ( "Y-m-d H:i:s" ),
 			'sitemap' => isset ( $data ['sitemap'] ) ? '1' : '0',
 			'show_childs' => isset ( $data ['show_childs'] ) ? '1' : '0',
@@ -884,14 +891,14 @@ class Pages extends Zend_Db_Table {
 			'template' => isset ( $data ['template'] ) ? $data ['template'] : 'default',
 			'module' => $module, 'createdBy' => $user->id,
 			'editedBy' => $user->id,
-			'deletable'=>1,
+			'allow_delete'=>1,
 			'deleted' => '0',
 			'deletedBy' => $user->id,
-			'publishedBy' => $user->id,
-			'parentId' => isset ( $data ['parent_id'] ) ? $data ['parent_id'] : '1',
+			'is_activeBy' => $user->id,
+			'id_parent' => isset ( $data ['parent_id'] ) ? $data ['parent_id'] : '1',
 			'level' => $parent->level + 1,
-			'sortId' => $countOfChildren + 1,
-			'name' => isset ( $data ['name'] ) ? $data ['name'] : '',
+			'priority' => $countOfChildren + 1,
+			'title' => isset ( $data ['title'] ) ? $data ['title'] : '',
 			'inside_items' => isset ( $data ['inside_items'] ) ? $data ['inside_items'] : '0',
 			'id_div_type' => isset ( $data ['id_div_type'] ) ? $data ['id_div_type'] : '0',			
 			'path' => $data ['path'] );
@@ -914,7 +921,7 @@ class Pages extends Zend_Db_Table {
 			}
 		}		
 		$result = array (
-			'published' => isset ( $data ['published'] ) ? (int)$data ['published'] : '0',
+			'is_active' => isset ( $data ['is_active'] ) ? (int)$data ['is_active'] : '0',
 			'sitemap' => isset ( $data ['sitemap'] ) ? (int)$data ['sitemap'] : '0',
 			'id_div_type' => isset ( $data ['id_div_type'] ) ? $data ['id_div_type'] : '0',
 			'show_childs' => isset ( $data ['show_childs'] ) ? (int)$data ['show_childs'] : '0',
@@ -922,7 +929,7 @@ class Pages extends Zend_Db_Table {
 			'content' => isset ( $data ['content'] ) ? $data ['content'] : '',
 			'template' => isset ( $data ['template'] ) ? $data ['template'] : 'default',
 			'editedBy' => $user->id,
-			'name' => isset ( $data ['name'] ) ? $data ['name'] : '',
+			'title' => isset ( $data ['title'] ) ? $data ['title'] : '',
 			'inside_items' => isset ( $data ['inside_items'] ) ? $data ['inside_items'] : '0',
 			'path' => $data ['path'] );
 		
@@ -937,19 +944,19 @@ class Pages extends Zend_Db_Table {
 	 */
 	private function getCopyDataPage($data) {
 		$user = Security::getInstance ()->getUser ();
-		$countOfChildren = $this->getCountOfChildren ( $data->parentId );
+		$countOfChildren = $this->getCountOfChildren ( $data->id_parent );
 		$maxId = $this->getMaxId ();
 		$data = $data->toArray ();
-		$number = $this->getCountOfCopies ( $data ['name'] ) + 1;
+		$number = $this->getCountOfCopies ( $data ['title'] ) + 1;
 		//$data ['id'] = $maxId + 1;
 		unset($data['id']);
-		$data ['name'] = $data ['name'] . "_$number";
+		$data ['title'] = $data ['title'] . "_$number";
 		$data ['version'] = $data ['version'];
 		$data ['path'] = $data ['path'] . "_$number";
-		$data ['published'] = '0';
+		$data ['is_active'] = '0';
 		$data ['pubDate'] = date ( "Y-m-d H:i:s" );
 		$data ['createdBy'] = $user->id;
-		$data ['sortId'] = $countOfChildren + 1;
+		$data ['priority'] = $countOfChildren + 1;
 		
 		return $data;
 	}
@@ -958,12 +965,12 @@ class Pages extends Zend_Db_Table {
 	 * Получение количества копий страницы
 	 * для определения префикса новой копии
 	 *
-	 * @param string $name
+	 * @param string $title
 	 * @return int
 	 */
-	private function getCountOfCopies($name) {
+	private function getCountOfCopies($title) {
 		$db = $this->getAdapter ();
-		$sql = $db->quoteInto ( "SELECT count(*) as c FROM $this->_name WHERE name regexp ?", $name . '_[[:digit:]]' );
+		$sql = $db->quoteInto ( "SELECT count(*) as c FROM $this->_name WHERE title regexp ?", $title . '_[[:digit:]]' );
 		
 		$result = $db->query ( $sql );
 		$count = $result->fetchAll ();
@@ -991,22 +998,23 @@ class Pages extends Zend_Db_Table {
 	 */
 	private function getDuration($data) {
 		$title = 'Выключить';		
-		if ($data->published == '0') {			
+		if ($data->is_active == '0') {			
 			$title = 'Включить';
 		}
-		$lang = $data->version;
-		if ($data->type!='root'){
-			$module = ($data->module == 'default' || empty ( $data->module )) ? 'pages' : $data->module;
+		//$lang = $data->version;
+		if ($data->id_parent!=''){
+			//$module = ($data->module == 'default' || empty ( $data->module )) ? 'pages' : $data->module;
 			
-			$url = ($lang == 'ru') ? $data->path : $lang . '/' . $data->path;
-			$delete = $data->deletable==1 ? "<a href ='#' title='Удалить' delete=\"true\" id_page=\"$data->id\" ><img src='/img/admin/delete.gif' /></a>" : '';
-			//$copy = $data->deletable==1 ? "<a href ='#' title='Сделать копию' ><img src='/images/plus_b.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/copy/id/$data->id/\" '/></a>" :'';
+			$url =  $data->path;
+			$delete = $data->allow_delete==1 ? "<a href ='#' title='Удалить' delete=\"true\" id_page=\"$data->id\" ><img src='/img/admin/delete.gif' /></a>" : '';
+			//$copy = $data->allow_delete==1 ? "<a href ='#' title='Сделать копию' ><img src='/images/plus_b.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/copy/id/$data->id/\" '/></a>" :'';
 			
 			
-			$go_to_module = $data->inside_items ==1 ? "<a href ='#' title='Перейти внутрь раздела' ><img src='/img/admin/folder.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/gotomodule/id_page/$data->id/id_type/$data->id_div_type/\" '/></a>" :'<img src="/img/admin/s.gif" width="24" height="1" >';
+			//$go_to_module = $data->inside_items ==1 ? "<a href ='#' title='Перейти внутрь раздела' ><img src='/img/admin/folder.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/gotomodule/id_page/$data->id/id_type/$data->id_div_type/\" '/></a>" :'<img src="/img/admin/s.gif" width="24" height="1" >';
+			$go_to_module = '';
 			//"<a href ='#' title='Просмотр'><img src='/images/search.gif' onclick='javascript:window.location = \"/$url\" '/></a>" .
 			return 	$go_to_module.
-					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" ><img src='/img/admin/active_" . $data->published . ".gif' /></a>" . 
+					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" ><img src='/img/admin/active_" . $data->is_active . ".gif' /></a>" . 
 					"<a href ='#' title='Редактировать' ><img src='/img/admin/redact.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id/$data->id/\" '/></a>" .
 					"<a href ='#' title='Добавить' ><img src='/img/admin/plus_krug.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" .$delete;
 					;

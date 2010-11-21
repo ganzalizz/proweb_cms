@@ -22,10 +22,13 @@ class pages_IndexController extends Zend_Controller_Action {
     public function init() { 
       //  echo 'fufelok';
 //        //exit ();
+
+    	$view = Zend_Layout::getMvcInstance()->getView();
+    	print_r($view->getScriptPaths());
         $id = $this->_getParam('id');
         $page = Pages::getInstance()->getPage($this->_getParam('id'));
         
-        if(is_null($page) || $page->published == '0') {
+        if(is_null($page) || $page->is_active == '0') {
             $this->_redirect('/404');
         }        
         
@@ -47,11 +50,13 @@ class pages_IndexController extends Zend_Controller_Action {
         $this->layout->current_type = 'pages';
         $this->layout->lang = $this->lang;
         $this->layout->page = $this->_page;
-        $this->layout->id_object = $this->_page->id;
+       // $this->layout->id_object = $this->_page->id;
 
-        if ($page->show_childs==1) {
+        /*if ($page->show_childs==1) {
             $this->layout->page_childs = Pages::getInstance()->getChildrenAndURLs($page->id);
-        }
+        }*/
+        
+        
     }
     
     public function indexAction()
@@ -72,6 +77,10 @@ class pages_IndexController extends Zend_Controller_Action {
      */
     public function mainAction() {
         $this->layout->setLayout("front/main");
+        
+        //print_r($this->view->getScriptPaths());
+        $this->initView();
+        
     }
 
     /**

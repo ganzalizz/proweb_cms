@@ -131,7 +131,7 @@ class Router
 		//print_r($data);
 		$id = $data['id'];
 		$name = $data['name'];
-		$route = $this->filtered($data['path']);
+		$route = $route_name = $this->filtered($data['path']);
 		$version = $this->filtered($data['lang']);
 		$module = $this->filtered($module);
 		$action = $this->filtered($action);
@@ -140,7 +140,7 @@ class Router
 			$controller = 'page';
 		}
 		$string = "\n;[$name-$id]\n";
-		$string .= "routes.$id.type = \"Zend_Controller_Router_Route\"\n";
+		$string .= "routes.$route.type = \"Zend_Controller_Router_Route\"\n";
 		
 		if($version != 'ru'){
 			$route = ($route == '') ? "$version" : "$version/$route";
@@ -149,11 +149,11 @@ class Router
 		if($route!=''){
 			$route.='/*';
 		}
-		$string .= "routes.$id.route = \"$route\" \n";
-		$string .= "routes.$id.defaults.module = \"$module\"\n";
-		$string .= "routes.$id.defaults.controller = \"$controller\"\n";
-		$string .= "routes.$id.defaults.action = \"$action\"\n";
-		$string .= "routes.$id.defaults.id = \"$id\" \n";
+		$string .= "routes.$route_name.route = \"$route\" \n";
+		$string .= "routes.$route_name.defaults.module = \"$module\"\n";
+		$string .= "routes.$route_name.defaults.controller = \"$controller\"\n";
+		$string .= "routes.$route_name.defaults.action = \"$action\"\n";
+		$string .= "routes.$route_name.defaults.id = \"$id\" \n";
 		
 		$pre = file_get_contents($filename);
 		file_put_contents($filename, $pre . $string);

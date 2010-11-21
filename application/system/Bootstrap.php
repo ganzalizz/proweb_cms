@@ -154,8 +154,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //Zend_Controller_Front::getInstance()
         	//->registerPlugin(new Zend_Controller_Plugin_ErrorHandler())
         	//->throwExceptions(true);
+        //Zend_Controller_Front::getInstance()->getRequest()->set
         Bootstrap::init(); 
-	Zend_Session::start();    
+		Zend_Session::start();    
        
         Configurator::setupDatabase();
         Configurator::setupView(Zend_Registry::get('helpersPaths'), Zend_Registry::get('scriptsPaths'));
