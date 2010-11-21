@@ -8,7 +8,7 @@
         <?//}?>
         
         <h3><a href="/newslist/item/<?=$new->id?>" class="head_news"><?=$new->name?></a></h3>
-            <p><?=$new->teaser?>&nbsp;<a href="/newslist/item/<?=$new->id?>">читать...</a></p>
+            <p><?=$new->teaser?>&nbsp;<a href="/newsitem/item/<?=$new->id?>">читать...</a></p>
             
         </div>
    
@@ -16,6 +16,6 @@
  
 </div><?}?>
 
-<?php echo $this->pagination($this->pagination_config)->create_links(); ?>
+<?php echo $this->paginator ?>
 
 

@@ -40,7 +40,7 @@ class News_NewsController extends Zend_Controller_Action {
 
     public function indexAction() {
       
-       if ($this->_hasParam('item')) $this->_forward('newsitem'); 
+      // if ($this->_hasParam('item')) $this->_forward('newsitem'); 
         
        $ini = new Ext_Common_Config('news','frontend');
        $registry = $ini->getModuleConfigSection();
@@ -50,18 +50,14 @@ class News_NewsController extends Zend_Controller_Action {
        $page = $this->_getParam('page',1);
        $item_per_page = $conf->news->per->page;
        
-       $offset = $page ? (($page - 1) * $item_per_page):0;
        
-       $this->view->news = News::getInstance()->getAllActivePage($item_per_page, $offset);
+       $paginator = News::getInstance()->getNewsPaginator($item_per_page,$page);
+       Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
+       $paginator->setView(Zend_Layout::getMvcInstance()->getView());
+       $this->view->news =  $paginator->getCurrentItems();
+       $this->view->paginator = $paginator;
+       print_r($paginator->);
        
-       
-       $this->view->addHelperPath('/Ext/View/Helper', 'Ext_View_Helper');
-       $this->view->pagination_config = array( 'total_items'=>100,
-                                               'items_per_page'=>25,
-                                               'style'=>'extended');
-       //$this->view->paginator = News::getInstance()->getPaginatorRows($page);
-       echo $this->view->getScriptPaths(); 
-        
         
 
         
@@ -69,7 +65,7 @@ class News_NewsController extends Zend_Controller_Action {
        
         
          
-       $this->view->news = News::getInstance()->getAllActive();
+      
     }
 
     public function newsitemAction() {
