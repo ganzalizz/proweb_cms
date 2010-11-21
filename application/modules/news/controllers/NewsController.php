@@ -15,7 +15,7 @@ class News_NewsController extends Zend_Controller_Action {
         $id = $this->_getParam('id');
         $page = Pages::getInstance()->getPage($this->_getParam('id'));
         if(!is_null($page)) {
-            if ($page->published == '0') {
+            if ($page->is_active == '0') {
                 $this->_redirect('/404');
             }
 
@@ -31,7 +31,7 @@ class News_NewsController extends Zend_Controller_Action {
             $this->view->placeholder('descriptions')->set($options->descriptions);
             $this->view->placeholder('id_page')->set($id);
             $this->view->placeholder('object_id')->set($id);
-            $this->view->placeholder('h1')->set($page->name);
+            $this->view->placeholder('h1')->set($page->title);
            
            // $this->view->page = $page;
            // $this->layout->id_object = $page->id;
@@ -55,16 +55,19 @@ class News_NewsController extends Zend_Controller_Action {
        $this->view->news = News::getInstance()->getAllActivePage($item_per_page, $offset);
        
        
-       $this->view->addHelperPath('/Ext/View/Helper', 'Ext_View_Helper');
+       $this->view->addHelperPath('Ext/View/Helper', 'Ext_View_Helper');
        $this->view->pagination_config = array( 'total_items'=>100,
                                                'items_per_page'=>25,
                                                'style'=>'extended');
        //$this->view->paginator = News::getInstance()->getPaginatorRows($page);
-       echo $this->view->getScriptPaths(); 
+      // echo $this->view->getScriptPaths(); 
         
+        $router = Zend_Controller_Front::getInstance()->getRouter()->getCurrentRoute();
+        //$router = Zend_Controller_Front::getInstance()->getRouter()
         
+        //print_r($router);
 
-        
+       // var_dump(  Zend_Controller_Front::getInstance()->getBaseUrl());
         
        
         
