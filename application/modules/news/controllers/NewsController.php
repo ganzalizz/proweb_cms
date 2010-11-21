@@ -56,16 +56,9 @@ class News_NewsController extends Zend_Controller_Action {
        $paginator->setView(Zend_Layout::getMvcInstance()->getView());
        $this->view->news =  $paginator->getCurrentItems();
        $this->view->paginator = $paginator;
-       print_r($paginator->);
        
-        
-
-        
-        
        
-        
-         
-      
+       
     }
 
     public function newsitemAction() {

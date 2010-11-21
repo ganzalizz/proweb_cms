@@ -6,7 +6,7 @@
         <? //if($new['small_img']){?>
            <!-- <div class="photo"><a href="/newslist/item/<?//=$new['id']?>"><img src="/pics/news/<?//=$new['small_img']?>" alt="" /></a></div> -->
         <?//}?>
-        
+        <a href="<?php echo $this->url(array('page' =>1)); ?>"><?=$article['name']?></a>
         <h3><a href="/articleslist/item/<?=$article['id']?>" class="head_news"><?=$article['name']?></a></h3>
             <p><?=$article['intro']?>&nbsp;<a href="/articleslist/item/<?=$article['id']?>">читать...</a></p>
             
