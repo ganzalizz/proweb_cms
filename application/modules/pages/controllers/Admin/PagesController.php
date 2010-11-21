@@ -23,20 +23,12 @@ class Pages_Admin_PagesController extends MainAdminController {
 
     public function indexAction() {        
         $lang = $this->_hasParam('lang') ? $this->_getParam('lang') : 'ru';
-
-        //Loader::loadPublicModel('Lang');
-        $version = Lang::getInstance()->getVersion($lang);
-        $this->view->version = $version;
-        $root = Pages::getInstance()->getRoot($version->name);
-        $tree = Pages::getInstance()->getTree($version->name, $root->parentId);
+       
+        $root = Pages::getInstance()->getRoot();
+        //print_r($root->toArray()); exit;
+        $tree = Pages::getInstance()->getTree($root->id_parent);
         $this->view->html_tree = $tree;
-        if($this->_hasParam('node') && $this->_hasParam('target') && $this->_hasParam('point')) {
-            $node = (int)$this->_getParam('node');
-            $target = (int)$this->_getParam('target');
-            $point = (string)$this->_getParam('point');
-            $pages = Pages::getInstance();
-            $pages->replace($node, $target, $point);
-        }
+        
 
         if(!empty($tree)) {
             /*$id = $tree[0]['id'];
@@ -47,6 +39,8 @@ class Pages_Admin_PagesController extends MainAdminController {
 //			$this->view->help = 'Модуль управления содержимым сайта';
             $this->view->lang = $lang;
         }
+        
+        
     }
 
     public function moveAction() {

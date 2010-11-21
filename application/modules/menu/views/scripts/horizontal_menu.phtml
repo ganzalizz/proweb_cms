@@ -4,8 +4,8 @@
         <?foreach ($this->menu as $key => $data) { ?>
         	<?php $item = $data['item'];?>
             <li>
-                <a href="/<?=$item->path?>" title="<?=$item->name?>" <?=$item->id==$this->current ? 'class="active"' : ''?>>
-                    <span><?=$item->name?></span>
+                <a href="/<?=$item->path?>" title="<?=$item->title?>" <?=$item->id==$this->current ? 'class="active"' : ''?>>
+                    <span><?=$item->title?></span>
                    
                 </a>
                 <?php if (isset($data['childs']) && count($data['childs'])){ ?>
@@ -13,8 +13,8 @@
                 	<ul>
                 		<?php foreach ($data['childs'] as $child){?>
                 			<li>
-                				<a href="/<?=$child->path?>" title="<?=$child->name?>" <?=$child->id==$this->current ? 'class="active"' : ''?>>
-				                    <span><?=$child->name?></span>
+                				<a href="/<?=$child->path?>" title="<?=$child->title?>" <?=$child->id==$this->current ? 'class="active"' : ''?>>
+				                    <span><?=$child->title?></span>
 				                </a>
                 			</li>
                 		

@@ -78,7 +78,7 @@ class Menu extends Zend_Db_Table {
 				->joinInner(
 					array('sc'=>'site_content'),
 					'sc.id=sm.pageId',
-					array('sc.name', 'sc.path', 'sc.level', 'sc.sortId', 'sc.parentId', 'sc.id')
+					array('sc.title', 'sc.path', 'sc.level', 'sc.priority', 'sc.id_parent', 'sc.id')
 				)
 				->joinInner(
 					array('smt'=>'site_menu_types'),
@@ -86,10 +86,10 @@ class Menu extends Zend_Db_Table {
 					array()
 				)
 				->where('smt.name = ?', $type)
-				->where('sc.published = ?', 1)
+				->where('sc.is_active = ?', 1)
 				->where('sc.deleted = ?', 0)
 				->where('sc.level <= ?', $depth)
-				->order(array('sc.level', 'sc.sortId'));
+				->order(array('sc.level', 'sc.priority'));
 				
 			return $this->fetchAll($select);
 		
