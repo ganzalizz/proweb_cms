@@ -12,7 +12,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ROOT_DIR,
             DIR_LIBRARY,
             DIR_ZEND,
-            DIR_ZENDX,
             DIR_PEAR,
             DIR_DEFAULT_CONTROLLERS,
             DIR_ADMIN_CONTROLLERS,
@@ -36,21 +35,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             
 
         ));
-        
-         
-        
+      
              
     }
 
-    
-    protected function _initViewHelpers()
-{
-    //assuming you already have this function in your bootstrap
-    //jQuery (using the ui-lightness theme) 
-    
-        
-          
-}
      
 
        
@@ -67,7 +55,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         define('DIR_ADMIN_CONTROLLERS', DIR_MODULES  . 'admin' . DS . 'controllers' . DS);
         define('DIR_LIBRARY', DIR_APPLICATION . 'library' . DS);
         define('DIR_ZEND', DIR_LIBRARY . 'Zend' . DS);
-        define('DIR_ZENDX', DIR_LIBRARY . 'ZendX' . DS);
         define('DIR_PEAR', DIR_LIBRARY . 'Pear' . DS);
         define('DIR_COMMON', DIR_APPLICATION . 'common' .  DS);
         define('DIR_MODELS', DIR_APPLICATION . 'models' . DS);
@@ -156,12 +143,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $scriptsPaths;
     }
 
-    // функция замены e-mail адресов
-	private static  function email_replace($text)
-	{
-		$exp = '/([a-zA-Z0-9|.|-|_]{2,256})@([a-zA-Z0-9|.|-]{2,256}).([a-z]{2,4})/';
-		return preg_replace($exp, '<script type="text/javascript"> eml = \'\1\' +  "@" + \'\2\'+\'.\3\'; document.write(eml);</script>', $text);
-	} 
+    
     
     public static function _initStart() {
         //Zend_Controller_Front::getInstance()
@@ -170,25 +152,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //Zend_Controller_Front::getInstance()->getRequest()->set
         Bootstrap::init(); 
 		Zend_Session::start();    
-       
+        Configurator::initConfig();
+        
         Configurator::setupDatabase();
         Configurator::setupView(Zend_Registry::get('helpersPaths'), Zend_Registry::get('scriptsPaths'));
-        
-        $view = Zend_Layout::getMvcInstance()->getView();   
-    $view->addHelperPath(DIR_LIBRARY."ZendX/JQuery/View/Helper", "ZendX_JQuery_View_Helper");
-        $view->jQuery()->addStylesheet('/css/css/ui-lightness/jquery-ui-1.8.6.custom.css')
-        ->setLocalPath('/js/jquery-1.4.2.min.js')
-        ->setUiLocalPath('/js/jquery-ui-1.8.6.custom.min.js');
-        
-        
         Configurator::setupRoutes(Zend_Controller_Front::getInstance()->getRouter());
-        
         Configurator::tuneEnvironment(); 
         
         Security::getInstance()->init();
-        SiteAuth::getInstance()->init();
-        
-        
+        SiteAuth::getInstance()->init();  
         
 		//Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive( ) );
 		//Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding( Ext_Search_Lucene::ENCODING );

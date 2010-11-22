@@ -123,11 +123,11 @@ class Pages_Admin_PagesController extends MainAdminController {
 		$this->view->options = $options;
 		$fck = $this->getFck('content', '90%', '400');
 		$this->view->fck = $fck;
-		$this->view->introText = $this->getFck('introText', '90%', '150','Basic');
+		$this->view->introText = $this->getFck('intro', '90%', '150','Basic');
 		$parentId = (int)$this->getRequest()->getParam('parent_id');
 		$this->view->parentId = $parentId;
-		$this->view->menu = MenuTypes::getInstance()->fetchAll("`name`='horizontal_menu'");
-                $this->view->url = Pages::getInstance()->generateStringPath($parentId, '/');
+		$this->view->menu = MenuTypes::getInstance()->fetchAll();
+        
 		$this->view->pageName = 'Добавить страницу';
 		$modules_types = Modules::getInstance()->fetchAll('active=1','priority DESC');
 		if (count($modules_types)){
@@ -193,7 +193,7 @@ class Pages_Admin_PagesController extends MainAdminController {
 
             $ok = 1;
             $err = array();
-            if (trim($data['name'])=='') {
+            if (trim($data['title'])=='') {
                 $err[] = 'Незаполнено поле название';
                 $ok = 0;
             }
@@ -240,7 +240,7 @@ class Pages_Admin_PagesController extends MainAdminController {
         $this->view->fck = $fck;
         $this->view->introText = $this->getFck('introText', '90%', '150','Basic');
         $this->view->pageName = 'Редактировать страницу';
-        if ($page->deletable==1) {
+        if ($page->allow_delete==1) {
             $div_types = SiteDivisionsType::getInstance()->fetchAll('active=1','priority DESC');
         } else $div_types =SiteDivisionsType::getInstance()->fetchAll('id='.(int)$page->id_div_type);
 

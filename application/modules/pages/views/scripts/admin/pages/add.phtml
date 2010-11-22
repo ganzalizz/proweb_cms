@@ -18,14 +18,14 @@
 
         <div class="content_block">
             <p class="form_name">Название страницы<span class="ser_text size11">(используется в меню)</span></p>
-            <?=$this->formText('name', $this->escape($this->page->name), array('onchange'=>'javascript:ttAdd();')) ?>
+            <?=$this->formText('title', $this->escape($this->page->title), array('onchange'=>'javascript:ttAdd();')) ?>
 
             <p class="form_name">Заголовок h1<span class="ser_text size11">(используется на сайте)</span></p>
             <?=$this->formText('h1', $this->escape($this->options->h1)) ?>
 
 
             <p class="form_name">Url <span class="ser_text size11">(адрес раздела/страницы)</span></p>
-            <?if ($this->page->deletable==0 && $this->page->id!=0) {
+            <?if ($this->page->allow_delete==0 && $this->page->id!=0) {
                 $url_params = array('readonly'=>'');
             }else {
                 $url_params = array();
@@ -59,10 +59,10 @@
 
                         </td>
                         <td>
-                            <div><?=$this->formCheckbox('published', null, array('checked'=>$this->page->published, 'class'=>'checkbox'), array(1,0)) ?>
+                            <div><?=$this->formCheckbox('is_active', null, array('checked'=>$this->page->is_active, 'class'=>'checkbox'), array(1,0)) ?>
                                 <label for="published">Опубликовать на сайте</label></div>
 
-                            <div><?=$this->formCheckbox('sitemap', null, array('class'=>'checkbox', 'checked'=>$this->page->sitemap)) ?>
+                            <div><?=$this->formCheckbox('show_in_sitemap', null, array('class'=>'checkbox', 'checked'=>$this->page->show_in_sitemap)) ?>
                                 <label for="sitemap">Отображать в карте сайта</label></div>
 
                             <div><?=$this->formCheckbox('show_childs', null, array('class'=>'checkbox', 'checked'=>$this->page->show_childs), array(1,0)) ?>
@@ -101,7 +101,7 @@
             <h3><span id="show-" ><img src="/img/admin/ico_show-.gif" alt="" /></span> Контент</h3>
             <p class="form_name">Краткое описание</p>
             <?php
-            $this->introText->Value = $this->page->introText;
+            $this->introText->Value = $this->page->intro;
             $this->introText->Create();
             ?>
             <p class="form_name">Полное описание</p>
@@ -122,7 +122,7 @@
                     }
                     ?>
             <div><?=$this->formCheckbox("menu[$data->id]", $data->id, array('class'=>'checkbox', 'checked'=>$checked)) ?>
-                <label ><?=$data->title?></label></div>
+                <label for="menu-<?php echo $data->id ?>" ><?=$data->title?></label></div>
 
 
                     <?php
