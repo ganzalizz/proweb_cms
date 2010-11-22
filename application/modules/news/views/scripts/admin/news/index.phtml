@@ -37,16 +37,16 @@
 
                     <? foreach($this->news as $item) {?>
                     <tr align="left">
-                            <?$pub='unpub';
+                            <?$is_active='unpub';
                             $title="заблокировать";
-                            $main='unsetmain' ;
+                            $is_main='unsetmain' ;
                             $main_tit="Убрать с главной";
-                            if ($item['pub']==0) {
-                                $pub="pub";
+                            if ($item['is_active']==0) {
+                                $is_active="is_active";
                                 $title="Разблокировать";
                             }
-                            if ($item['main']==0) {
-                                $main="setmain";
+                            if ($item['is_main']==0) {
+                                $is_main="setmain";
                                 $main_tit="Поместить на главную";
                             }?>
 
@@ -59,8 +59,8 @@
                         </td>
                         <td>
                             &nbsp;<a href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>/id_page/<?=$this->id_page?>" title="редактировать"><img src="/img/admin/redact.gif"></a>&nbsp;
-                            <a href="<?=$this->currentModul?>/<?=$pub?>/id/<?=$item['id']?>/id_page/<?=$this->id_page?>" title="<?=$title?>"><img src="/img/admin/active_<?=$item['pub']?>.gif" />&nbsp;
-                                <a href="<?=$this->currentModul?>/<?=$main?>/id/<?=$item['id']?>/id_page/<?=$this->id_page?>" title="<?=$main_tit?>"><img src="/img/admin/main_<?=$item['main']?>.gif" />&nbsp;
+                            <a href="<?=$this->currentModul?>/<?=$is_active?>/id/<?=$item['id']?>/id_page/<?=$this->id_page?>" title="<?=$title?>"><img src="/img/admin/active_<?=$item['is_active']?>.gif" />&nbsp;
+                                <a href="<?=$this->currentModul?>/<?=$is_main?>/id/<?=$item['id']?>/id_page/<?=$this->id_page?>" title="<?=$main_tit?>"><img src="/img/admin/main_<?=$item['is_main']?>.gif" />&nbsp;
                                     <a href="<?=$this->currentModul?>/copy/id/<?echo ($item['id'] )?>/id_page/<?=$this->id_page?>" title="Копировать"><img src="/img/admin/plus_b.gif"></a>&nbsp;
                                     <a href="#" onclick="go(<?=$item['id']?>)" title="Удалить"><img src="/img/admin/delete.gif"></a>
                                     &nbsp;</td>

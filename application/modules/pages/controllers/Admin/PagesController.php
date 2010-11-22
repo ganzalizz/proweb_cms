@@ -31,14 +31,13 @@ class Pages_Admin_PagesController extends MainAdminController {
         
 
         if(!empty($tree)) {
-            /*$id = $tree[0]['id'];
-			$tree[0]['duration'] = "<a href ='#' title='Добавить' style='margin-left: 128px'><img src='/images/plus_krug.gif' onclick='javascript:window.location=\"/admin/$lang/pages/add/parent_id/$id/\"'/></a>";
-			$this->view->ch=Zend_Json::encode($tree);*/
+           
 
             $this->view->pageName = 'Модуль управления содержимым сайта';
 //			$this->view->help = 'Модуль управления содержимым сайта';
             $this->view->lang = $lang;
         }
+       // echo new Zend_Db_Expr('ABS(is_active-1)');
         
         
     }
@@ -157,30 +156,26 @@ class Pages_Admin_PagesController extends MainAdminController {
     public function deleteAction() {
         if($this->_hasParam('id')) {
             $id = (int)$this->getRequest()->getParam('id');
-            Loader::loadPublicModel('Trash');
-            Trash::getInstance()->add($id);
+            Pages::getInstance()->remove($id);
         }
         if ($this->_request->isXmlHttpRequest()) {
             echo 'ok';
             exit;
         }
-        $lang = $this->_hasParam('lang') ? $this->getParam('lang') : 'ru';
+        
         $this->_redirect($this->_curModule);
     }
 
     public function pubAction() {
         if($this->_hasParam('id')) {
             $id = (int)$this->getRequest()->getParam('id');
-            $page = Pages::getInstance()->find($id)->current();
-
-            if (!is_null($page)) {
-                $page->published =  abs($page->published-1);
-                $page->save();
-                if ($this->_request->isXmlHttpRequest()) {
-                    echo $page->published;
-                    exit;
-                }
+            Pages::getInstance()->changeActive($id);
+          
+        	if ($this->_request->isXmlHttpRequest()) {
+            	echo 'ok';
+                exit;
             }
+         
 
         }
         $this->_redirect($this->_curModule);
@@ -260,51 +255,8 @@ class Pages_Admin_PagesController extends MainAdminController {
         $this->view->lang = $lang;
     }
 
-    public function basketAction() {
-        $tree = Pages::getInstance()->getTree();
-        $id = $tree[0]['id'];
-        $tree[0]['duration'] = "<a href ='#' style='margin-left: 125px'><img src='/images/plus_krug.gif' onclick='javascript:window.location=\"/admin/pages/add/parent_id/$id/\"'/></a>";
-        $this->view->ch = Zend_Json::encode($tree);
-        $this->view->pageName = 'Модуль управления содержимым сайта';
-    }
-
-    public function copyAction() {
-//		Zend_Debug::dump($this->_request->getParams());exit;
-        if($this->_hasParam('id')) {
-            Pages::getInstance()->copyPage($this->_getParam('id'));
-        }
-
-//		exit;
-        $lang = $this->_hasParam('lang') ? $this->_getParam('lang') : 'ru';
-        $this->_redirect($this->_curModule);
-    }
-
-    public function copyAllAction() {
-        if($this->_hasParam('id')) {
-            Pages::getInstance()->copyPage($this->_getParam('id'));
-        }
-
-        $lang = $this->_hasParam('lang') ? $this->_getParam('lang') : 'ru';
-        $this->_redirect($this->_curModule);
-    }
-
-    public function newlangAction() {
-        if($this->_request->isPost()) {
-            $data['name'] = $this->_getParam('_name');
-            $data['title'] = $this->_getParam('_title');
-            Loader::loadPublicModel('Lang');
-            Lang::getInstance()->addLang($data);
-            $this->_redirect("/admin/$data[name]/pages/");
-        }
-    }
-
-
-    public function getVersion($lang) {
-        Loader::loadPublicModel('Versions');
-        $version = Versions::getInstance()->getVersion($lang);
-
-        return $version;
-    }
+   
+    
 
     public function gotomoduleAction() {
         $id_page = $this->_getParam('id_page');
@@ -363,10 +315,5 @@ class Pages_Admin_PagesController extends MainAdminController {
             }
         }
     }
-
-    private function inLanguages($param) {
-        $version = $this->getVersion($param);
-
-        return empty($version) ? false : true;
-    }
+    
 }

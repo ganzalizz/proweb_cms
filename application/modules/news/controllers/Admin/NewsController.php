@@ -32,7 +32,7 @@ class News_Admin_NewsController extends MainAdminController {
         $onPage = $this->view->onpage = 50;
         $this->view->counter=($page-1)*$onPage;
         $this->view->news = News::getInstance()->fetchAll();
-        $this->view->total = News::getInstance()->getCount("id_page='".$this->_id_page."'");
+       // $this->view->total = News::getInstance()->getCount("id_page='".$this->_id_page."'");
 
     }
 
@@ -47,61 +47,68 @@ class News_Admin_NewsController extends MainAdminController {
         $page_id = $this->_getParam('pageid');
         $this->view->modul_page = $page = Pages::getInstance()->getPage($page_id);
         $this->view->page = $page;
+        
+        $form = new Form_FormNews();
+        
         if ($this->_request->isPost()) {
-
-            $data = $this->getRequest()->getParams();
-            $new = $data['new'];
-            if ($new['created_at']!='') {
-                $adate = preg_match('/([\d]{2}).+([\d]{2}).+([\d]{4})/is', $new['created_at'], $matches);
-                $new['created_at'] = $matches[3].'-'.$matches[2].'-'.$matches[1];
-            } else {
-                $new['created_at'] = date('Y-m-d H:i:s');
-
-            }
-            $new['name']=trim($new['name']);
-            if (isset($new['pub']) && $new['pub']=='on') {
-                $new['pub'] = 1;
-            }
-            else {
-                $new['pub'] = 0;
-            }
-            (isset($new['main']) && $new['main']=='on' ?$new['main'] = 1 :$new['main'] = 0);
-            if (isset($page)) {
-                $new['page_id']=$page->id;
-                $new['type']=$page->template;
-            }
-
-            $post_data['title'] = $new['name'];
-            $post_data['text'] = $new['content'];
-
-            $id = News::getInstance()->addNew($new);
-            $item = News::getInstance()->find($id)->current();
-            // иконка
-            $img_name = $_FILES['image_small']['name'];
-            $img_source = $_FILES['image_small']['tmp_name'];
-
-            if ($img_name!='' && $img_source!='' ) {
-                $ext = @end(explode('.', $img_name));
-                $small_img = DIR_PUBLIC.'pics/news/'.$id.'_small.'.$ext;
-                if(copy($img_source, $small_img)) {
-                    $item->small_img = $id.'_small.'.$ext;
-                    $item->save();
-                }
-            }
-            // картинка
-            $img_name = $_FILES['image_big']['name'];
-            $img_source = $_FILES['image_big']['tmp_name'];
-            $delete_img = $this->_getParam('delete_img_big');
-            if ($img_name!='' && $img_source!='' && !$delete_img) {
-                $ext = @end(explode('.', $img_name));
-
-                $big_img = DIR_PUBLIC.'pics/news/'.$id.'_big.'.$ext;
-                if(copy($img_source, $big_img)) {
-                    $item->big_img = $id.'_big.'.$ext;
-                    $item->save();
-                }
-            }
+			if ($form->isValid($this->_getAllParams())){
+				
+			
+	            $data = $this->getRequest()->getParams();
+	            $new = $data['new'];
+	            if ($new['created_at']!='') {
+	                $adate = preg_match('/([\d]{2}).+([\d]{2}).+([\d]{4})/is', $new['created_at'], $matches);
+	                $new['created_at'] = $matches[3].'-'.$matches[2].'-'.$matches[1];
+	            } else {
+	                $new['created_at'] = date('Y-m-d H:i:s');
+	
+	            }
+	            $new['name']=trim($new['name']);
+	            if (isset($new['pub']) && $new['pub']=='on') {
+	                $new['pub'] = 1;
+	            }
+	            else {
+	                $new['pub'] = 0;
+	            }
+	            (isset($new['main']) && $new['main']=='on' ?$new['main'] = 1 :$new['main'] = 0);
+	            if (isset($page)) {
+	                $new['page_id']=$page->id;
+	                $new['type']=$page->template;
+	            }
+	
+	            $post_data['title'] = $new['name'];
+	            $post_data['text'] = $new['content'];
+	
+	            $id = News::getInstance()->addNew($new);
+	            $item = News::getInstance()->find($id)->current();
+	            // иконка
+	            $img_name = $_FILES['image_small']['name'];
+	            $img_source = $_FILES['image_small']['tmp_name'];
+	
+	            if ($img_name!='' && $img_source!='' ) {
+	                $ext = @end(explode('.', $img_name));
+	                $small_img = DIR_PUBLIC.'pics/news/'.$id.'_small.'.$ext;
+	                if(copy($img_source, $small_img)) {
+	                    $item->small_img = $id.'_small.'.$ext;
+	                    $item->save();
+	                }
+	            }
+	            // картинка
+	            $img_name = $_FILES['image_big']['name'];
+	            $img_source = $_FILES['image_big']['tmp_name'];
+	            $delete_img = $this->_getParam('delete_img_big');
+	            if ($img_name!='' && $img_source!='' && !$delete_img) {
+	                $ext = @end(explode('.', $img_name));
+	
+	                $big_img = DIR_PUBLIC.'pics/news/'.$id.'_big.'.$ext;
+	                if(copy($img_source, $big_img)) {
+	                    $item->big_img = $id.'_big.'.$ext;
+	                    $item->save();
+	                }
+	            }
+			} 
         }
+        $this->view->form = $form;
         $fck1 = $this->getFck('new[intro]', '100%', '200');
         $this->view->fck_intro = $fck1;
         $fck2 = $this->getFck('new[content]', '100%', '300');

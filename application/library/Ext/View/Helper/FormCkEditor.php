@@ -16,7 +16,7 @@ class Ext_View_Helper_FormCkEditor extends Zend_View_Helper_FormElement
         $info = $this->_getInfo($name, $value, $attribs);
         extract($info); // name, value, attribs, options, listsep, disable
 
-        $editor = new CKEditor();
+        $editor = new CKEditor();        
         // пусть возвращает значение, а не выводит в браузер
         $editor->returnOutput = true;
 
@@ -27,7 +27,7 @@ class Ext_View_Helper_FormCkEditor extends Zend_View_Helper_FormElement
         $editor->config['width'] = 600;
 
         // $value содержит значение по умолчанию
-        return $editor->editor('ckeditor', $value);
+        return $editor->editor($name, $value);
     }
 
 }

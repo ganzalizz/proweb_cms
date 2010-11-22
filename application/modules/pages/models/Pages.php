@@ -94,39 +94,7 @@ class Pages extends Zend_Db_Table {
 		return self::$_instance;
 	}
 	
-	/**
-	 * Добавление новой языковой версии сайта
-	 *
-	 * @param string $version
-	 */
-	public function addVersion($version) {
-		$where = array ($this->getAdapter ()->quoteInto ( 'version = ?', 'ru' ) );
-		$cur_version = $this->fetchAll ( $where, 'level' );
-		$user = Security::getInstance ()->getUser ();		
-		
-		foreach ( $cur_version as $key => $data ) {
-			$conformParent = $this->getConformParent ( ( int ) $data->id_parent, $version );
-			$oldId = $data->id;
-			$data->id = '';
-			$data->version = $version;
-			$data->createdBy = $user->id;
-			$data->pubDate = date ( "Y-m-d H:i:s" );
-			$data->id_parent = empty ( $conformParent ) ? 0 : $conformParent->id;
-			$this->insert ( $data->toArray () );
-			$new = $this->getVersionPage ( $data );
-			PagesOptions::getInstance ()->addVersion ( $oldId, $new->id );
-			Menu::getInstance ()->addVersion ( $oldId, $new->id );
-			$new = $new->toArray ();
-			if ($new ['type'] != 'root') {
-				$new ['lang'] = $version;
-				
-				$comments = Templates::getInstance ()->getComments ( $new ['template'] );
-				$controller = (Templates::getInstance ()->filtered ( $comments->module ) == 'default') ? 'page' : 'index';
-				Router::getInstance ()->addRoute ( $new, 'index', $controller, $comments->module );
-			}
-		}
 	
-	}
 	
 	/**
 	 * Получение сраницы определенной языковой версии
@@ -370,30 +338,7 @@ class Pages extends Zend_Db_Table {
 		return $this->fetchRow ( $select );
 	}
 	
-	/**
-	 * Получение страниц для вывода на карте сайта
-	 *
-	 * @param string $lang
-	 * @param int $id
-	 * @return array
-	 *//*
-	public function getSiteMap($lang, $id = 1) {
-		$where = array (
-			$this->getAdapter ()->quoteInto ( 'id_parent = ?', $id ),
-			$this->getAdapter ()->quoteInto ( 'version = ?', $lang ),
-			$this->getAdapter ()->quoteInto ( 'sitemap = ?', 1 )
-			 );
-		$nodes = array ( );
-		$nodes = $this->fetchAll ( $where, "priority" );
-		
-		foreach ( $nodes as $data ) {
-			$data->path = $lang == 'ru' ? $data->path : $lang . '/' . $data->path;
-			$this->_tree [] = $data;
-			$this->getSiteMap ( $lang, $data->id );
-		}
-		
-		return $this->_tree;
-	}*/
+	
 	
 	/**
 	 **Нахождение всех страниц условия
@@ -510,28 +455,28 @@ class Pages extends Zend_Db_Table {
 		$this->deleteMenu ( $ids );
 		$this->deletePageOptions ( $ids );		
 		
-		foreach ( $ids as $key => $id ) {
-			if ($this->hasChild ( $id )) {
-			}
-		}
+		
 		
 		return true;
 	}
 	
-	public function unpubPage($id) {
-		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
-		$this->update ( array ('is_active' => '0', 'unpubDate' => date ( "Y-m-d H:i:s" ) ), $where );
-	}
 	
-	public function pubPage($id) {
-		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
-		$this->update ( array ('is_active' => '1', 'pubDate' => date ( "Y-m-d H:i:s" ) ), $where );
-	}
 	
 	public function deletePageOptions($ids) {
 		$where = $this->getAdapter ()->quoteInto ( "pageId IN (?)", $ids );
 		//Loader::loadPublicModel ( 'PagesOptions' );
 		PagesOptions::getInstance ()->deleteOptions ( $where );
+	}
+	
+	/**
+	 * изменение активности
+	 * @param int $id
+	 */
+	public function changeActive($id){
+		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
+		$data = array('is_active'=>new Zend_Db_Expr('ABS(is_active-1)'));
+		return  $this->update($data, $where);
+		
 	}
 	
 	public function deleteMenu($ids) {
@@ -552,48 +497,10 @@ class Pages extends Zend_Db_Table {
 		return $result ? $result : array ( );
 	}
 	
-	/**
-	 * Получение пути для страницы с переданным разделителем
-	 *
-	 * @param int $id_parent
-	 * @param string $separator
-	 * @return string
-	 */
-	public function generateStringPath($id_parent, $separator) {
-		$reverse = $this->generateReversePath ( $id_parent );
-		$result = '';
-		
-		for($i = count ( $reverse ) - 1; $i >= 0; $i --) {
-			$result .= $reverse [$i];
-			$result .= $separator;
-		}
-		
-		return $result;
-	}
 	
-	/**
-	 * Создание копии страницы
-	 *
-	 * @param int $id
-	 */
-	public function copyPage($id) {
-		$page = $this->getPage ( $id );
-		$this->addPage ( $page );
-	}
 	
-	/**
-	 * Создание копии страницы вместе с поддеревом
-	 *
-	 * @param int $id
-	 */
-	public function copyPageWithChildren($id) {
-		$page = $this->getPage ( $id );
-		$this->addPage ( $page );
-		
-		foreach ( $this->getChildren ( $page->id ) as $key => $data ) {
-			$this->copyPageWithChildren ( $data );
-		}
-	}
+	
+	
 	
 	public function search($search){
 		 $dbAdapter = Zend_Registry::get('db');
@@ -673,18 +580,7 @@ class Pages extends Zend_Db_Table {
 	}
 	
 	
-	/**
-	 * Получение контента определенного типа (page, image, root...)
-	 *
-	 * @param string $type
-	 * @param string $order
-	 * @return array
-	 */
-	private function getContent($type, $order = null) {
-		$where = $this->getAdapter ()->quoteInto ( "type = ? OR type = 'root'", $type );
-		
-		return $this->fetchAll ( $where, $order );
-	}
+	
 	
 	/**
 	 * Перемещение страницы через dnd,
@@ -822,41 +718,9 @@ class Pages extends Zend_Db_Table {
 		return $root ? true : false;
 	}
 	
-	/**
-	 * Получение "перевернутого" пути страницы, 
-	 * так как первоначально путь формируется от детей - к отцу
-	 *
-	 * @param int $id_parent
-	 * @return string
-	 */
-	private function generateReversePath($id_parent) {
-		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id_parent );
-		$parent = $this->fetchRow ( $where );
-		
-		if ($parent && $parent->type != 'root') {
-			$this->_path [] = $parent->path;
-			$this->generateReversePath ( $parent->id_parent );
-		}
-		
-		return $this->_path;
-	}
 	
-	/**
-	 * Получение пути страницы в виде массива
-	 *
-	 * @param int $id_parent
-	 * @return array
-	 */
-	private function generateArrayPath($id_parent) {
-		$reverse = $this->generateReversePath ( $id_parent );
-		$result = array ( );
-		
-		for($i = count ( $reverse ) - 1; $i >= 0; $i --) {
-			$result [] = $reverse [$i];
-		}
-		
-		return $result;
-	}
+	
+	
 	
 	/**
 	 * Вбивание данных при добавлении новой страницы
@@ -936,30 +800,7 @@ class Pages extends Zend_Db_Table {
 		return $result;
 	}
 	
-	/**
-	 * Получение данных копируемой страницы
-	 *
-	 * @param object $data
-	 * @return array
-	 */
-	private function getCopyDataPage($data) {
-		$user = Security::getInstance ()->getUser ();
-		$countOfChildren = $this->getCountOfChildren ( $data->id_parent );
-		$maxId = $this->getMaxId ();
-		$data = $data->toArray ();
-		$number = $this->getCountOfCopies ( $data ['title'] ) + 1;
-		//$data ['id'] = $maxId + 1;
-		unset($data['id']);
-		$data ['title'] = $data ['title'] . "_$number";
-		$data ['version'] = $data ['version'];
-		$data ['path'] = $data ['path'] . "_$number";
-		$data ['is_active'] = '0';
-		$data ['pubDate'] = date ( "Y-m-d H:i:s" );
-		$data ['createdBy'] = $user->id;
-		$data ['priority'] = $countOfChildren + 1;
-		
-		return $data;
-	}
+	
 	
 	/**
 	 * Получение количества копий страницы
@@ -978,16 +819,7 @@ class Pages extends Zend_Db_Table {
 		return $count [0] ['c'];
 	}
 	
-	/**
-	 * Получение максимального ID
-	 *
-	 * @return unknown
-	 */
-	private function getMaxId() {
-		$max = $this->fetchRow ( null, 'id DESC' );
-		
-		return $max->id;
-	}
+	
 	
 	/**
 	 * Получение текста для вставки иконок управления 
@@ -1014,7 +846,7 @@ class Pages extends Zend_Db_Table {
 			$go_to_module = '';
 			//"<a href ='#' title='Просмотр'><img src='/images/search.gif' onclick='javascript:window.location = \"/$url\" '/></a>" .
 			return 	$go_to_module.
-					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" ><img src='/img/admin/active_" . $data->is_active . ".gif' /></a>" . 
+					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" active=\"".$data->is_active."\" ><img src='/img/admin/active_" . $data->is_active . ".gif' /></a>" . 
 					"<a href ='#' title='Редактировать' ><img src='/img/admin/redact.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id/$data->id/\" '/></a>" .
 					"<a href ='#' title='Добавить' ><img src='/img/admin/plus_krug.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" .$delete;
 					;

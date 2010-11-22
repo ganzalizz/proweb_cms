@@ -11,7 +11,7 @@ class Form_FormNews extends Ext_Form
         parent::init();
         
        
-        $this->setAction('otzivy');
+        $this->setAction('');
         // Указываем метод формы
         $this->setMethod('post');
         
@@ -24,14 +24,14 @@ class Form_FormNews extends Ext_Form
             'maxlength'   => '150',
             'validators'  => array(
                 array('Alnum', true, array(true)),
-                array('StringLength', true, array(5, 30))
+                array('StringLength', true, array(5, 150))
              ),
             'filters'     => array('StringTrim')
         ));
          
         $this->addElement($name);
         
-        $teaser = new Zend_Form_Element_Textarea('teaser', array(
+       /* $teaser = new Zend_Form_Element_Textarea('teaser', array(
             'label' => 'Анонс',
             'required' => true,
             'rows' => '5',
@@ -42,7 +42,13 @@ class Form_FormNews extends Ext_Form
             'filters' => array('StringTrim')
             
             
-        ));
+        ));*/
+         $teaser = new Ext_Form_Element_CkEditor('teaser', array(
+                    'label' => 'Анонс',
+         			'description' => 'не более 1000 символов',
+                    'required' => true,         			
+                    'filters' => array('StringTrim')
+                ));
         
         $this->addElement($teaser);
         
