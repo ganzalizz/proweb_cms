@@ -14,6 +14,7 @@ class News_Admin_NewsController extends MainAdminController {
 
     public function init() {
         $this->view->addHelperPath(Zend_Registry::get('helpersPaths') , 'View_Helper') ;
+        //$this->view->addHelperPath(DIR_LIBRARY.'ZendX/JQuery/View/Helper', 'ZendX_JQuery_View_Helper');
         $this->_id_page = $this->_getParam('id_page');
         $this->view->id_page = $this->_id_page;
         if ($this->_id_page!=null) {

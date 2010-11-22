@@ -24,7 +24,7 @@ class Ext_View_Helper_FormCkEditor extends Zend_View_Helper_FormElement
         $editor->basePath = '/ckeditor/';
        
         // ширина редактора
-        $editor->config['width'] = 600;
+        $editor->config['width'] = 800;
 
         // $value содержит значение по умолчанию
         return $editor->editor($name, $value);

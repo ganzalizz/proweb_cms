@@ -74,6 +74,15 @@ class Form_FormNews extends Ext_Form
         
         $this->addElement($link);
         
+        $date_news = new ZendX_JQuery_Form_Element_DatePicker('date_news', array(
+           'label' => 'Дата новости',
+           
+       ));
+       
+       $date_news->setJQueryParam('dateFormat', 'dd.mm.yy');
+       
+       $this->addElement($date_news);
+        
         $author = new Zend_Form_Element_Text('author', array(
             'required' => true,
             'label' => 'Автор новости',
@@ -86,6 +95,17 @@ class Form_FormNews extends Ext_Form
         ));
         
        $this->addElement($author);
+       
+       $created_at = new ZendX_JQuery_Form_Element_DatePicker('created_at', array(
+           'label' => 'Дата публикации',
+           
+       ));
+       
+       $created_at->setJQueryParam('dateFormat', 'dd.mm.yy');
+       
+       $this->addElement($created_at);
+       
+       
        
        //TODO: Date element
        
@@ -123,7 +143,7 @@ class Form_FormNews extends Ext_Form
        
        $this->addElement($seo_title);
        
-       $seo_descriptions = $author = new Zend_Form_Element_Text('seo_descriptions', array(
+       $seo_descriptions = new Zend_Form_Element_Text('seo_descriptions', array(
             'required' => true,
             'label' => 'Описание страницы',
             'maxlength'   => '300',
@@ -149,7 +169,22 @@ class Form_FormNews extends Ext_Form
        
        $this->addElement($seo_keywords);
        
-        
+       $this->addDisplayGroup(
+             array('name', 'teaser', 'content','link','date_news','author','created_at'), 'newsDataGroup',
+             array(
+                     'legend' => 'Новость'
+                    ));
+       $this->addDisplayGroup(
+             array('is_active', 'is_main', 'is_hot'), 'publicDataGroup',
+             array(
+                     'legend' => 'Правила публикации'
+                    ));
+       
+       $this->addDisplayGroup(
+             array('seo_title', 'seo_descriptions', 'seo_keywords'), 'seocDataGroup',
+             array(
+                     'legend' => 'SEO'
+                    ));
        
         
          

@@ -8,7 +8,7 @@ class News_NewsController extends Zend_Controller_Action {
        	$this->view->addScriptPath(DIR_LIBRARY.'Ext/View/Scripts/');       
         $this->layout = $this->view->layout();
         $this->lang = $this->_getParam('lang', 'ru');
-
+        $this->view->jQuery()->enable()->uiEnable();
         
         $this->layout->setLayout("front/default");
         $id = $this->_getParam('id');
