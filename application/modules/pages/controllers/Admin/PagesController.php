@@ -37,7 +37,7 @@ class Pages_Admin_PagesController extends MainAdminController {
 //			$this->view->help = 'Модуль управления содержимым сайта';
             $this->view->lang = $lang;
         }
-       // echo new Zend_Db_Expr('ABS(is_active-1)');
+       
         
         
     }

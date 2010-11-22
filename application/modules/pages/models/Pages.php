@@ -474,7 +474,7 @@ class Pages extends Zend_Db_Table {
 	 */
 	public function changeActive($id){
 		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $id );
-		$data = array('is_active'=>new Zend_Db_Expr('ABS(is_active-1)'));
+		$data = array('is_active'=>new Zend_Db_Expr('IF(is_active=1,0,1)'));
 		return  $this->update($data, $where);
 		
 	}

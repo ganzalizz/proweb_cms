@@ -43,7 +43,8 @@
 			}
 		});
 		
-		$("a[pub]").click(function(){			
+		$("a[pub]").click(function(){	
+			var item = 	 $(this);	
 			var id_page = $(this).attr("id_page");	
 			var active = $(this).attr("active");
 			var img = $(this).find("img");		
@@ -51,7 +52,10 @@
 			   function(data){
 			    
 			     if(data=='ok'){
+				    //alert(Math.abs(active-1)); 
 			     	img.attr("src", "/img/admin/active_"+Math.abs(active-1)+".gif");
+			     	// устанавливаем параметр активности в ссылку
+			     	item.attr("active", Math.abs(active-1));
 			     } else{
 			     	alert("Ошибка.");
 			     }
