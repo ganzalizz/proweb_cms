@@ -35,7 +35,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             
 
         ));
-        
+      
              
     }
 
@@ -143,12 +143,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         return $scriptsPaths;
     }
 
-    // функция замены e-mail адресов
-	private static  function email_replace($text)
-	{
-		$exp = '/([a-zA-Z0-9|.|-|_]{2,256})@([a-zA-Z0-9|.|-]{2,256}).([a-z]{2,4})/';
-		return preg_replace($exp, '<script type="text/javascript"> eml = \'\1\' +  "@" + \'\2\'+\'.\3\'; document.write(eml);</script>', $text);
-	} 
+    
     
     public static function _initStart() {
         //Zend_Controller_Front::getInstance()
@@ -157,7 +152,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //Zend_Controller_Front::getInstance()->getRequest()->set
         Bootstrap::init(); 
 		Zend_Session::start();    
-       
+        Configurator::initConfig();
+        
         Configurator::setupDatabase();
         Configurator::setupView(Zend_Registry::get('helpersPaths'), Zend_Registry::get('scriptsPaths'));
         Configurator::setupRoutes(Zend_Controller_Front::getInstance()->getRouter());

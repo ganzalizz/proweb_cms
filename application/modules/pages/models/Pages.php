@@ -514,7 +514,11 @@ class Pages extends Zend_Db_Table {
 	}
 	
 	public function remove($id){
-		$page= $this->find($id)->current();
+		
+		$where = $this->getAdapter()->quoteInto('id = ?', (int)$id);
+		return $this->delete($where);
+		
+		/*$page= $this->find($id)->current();
 		if ($this->getCountOfChildren($id)){
 			$childs = $this->fetchAll('id_parent='.(int)$id);
 			foreach ($childs as $child){
@@ -524,7 +528,7 @@ class Pages extends Zend_Db_Table {
 		if (!is_null($page)){
 			@unlink(DIR_PUBLIC.'pics/default/'.$page->img);			
 			$page->delete();	
-		}	
+		}	*/
 	}
 	
 	

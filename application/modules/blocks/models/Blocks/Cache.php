@@ -22,6 +22,11 @@ class Blocks_Cache extends Zend_Cache {
      */
     public static function getInstance() {
         if (null === self::$_cache) {
+        	
+        	$config = Zend_Registry::get('config');
+        	$allow_cache = (boolean)$config->cache->siteblocks;
+        	
+        	
         	$backendName = 'File';
 			$frontendName = 'Class';
 			
@@ -33,7 +38,7 @@ class Blocks_Cache extends Zend_Cache {
 			$frontendOptions = array(			
 			    'cached_entity' 	=> Blocks::getInstance(), 	 // экземпляр класса
 				'cache_id_prefix'	=>'blocks_',
-				'caching'			=> true,  			
+				'caching'			=> $allow_cache,  			
 			);
 			// Устанавливаем массив опций для выбранного бэкэнда			
 			$backendOptions = array ('cache_dir' => $cache_dir );		

@@ -150,4 +150,11 @@ class Configurator {
         ini_set('magic_quotes_gpc', 0);
         error_reporting(E_ALL|E_STRICT);
     }
+    /**
+     * добавляем в реестр разделы из configuration.ini
+     */
+    public static function initConfig(){
+    	$config = self::getConfig('config');
+    	Zend_Registry::set('config', $config);
+    }
 }
