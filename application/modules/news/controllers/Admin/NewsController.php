@@ -11,6 +11,8 @@ class News_Admin_NewsController extends MainAdminController {
      * @var object
      */
     private $_owner = null;
+    
+    private $_curModule = null;
 
     public function init() {
         $this->view->addHelperPath(Zend_Registry::get('helpersPaths') , 'View_Helper') ;
@@ -24,7 +26,7 @@ class News_Admin_NewsController extends MainAdminController {
             }
         }
         $this->view->lang = $lang = $this->_getParam('lang','ru');
-        $this->view->currentModul = SP.'news'.SP.$lang.SP.$this->getRequest()->getControllerName();
+        $this->view->currentModul = $this->_curModule = SP.'news'.SP.$lang.SP.$this->getRequest()->getControllerName();
     }
 
     public function indexAction() {
@@ -48,72 +50,20 @@ class News_Admin_NewsController extends MainAdminController {
         $page_id = $this->_getParam('pageid');
         $this->view->modul_page = $page = Pages::getInstance()->getPage($page_id);
         $this->view->page = $page;
+        $id = $this->_getParam('id');
         
         $form = new Form_FormNews();
-        
-        if ($this->_request->isPost()) {
-			if ($form->isValid($this->_getAllParams())){
-				
+     	if ($id!=null){
+        	$row = News::getInstance()->find($id)->current();
+        	if ($row!=null){
+        		$form->populate($row->toArray());        		
+        	}
+        	
+        } 
+        $this->processForm($form, $this->getRequest());
 			
-	            $data = $this->getRequest()->getParams();
-	            $new = $data['new'];
-	            if ($new['created_at']!='') {
-	                $adate = preg_match('/([\d]{2}).+([\d]{2}).+([\d]{4})/is', $new['created_at'], $matches);
-	                $new['created_at'] = $matches[3].'-'.$matches[2].'-'.$matches[1];
-	            } else {
-	                $new['created_at'] = date('Y-m-d H:i:s');
-	
-	            }
-	            $new['name']=trim($new['name']);
-	            if (isset($new['pub']) && $new['pub']=='on') {
-	                $new['pub'] = 1;
-	            }
-	            else {
-	                $new['pub'] = 0;
-	            }
-	            (isset($new['main']) && $new['main']=='on' ?$new['main'] = 1 :$new['main'] = 0);
-	            if (isset($page)) {
-	                $new['page_id']=$page->id;
-	                $new['type']=$page->template;
-	            }
-	
-	            $post_data['title'] = $new['name'];
-	            $post_data['text'] = $new['content'];
-	
-	            $id = News::getInstance()->addNew($new);
-	            $item = News::getInstance()->find($id)->current();
-	            // иконка
-	            $img_name = $_FILES['image_small']['name'];
-	            $img_source = $_FILES['image_small']['tmp_name'];
-	
-	            if ($img_name!='' && $img_source!='' ) {
-	                $ext = @end(explode('.', $img_name));
-	                $small_img = DIR_PUBLIC.'pics/news/'.$id.'_small.'.$ext;
-	                if(copy($img_source, $small_img)) {
-	                    $item->small_img = $id.'_small.'.$ext;
-	                    $item->save();
-	                }
-	            }
-	            // картинка
-	            $img_name = $_FILES['image_big']['name'];
-	            $img_source = $_FILES['image_big']['tmp_name'];
-	            $delete_img = $this->_getParam('delete_img_big');
-	            if ($img_name!='' && $img_source!='' && !$delete_img) {
-	                $ext = @end(explode('.', $img_name));
-	
-	                $big_img = DIR_PUBLIC.'pics/news/'.$id.'_big.'.$ext;
-	                if(copy($img_source, $big_img)) {
-	                    $item->big_img = $id.'_big.'.$ext;
-	                    $item->save();
-	                }
-	            }
-			} 
-        }
-        $this->view->form = $form;
-        $fck1 = $this->getFck('new[intro]', '100%', '200');
-        $this->view->fck_intro = $fck1;
-        $fck2 = $this->getFck('new[content]', '100%', '300');
-        $this->view->fck_content = $fck2;
+       
+        $this->view->form = $form;        
     }
 
     public function editAction() {
@@ -374,15 +324,68 @@ class News_Admin_NewsController extends MainAdminController {
         $this->_redirect("/news/$lang/admin_news/");
     }
 
-
-
-    private function editRoute($data) {
-        Loader::loadCommon('Router');
-
-        if(!Router::getInstance()->replaceRoute($data, 'index', 'index', 'news')) {
-            return "Такой URL уже существует!";
-        }
-
-        return '';
+    /**
+     * 
+     * @param Ext_Form $form
+     * @param Zend_Controller_Request_Http $request
+     */
+    private function processForm($form, $request){
+    	//print_r($request->getMethod());
+    	if ($request->isPost()){
+    		//var_dump($form->getValue('id')); exit;
+    		if ($form->isValid($this->_getAllParams()) && $form->getValue('id')!=''){
+    			echo 'edit';
+    			News::getInstance()->editNews($form->getValues(), (int)$form->getValue('id'));
+    			
+    		} else {
+    			$id = News::getInstance()->addNews($form->getValues());
+    		}
+    	}
     }
+    
+    public function postDispatch(){
+    	 
+      $profiler = News::getDefaultAdapter()->getProfiler();	
+      $totalTime    = $profiler->getTotalElapsedSecs();
+  
+      $queryCount   = $profiler->getTotalNumQueries();
+   
+      $longestTime  = 0;
+   
+      $longestQuery = null;
+   
+       
+   
+      foreach ($profiler->getQueryProfiles() as $query) {
+  
+          if ($query->getElapsedSecs() > $longestTime) {
+   
+              $longestTime  = $query->getElapsedSecs();
+   
+              $longestQuery = $query->getQuery();
+  
+          }
+          echo $query->getQuery().'<br>';
+  
+      }
+  
+       
+  
+      echo 'Executed ' . $queryCount . ' queries in ' . $totalTime .
+  
+           ' seconds' . "\n";
+  
+      echo 'Average query length: ' . $totalTime / $queryCount .
+  
+           ' seconds' . "\n";
+  
+      echo 'Queries per second: ' . $queryCount / $totalTime . "\n";
+  
+      echo 'Longest query length: ' . $longestTime . "\n";
+  
+      echo "Longest query: \n" . $longestQuery . "\n";
+    }
+
+
+    
 }

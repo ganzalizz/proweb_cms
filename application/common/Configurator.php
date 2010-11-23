@@ -42,6 +42,7 @@ class Configurator {
         $db = Zend_Db::factory($config->db->type, $config->db->config->toArray());
         $sql = "SET NAMES UTF8";
         $db->query($sql);
+        $db->getProfiler()->setEnabled(true);
         Zend_Db_Table::setDefaultAdapter($db);
         Zend_Registry::set('db', $db);
     }
