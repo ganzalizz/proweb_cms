@@ -48,7 +48,7 @@ class News extends Zend_Db_Table {
             ) ;
 
 
-
+	
     
 
     /**
@@ -87,7 +87,10 @@ class News extends Zend_Db_Table {
 
         return self::$_instance;
     }
-
+    
+    
+    
+    
     public function getCount($where) {
         $sql = "SELECT	 COUNT(*) AS count FROM site_news WHERE $where";
         return $this->getAdapter()->fetchOne($sql);
@@ -200,10 +203,12 @@ class News extends Zend_Db_Table {
      */
     public function addNews($data) 
     {
-        
-        $data['created_at'] = (!isset($data['created_at'])) ? new Zend_Db_Expr('NOW()'): $data['created_at'];
-        $data['date_news'] = (!isset($data['date_news'])) ? new Zend_Db_Expr('NOW()') : $data['date_news']; 
+       
+        $data['created_at'] = (!isset($data['created_at'])) ? new Zend_Db_Expr('NOW()'): date('Y-m-d', strtotime($data['created_at']));
+        $data['date_news'] = (!isset($data['date_news'])) ? new Zend_Db_Expr('NOW()') : date('Y-m-d', strtotime($data['date_news']));
+         
         return $this->insert($data);
+       
     }
 
     /**
@@ -247,6 +252,7 @@ class News extends Zend_Db_Table {
     public function editNews($data,$id) 
     {
         $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        unset($data['id']);        
         return $this->update($data, $where);
     }
 

@@ -10,13 +10,17 @@ class Form_FormNews extends Ext_Form
     {
         parent::init();
         
-       
+        //$this->setName('news');
         $this->setAction('');
         // Указываем метод формы
         $this->setMethod('post');
         
         // Задаем атрибут class для формы
         $this->setAttrib('class', 'news');
+        
+        $id = new Zend_Form_Element_Hidden('id');
+        
+        $this->addElement($id);
         
         $name = new Zend_Form_Element_Text('name', array(
             'required' => true,
@@ -28,6 +32,7 @@ class Form_FormNews extends Ext_Form
              ),
             'filters'     => array('StringTrim')
         ));
+      
          
         $this->addElement($name);
         
@@ -64,7 +69,7 @@ class Form_FormNews extends Ext_Form
             'label' => 'Сылка на первоисточник',
             'maxlength'   => '255',
             'validators'  => array(
-                array('Alnum', true, array(true)),
+                //array('Alnum', true, array(true)),
                 array('StringLength', true, array(11, 255))
              ),
             'filters'     => array('StringTrim')

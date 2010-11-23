@@ -42,6 +42,8 @@ class News_Row extends Zend_Db_Table_Row {
         return $date;
 
     }
+    
+ 	
 
     public function delete() {
         /**
