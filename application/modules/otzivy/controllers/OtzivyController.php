@@ -42,6 +42,7 @@ class Otzivy_OtzivyController extends Zend_Controller_Action {
             if ($form->isValid($this->_getAllParams())){
                 Otzivy::getInstance()->addOtziv($form->getValues());
                 $form = new Form_FormOtzivy();
+                
             }
             
         }    
