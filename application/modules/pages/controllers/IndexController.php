@@ -53,13 +53,27 @@ class pages_IndexController extends Zend_Controller_Action {
     
     public function indexAction()
     {
-        
+       
     }
     
     /**
      * Открытие страницы с переданным id
      */
     public function pageAction() {
+    	 /*$page = $this->_page->toArray();
+    	 unset($page['id']);
+    	 for ($index = 1; $index <= 200; $index++) {
+    	 	$page['title'] = 'test_page_'.$index;
+    	 	Pages::getInstance()->insert($page);
+    	 }*/
+    	//set_time_limit(0);
+    	//Pages::getInstance()->reindex();
+    	//require_once DIR_LIBRARY.'Phpmorphy/examples/example-0.3.x.php';
+    	
+    	//Search_Index::getInstance()->procesText($this->_page->content);
+    	Search_Index::getInstance()->buildIndexes();
+    	//Search_Index::getInstance()->search('pages', 'значительное событие');
+    	
         
     }
 

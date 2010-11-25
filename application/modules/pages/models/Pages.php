@@ -533,12 +533,11 @@ class Pages extends Zend_Db_Table {
 	
 	
 	public function reindex(){
-		$index = New Ext_Search_Lucene(Ext_Search_Lucene::PAGES, true);
-		//$pages_rowset = $this->fetchAll('is_active=1')
-		$count = 10 ;
-		$offset = 0 ;
-		while( ( $rowset = $this->fetchAll( 'is_active=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
-			while( $rowset->valid() ) {
+		
+		$index = New Ext_Search_Lucene(Ext_Search_Lucene::PAGES, true);		
+		$index->setMergeFactor(10000);
+		$rowset = $this->fetchAll( 'is_active=1' );
+			while( $rowset->valid() ) {				
 				$row = $rowset->current() ;
 				//
 				// Prepare document
@@ -547,16 +546,12 @@ class Pages extends Zend_Db_Table {
 				$doc->setUrl($row->path);
 				$doc->setTitle($row->title);
 				$doc->setId($row->id);
-                                $doc->setContent(strip_tags($row->content));
-				
+                $doc->setContent(strip_tags($row->content));
+                				
 		        $index->addDocument( $doc ) ;
 
 				$rowset->next() ;
 			}
-			$offset += $count ;
-		}
-
-		$index->commit() ;
 		return $index->numDocs();
 		
 	}

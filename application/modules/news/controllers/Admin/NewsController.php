@@ -330,9 +330,9 @@ class News_Admin_NewsController extends MainAdminController {
      * @param Zend_Controller_Request_Http $request
      */
     private function processForm($form, $request){
-    	//print_r($request->getMethod());
+    	
     	if ($request->isPost()){
-    		//var_dump($form->getValue('id')); exit;
+    		
     		if ($form->isValid($this->_getAllParams()) && $form->getValue('id')!=''){
     			echo 'edit';
     			News::getInstance()->editNews($form->getValues(), (int)$form->getValue('id'));

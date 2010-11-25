@@ -21,7 +21,7 @@ class Search_IndexController extends Zend_Controller_Action {
 	public function init() {
 		/*$this->initView()
 		$view = Zend_Layout::getMvcInstance()->getView();*/
-		
+		$this->view->addScriptPath(DIR_LIBRARY.'Ext/View/Scripts/'); 
 		$this->view->addHelperPath( Zend_Registry::get( 'helpersPaths' ), 'View_Helper' );
 		$this->layout = $this->view->layout();
 		$this->lang = $this->_getParam( 'lang', 'ru' );
@@ -35,7 +35,7 @@ class Search_IndexController extends Zend_Controller_Action {
 		$page = Pages::getInstance()->find( $id )->current();
 		
 		if (! is_null( $page )) {
-			if ($page->published == 0) {
+			if ($page->is_active == 0) {
 				$this->_redirect( '/404' );
 			}
 			$options = PagesOptions::getInstance()->getPageOptions( $id );
@@ -73,33 +73,18 @@ class Search_IndexController extends Zend_Controller_Action {
 			$this->view->placeholder( 'descriptions' )->set( $this->view->placeholder( 'descriptions' ) . ": $search" );
 			
 			$this->view->layout()->search = $search;
-			$search = Zend_Search_Lucene_Search_QueryParser::parse( strip_tags( $search ), Ext_Search_Lucene::ENCODING );
+			//$search = Zend_Search_Lucene_Search_QueryParser::parse( strip_tags( $search ), Ext_Search_Lucene::ENCODING );
 			
-			/**
-			 * 
-			 * поиск по товарам
-			 */
+			$ini = new Ext_Common_Config('search','frontend');  
+			$onpage = $ini->results->per->page;
+			$onpage = 1;
 			
-			$result = Ext_Search_Lucene::open( Ext_Search_Lucene::CATALOG_PRODUCTS );
-			$result = $result->find( $search );
-			$hits = array_merge( $hits, $result );
+			$paginator = Search_Index::getInstance()->search($search,$this->_current_page,  $onpage);
+			Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
 			
-			/**
-			 * поиск по разделам каталога
-			 */	
-			$result = Ext_Search_Lucene::open( Ext_Search_Lucene::CATALOG_DIVISIONS );
-			$result = $result->find( $search );
-			$hits = array_merge( $hits, $result );
-			
-			// поиск по новостям			
-			$news_index = Ext_Search_Lucene::open( Ext_Search_Lucene::NEWS);
-			$result = $news_index->find( $search );			
-			$hits = array_merge( $hits, $result );
-			
-			// поиск по страницам
-			$result =  Ext_Search_Lucene::open( Ext_Search_Lucene::PAGES );
-			$result = $result->find( $search );
-			$hits = array_merge( $hits, $result );
+			$paginator->setView($this->view);
+	        $hits =  $paginator->getCurrentItems();
+	        $this->view->paginator = $paginator;
 			
 			
 			
@@ -108,10 +93,10 @@ class Search_IndexController extends Zend_Controller_Action {
 				$this->view->err = $message = "найдено результатов 0";
 				//echo $message;
 			} else {
-				$this->view->total = count( $hits );
+				//$this->view->total = $paginator->getItemCount();
 				$count = $this->_count;
 				$offset = ($this->_current_page - 1) * $this->_count;
-				$hits = array_slice( $hits, $offset, $count );
+				//$hits = array_slice( $hits, $offset, $count );
 				$this->view->hits = $hits;
 			}
 		}
