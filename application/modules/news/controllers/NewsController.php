@@ -2,13 +2,21 @@
 
 class News_NewsController extends Zend_Controller_Action {
 
+    private $_session;
+    
+    public function preDispatch() {
+        Ext_Form_Element_Uploadify::bypassSession();
+        $this->_session = new Zend_Session_Namespace('uplodify');
+    }
+    
+    
     public function init() {
         
        
        	$this->view->addScriptPath(DIR_LIBRARY.'Ext/View/Scripts/');       
         $this->layout = $this->view->layout();
         $this->lang = $this->_getParam('lang', 'ru');
-        $this->view->jQuery()->enable()->uiEnable();
+        
         
         $this->layout->setLayout("front/default");
         $id = $this->_getParam('id');
@@ -50,8 +58,11 @@ class News_NewsController extends Zend_Controller_Action {
     public function newsitemAction() {
         $new_id = $this->_getParam('item', 0);
         $item = News::getInstance()->getNewsById($new_id);
+        
         if (isset($item) && $item) {
+            News::getInstance()->addCountViews($new_id);
             $this->view->item =$news_row = $item;
+            
             if ($news_row!=''){
             	$bread_items[] = array('title'=>$news_row->name);
             	$this->view->placeholder('title')->set($news_row->seo_title);

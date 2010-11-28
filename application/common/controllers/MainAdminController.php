@@ -18,7 +18,6 @@ abstract class MainAdminController extends Zend_Controller_Action {
         $this->view->addHelperPath(Zend_Registry::get('helpersPaths') , 'View_Helper') ;
         $this->view->addHelperPath(array(DIR_LIBRARY. 'Ext'. DS . 'View' . DS . 'Helper' . DS), 'Ext_View_Helper');
         
-        //Loader::loadCommon('Security');
         $this->view->layout()->lang = $this->_getParam('lang', 'ru');
         $this->view->layout()->controller = $this->getRequest()->getControllerName();
         $this->setTemplate();

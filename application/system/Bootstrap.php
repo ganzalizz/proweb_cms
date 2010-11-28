@@ -159,19 +159,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         
         $view = Zend_Layout::getMvcInstance()->getView();   
         $view->addHelperPath(DIR_LIBRARY."ZendX/JQuery/View/Helper", "ZendX_JQuery_View_Helper");
-        $view->jQuery()->addStylesheet('/css/css/ui-lightness/jquery-ui-1.8.6.custom.css')
+        $view->jQuery()->addStylesheet('/css/ui-lightness/jquery-ui-1.8.6.custom.css')
+       // ->addStylesheet('/css/ajaxFileUploader/ajaxfileupload.css')        
         ->setLocalPath('/js/jquery-1.4.2.min.js')
         ->setUiLocalPath('/js/jquery-ui-1.8.6.custom.min.js');
+        //->addJavascriptFile('/js/jquery.jqUploader.js')
+        //->addJavascriptFile('/js/jquery.flash.js');
         Configurator::setupRoutes(Zend_Controller_Front::getInstance()->getRouter());
         Configurator::tuneEnvironment(); 
         
         Security::getInstance()->init();
         SiteAuth::getInstance()->init();  
         
-		//Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive( ) );
-		//Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding( Ext_Search_Lucene::ENCODING );
 		
-//        
         
         
 

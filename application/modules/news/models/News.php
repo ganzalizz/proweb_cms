@@ -206,8 +206,8 @@ class News extends Zend_Db_Table {
        
         $data['created_at'] = (!isset($data['created_at'])) ? new Zend_Db_Expr('NOW()'): date('Y-m-d', strtotime($data['created_at']));
         $data['date_news'] = (!isset($data['date_news'])) ? new Zend_Db_Expr('NOW()') : date('Y-m-d', strtotime($data['date_news']));
-         
-        return $this->insert($data);
+        unset($data['id']); 
+        return $this->createRow($data)->save(); 
        
     }
 
@@ -254,6 +254,13 @@ class News extends Zend_Db_Table {
         $where = $this->getAdapter()->quoteInto('id = ?', $id);
         unset($data['id']);        
         return $this->update($data, $where);
+    }
+    
+    public function addCountViews($id)
+    {
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        $data['count_views'] = new Zend_Db_Expr('count_views+1');
+        $this->update($data, $where);
     }
 
 
