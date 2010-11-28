@@ -60,10 +60,10 @@ class News_Row extends Zend_Db_Table_Row {
      * @return void
      */
     protected function _postUpdate() {
-        Ext_Search_Lucene::deleteItemFromIndex ( $this->id, Ext_Search_Lucene::NEWS );
-        if ($this->pub == 1) {
-            $this->addItemToSearchIndex();
-        }
+//        Ext_Search_Lucene::deleteItemFromIndex ( $this->id, Ext_Search_Lucene::NEWS );
+//        if ($this->pub == 1) {
+//            $this->addItemToSearchIndex();
+//        }
 
     }
 
@@ -77,9 +77,9 @@ class News_Row extends Zend_Db_Table_Row {
         /**
          * индексируются только опубликованные элементы
          */
-        if ($this->pub == 1) {
-            $this->addItemToSearchIndex();
-        }
+//        if ($this->pub == 1) {
+//            $this->addItemToSearchIndex();
+//        }
     }
 
     /**

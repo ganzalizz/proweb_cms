@@ -16,6 +16,7 @@ class News_Admin_NewsController extends MainAdminController {
 
     public function init() {
         $this->view->addHelperPath(Zend_Registry::get('helpersPaths') , 'View_Helper') ;
+        $this->view->
         //$this->view->addHelperPath(DIR_LIBRARY.'ZendX/JQuery/View/Helper', 'ZendX_JQuery_View_Helper');
         $this->_id_page = $this->_getParam('id_page');
         $this->view->id_page = $this->_id_page;
@@ -46,20 +47,14 @@ class News_Admin_NewsController extends MainAdminController {
         $lang = $this->getRequest()->getParam('lang','ru');
         $this->view->currentModul = $curModul = SP.'news'.SP.$lang.SP.$this->getRequest()->getControllerName();
         $this->view->lang = $lang;
-        //  $this->view->peoples = Peoples::getInstance()->fetchAll(null, 'priority DESC');
+        //$this->view->peoples = Peoples::getInstance()->fetchAll(null, 'priority DESC');
         $page_id = $this->_getParam('pageid');
         $this->view->modul_page = $page = Pages::getInstance()->getPage($page_id);
         $this->view->page = $page;
         $id = $this->_getParam('id');
         
         $form = new Form_FormNews();
-     	if ($id!=null){
-        	$row = News::getInstance()->find($id)->current();
-        	if ($row!=null){
-        		$form->populate($row->toArray());        		
-        	}
-        	
-        } 
+     	
         $this->processForm($form, $this->getRequest());
 			
        
@@ -72,145 +67,30 @@ class News_Admin_NewsController extends MainAdminController {
         $lang = $this->getRequest()->getParam('lang','ru');
         $this->view->currentModul = $curModul = SP.'news'.SP.$lang.SP.$this->getRequest()->getControllerName();
         $this->view->lang = $lang;
-        $novost = News::getInstance()->getNewById($id);
+        //$novost = News::getInstance()->getNewById($id);
         // $this->view->peoples = Peoples::getInstance()->fetchAll(null, 'priority DESC');
         //print_r($novost->toArray());
         $page_id = $this->_getParam('pageid');
         $this->view->modul_page =$page = Pages::getInstance()->getPage($page_id);
 
-        if ($this->_request->isPost()) {
-            $id = (int)$this->getRequest()->getParam('id');
-            $data = $this->getRequest()->getParams();
-            
-            if ($data['new']['name']!='' ) {
-                $new = $data['new'];
-                if ($new['created_at']!='') {
-                    $adate = preg_match('/([\d]{2}).+([\d]{2}).+([\d]{4})/is', $new['created_at'], $matches);
-                    $new['created_at'] = $matches[3].'-'.$matches[2].'-'.$matches[1];
-                } else {
-                    $new['created_at'] = date('Y-m-d H:i:s');
-                }
-                $new['name']=trim($new['name']);
-                if (isset($new['pub']) && $new['pub']=='1') {
-                    $new['pub'] = 1;
-                }
-                else {
-                    $new['pub'] = 0;
-                }
-                (isset($new['main']) && $new['main']=='1' ?	$new['main'] = 1 :$new['main'] = 0);
-                News::getInstance()->editNew($new,$id);
-                // иконка
-                $img_name = $_FILES['image_small']['name'];
-                $img_source = $_FILES['image_small']['tmp_name'];
-                $delete_img = $this->_getParam('delete_img_small');
-                if ($img_name!='' && $img_source!='' && !$delete_img) {
-                    $item = News::getInstance()->getNewById($id);
-                    $ext = @end(explode('.', $img_name));
-                    $small_img = DIR_PUBLIC.'pics/news/'.$id.'_small.'.$ext;
-                    $big_img = DIR_PUBLIC.'pics/news/'.$id.'_big.'.$ext;
-                    if(copy($img_source, $small_img)) {
-                        $item->small_img = $id.'_small.'.$ext;
-                        $item->save();
-                    }
-                } else if ($delete_img) {
-                    $item = News::getInstance()->getNewById($id);
-                    @unlink(DIR_PUBLIC.'pics/news/'.$item->small_img);
-                    $item->small_img='';
-                    $item->save();
-                }
-                // картинка
-                $img_name = $_FILES['image_big']['name'];
-                $img_source = $_FILES['image_big']['tmp_name'];
-                $delete_img = $this->_getParam('delete_img_big');
-                if ($img_name!='' && $img_source!='' && !$delete_img) {
-                    $item = News::getInstance()->getNewById($id);
-                    $ext = @end(explode('.', $img_name));
-
-                    $big_img = DIR_PUBLIC.'pics/news/'.$id.'_big.'.$ext;
-                    if(copy($img_source, $big_img)) {
-                        $item->big_img = $id.'_big.'.$ext;
-                        $item->save();
-                    }
-                } else if ($delete_img) {
-                    $item = News::getInstance()->getNewById($id);
-                    @unlink(DIR_PUBLIC.'pics/news/'.$item->big_img);
-                    $item->big_img='';
-                    $item->save();
-                }
-
-                $this->editMeta('news', $id);
-                $sortSession = new Zend_Session_Namespace('sortSearch');
-                $pageSession = new Zend_Session_Namespace('pageSearch');
-
-                if (isset($pageSession->page)) {
-                    $page_link="/page/".$pageSession->page;
-                } else $page_link="";
-
-                if (isset($sortSession->sort)) {
-                    $sort_link="/sort/".strtolower($sortSession->sort);
-                } else $sort_link="";
-
-                $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-            } else $this->view->err=1;
-        }
-
-        $fck1 = $this->getFck('new[intro]', '100%', '200');
-        $this->view->fck_intro = $fck1;
-        $fck2 = $this->getFck('new[content]', '100%', '300');
-        $this->view->fck_content = $fck2;
-        $this->view->options = $this->getMeta('news', $id);
-        $novost->created_at = $this->dateFromDb($novost->created_at);
-        $this->view->new = $novost;
-    }
-
-    public function pubAction() {
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $curModul = SP.'news'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        if(!$this->_hasParam('id')) {
-            $this->_redirect($curModul);
-        }
-        else {
-            $id = (int)$this->getRequest()->getParam('id');
-            News::getInstance()->pubNew($id);
-
-            $sortSession = new Zend_Session_Namespace('sortSearch');
-            $pageSession = new Zend_Session_Namespace('pageSearch');
-
-            if (isset($pageSession->page)) {
-                $page_link="/page/".$pageSession->page;
-            } else $page_link="";
-
-            if (isset($sortSession->sort)) {
-                $sort_link="/sort/".strtolower($sortSession->sort);
-            } else $sort_link="";
-
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-        }
-    }
-
-    public function unpubAction() {
-
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $curModul = SP.'news'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        if(!$this->_hasParam('id')) {
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-        }
-        else {
-            $id = (int)$this->getRequest()->getParam('id');
-            News::getInstance()->unpubNew($id);
-            $sortSession = new Zend_Session_Namespace('sortSearch');
-            $pageSession = new Zend_Session_Namespace('pageSearch');
-
-            if (isset($pageSession->page)) {
-                $page_link="/page/".$pageSession->page;
-            } else $page_link="";
-
-            if (isset($sortSession->sort)) {
-                $sort_link="/sort/".strtolower($sortSession->sort);
-            } else $sort_link="";
-
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-        }
+        
+        $row = News::getInstance()->find($id)->current();
+        //if (isset($row->small_img))
+        $data[]['small_img'] = '/pics/news/small_img_thumb/'.$row->small_img;
+        echo  '/pics/news/small_img_thumb/'.$row->small_img;
+        $form = new Form_FormNews($data);
+        
+        	if ($row!=null){
+                        
+        		$form->populate($row->toArray()); 
+                       print_r($form);                       
+        	}
+                
+        $this->processForm($form, $this->getRequest());
+      
+        $this->view->form = $form;
+           // $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
+       
     }
 
 
@@ -329,62 +209,74 @@ class News_Admin_NewsController extends MainAdminController {
      * @param Ext_Form $form
      * @param Zend_Controller_Request_Http $request
      */
-    private function processForm($form, $request){
-    	
-    	if ($request->isPost()){
-    		
-    		if ($form->isValid($this->_getAllParams()) && $form->getValue('id')!=''){
-    			echo 'edit';
-    			News::getInstance()->editNews($form->getValues(), (int)$form->getValue('id'));
+    private function processForm($form, $request)
+    {
+    	if ($request->isPost())
+        {
+    	        	
+            if ($form->isValid($this->_getAllParams()) && ($request->getActionName() === 'add'))
+            {
     			
-    		} else {
-    			$id = News::getInstance()->addNews($form->getValues());
-    		}
-    	}
+                        $this->reciveFile(ROOT_DIR.'pics/news/small_img/');
+                        $fileInfo = $uploads->getFileInfo();
+                        $thumb = Ext_Common_PhpThumbFactory::create(ROOT_DIR.'pics/news/small_img/'.$fileInfo['name']);
+                        echo "Image create";
+                        $thumb->resize(100);
+                        echo "Resize ok";
+                        $thumb->save(ROOT_DIR.'pics/news/small_img_thumb/'.$fileInfo['name']);
+                        echo "sAVE";
+                        $id = News::getInstance()->addNews($form->getValues());
+    			$this->_redirect($this->_curModule.'/edit/id/'.$id);
+                        
+                        
+                        
+    			
+            } 
+            else 
+            {
+                
+                  $uploads = $this->reciveFile(ROOT_DIR.'pics/news/small_img/');
+                  $fileInfo = $uploads->getFileInfo();
+                 // $fileInfo['small_img']['name'];
+                  $form->getElement('small_img')->setValue($fileInfo['small_img']['name']);
+                  //echo ROOT_DIR.'pics/news/small_img/'.$fileInfo['name'];
+                  echo "Begin";
+                  //echo ROOT_DIR.'pics/news/small_img/'.$fileInfo['name'];
+                  $thumb = Ext_Common_PhpThumbFactory::create(ROOT_DIR.'pics/news/small_img/'.$fileInfo['small_img']['name']);
+                  echo "Image create";
+                  $thumb->resize(100);
+                  echo "Resize ok";
+                  $thumb->save(ROOT_DIR.'pics/news/small_img_thumb/'.$fileInfo['small_img']['name']);
+                  echo "sAVE";
+    		  News::getInstance()->editNews($form->getValues(), (int)$form->getValue('id'));
+                  
+    	    }
+        }
     }
     
-    public function postDispatch(){
-    	 
-      $profiler = News::getDefaultAdapter()->getProfiler();	
-      $totalTime    = $profiler->getTotalElapsedSecs();
-  
-      $queryCount   = $profiler->getTotalNumQueries();
-   
-      $longestTime  = 0;
-   
-      $longestQuery = null;
-   
-       
-   
-      foreach ($profiler->getQueryProfiles() as $query) {
-  
-          if ($query->getElapsedSecs() > $longestTime) {
-   
-              $longestTime  = $query->getElapsedSecs();
-   
-              $longestQuery = $query->getQuery();
-  
-          }
-          echo $query->getQuery().'<br>';
-  
-      }
-  
-       
-  
-      echo 'Executed ' . $queryCount . ' queries in ' . $totalTime .
-  
-           ' seconds' . "\n";
-  
-      echo 'Average query length: ' . $totalTime / $queryCount .
-  
-           ' seconds' . "\n";
-  
-      echo 'Queries per second: ' . $queryCount / $totalTime . "\n";
-  
-      echo 'Longest query length: ' . $longestTime . "\n";
-  
-      echo "Longest query: \n" . $longestQuery . "\n";
+    private function reciveFile($destination)
+    {
+       $upload = new Zend_File_Transfer_Adapter_Http();
+       $upload->setDestination($destination);
+       try {
+       // upload received file(s)
+       $upload->receive();
+        } catch (Zend_File_Transfer_Exception $e) {
+              $e->getMessage();
+        }
+        return $upload;
+        
     }
+    
+    public function installAction()
+    {
+        
+        require_once 'NewsInstall.php';
+       News_Admin_NewsInstall::getInstance()->Uninstall();
+       
+    }
+    
+   
 
 
     

@@ -146,7 +146,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     
     
     public static function _initStart() {
-        
+        //Zend_Controller_Front::getInstance()
+        	//->registerPlugin(new Zend_Controller_Plugin_ErrorHandler())
+        	//->throwExceptions(true);
+        //Zend_Controller_Front::getInstance()->getRequest()->set
         Bootstrap::init(); 
 		Zend_Session::start();    
         Configurator::initConfig();
@@ -154,23 +157,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Configurator::setupDatabase();
         Configurator::setupView(Zend_Registry::get('helpersPaths'), Zend_Registry::get('scriptsPaths'));
         
-        $view = Zend_Layout::getMvcInstance()->getView();          
-        $view->addHelperPath(DIR_LIBRARY."ZendX/JQuery/View/Helper", "ZendX_JQuery_View_Helper");        
-        $view->jQuery()->addStylesheet('/css/css/ui-lightness/jquery-ui-1.8.6.custom.css')
+        $view = Zend_Layout::getMvcInstance()->getView();   
+        $view->addHelperPath(DIR_LIBRARY."ZendX/JQuery/View/Helper", "ZendX_JQuery_View_Helper");
+        $view->jQuery()->addStylesheet('/css/ui-lightness/jquery-ui-1.8.6.custom.css')
+       // ->addStylesheet('/css/ajaxFileUploader/ajaxfileupload.css')        
         ->setLocalPath('/js/jquery-1.4.2.min.js')
         ->setUiLocalPath('/js/jquery-ui-1.8.6.custom.min.js');
+        //->addJavascriptFile('/js/jquery.jqUploader.js')
+        //->addJavascriptFile('/js/jquery.flash.js');
         Configurator::setupRoutes(Zend_Controller_Front::getInstance()->getRouter());
         Configurator::tuneEnvironment(); 
         
         Security::getInstance()->init();
         SiteAuth::getInstance()->init();  
         
-        
-        
-		//Zend_Search_Lucene_Analysis_Analyzer::setDefault( new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive( ) );
-		//Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding( Ext_Search_Lucene::ENCODING );
 		
-//        
         
         
 
