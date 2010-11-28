@@ -8,8 +8,8 @@
         <?foreach($this->hits as $hit) {?>
     <div class="news_item overflow">
         <div class="text_news overflow">
-            <a href="/<?=$hit->url?>" class="head_news"><?=$hit->title?></a>
-                    <?=(strlen($hit->content) > 330)?substr($hit->content, 0, strpos($hit->content,' ', 330)).'...':$hit->content;?>
+            <a href="/<?=$hit->url?>" class="head_news"><?=$hit->title?></a><br>
+                    <?=(strlen($hit->original_content) > 330)?substr($hit->original_content, 0, strpos($hit->original_content,' ', 330)).'...':$hit->original_content;?>
             <div class="read_more"><a href="/<?=$hit->url?>">Подробнее</a></div>
         </div>
     </div>
@@ -25,3 +25,5 @@
             <p>по запросу "<?=$this->layout()->search?>" ничего не найдено.</p>
         </div>
     <?}?>
+    
+    <?php echo $this->paginator?>
