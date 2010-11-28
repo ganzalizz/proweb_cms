@@ -32,7 +32,8 @@ class Blocks_Cache extends Zend_Cache {
 			
        		$cache_dir = DIR_DB_CACHE . self::CACHE_DIR;
 			if (!is_dir($cache_dir)){
-				mkdir($cache_dir, 0755);
+				mkdir($cache_dir, 0755, true);
+				
 			}
 			// Устанавливаем массив опций для выбранного фронтэнда		
 			$frontendOptions = array(			
