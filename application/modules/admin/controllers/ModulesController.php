@@ -48,8 +48,9 @@ class Admin_ModulesController extends MainAdminController  {
 	 */
 	public function indexAction() {
 		$this->layout->action_title = "Список модулей";	
-		$where = null;
-		$modules = Modules::getInstance()->fetchAll(null, 'priority DESC')->toArray();		
+		
+                $modules = Modules::getInstance()->ModulesSync();
+		//$modules = Modules::getInstance()->fetchAll(null, 'priority DESC')->toArray();		
 		$this->view->items = $modules;
 	}
 

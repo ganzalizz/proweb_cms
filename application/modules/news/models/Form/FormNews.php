@@ -208,7 +208,7 @@ class Form_FormNews extends Ext_Form
         $small_img->addValidator('Extension', false, 'jpg,png,gif');
         $small_img->setLabel('Маленькая фотография');
         $fields[] = $small_img;
-        $this->addElement($small_img);
+        $this->addElement($small_img,'small_img');
 
        
        

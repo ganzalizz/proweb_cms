@@ -4,24 +4,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once 'ModuleInstall.php';
+require_once APPLICATION_PATH.'/library/Ext/Common/InstallModule.php';
 
-class News_Admin_NewsInstall extends InstallModuleAbstract
+class News_Admin_NewsInstall extends Ext_Common_InstallModule
 {
     
-  
-        
-    protected $_moduleName = "news";
-    
-    protected $_tableName = 'site_news';
-    
+     
     //TODO: Сделать префикс для названия таблиц
     protected $_ins_id = null;
     
     
     public function Install()
     {
-        
+        echo 'Fufel----------------';
         $this->RegisterModule();
         $this->DoRoute();
     }
@@ -40,7 +35,7 @@ class News_Admin_NewsInstall extends InstallModuleAbstract
         
        
        
-        $sql = "CREATE TABLE IF NOT EXISTS ".$this->_tableName." (
+        $sql = "CREATE TABLE IF NOT EXISTS ".$this->_module_tableName." (
                      id int(11) unsigned NOT NULL AUTO_INCREMENT,
                      name varchar(255) NOT NULL,
                      link varchar(255) DEFAULT NULL,
@@ -81,30 +76,38 @@ class News_Admin_NewsInstall extends InstallModuleAbstract
                            'admin_news',
                            'index',
                            0,1,1);";
-        
+        //$installed_module = "UPDATE site_modules SET installed = 1 WHERE NAME = 'news'";
+        echo 'Fufel++++++++++++++++';
+        echo var_dump($this-_db);
         $this->_db->beginTransaction();
         
         $this->_db->getConnection()->exec($sql);
         if (!$this->IsModuleRegistered())
                 $this->_db->getConnection()->exec($register_module_sql);
+                $where = $this->_db->quoteInto('name = ?', 'news');
+        $this->_db->update('site_modules', array('installed' => 1), $where);
         $this->_db->commit();
     }
     
     protected function UnregisteredModule()
     {
-        $sql = "DELETE FROM site_divisions_type WHERE module = 'news'";
         $this->_db->beginTransaction();
-        $this->_db->getConnection()->exec($sql);
-        $delete_table = "DROP TABLE IF EXISTS ".$this->_tableName;
-        $this->_db->getConnection()->exec($delete_table);
+        $where = $this->_db->quoteInto('module = ?', 'news');
+        $this->_db->delete('site_divisions_type', $where);
+        //$sql = "DELETE FROM site_divisions_type WHERE module = 'news'";
         
+        //$this->_db->getConnection()->exec($sql);
+        $delete_table = "DROP TABLE IF EXISTS ".$this->_module_tableName;
+        $this->_db->getConnection()->exec($delete_table);
+        $where = $this->_db->quoteInto('name = ?', 'news');
+        $this->_db->update('site_modules', array('installed' => 0), $where);
         $this->_db->commit();
     }
     
     private function DoRoute()
     {
       
-      $route_config = new Zend_Config_Ini($this->_news_config->main->config->path.'routes.ini',null,
+      $route_config = new Zend_Config_Ini($this->_module_config->main->config->path.'routes.ini',null,
                               array('skipExtends'        => true,
                                     'allowModifications' => true));
        
@@ -129,7 +132,7 @@ class News_Admin_NewsInstall extends InstallModuleAbstract
         $writer = new Zend_Config_Writer_Ini();
       
      
-        $writer->setFilename($this->_news_config->main->config->path.'routes.ini');
+        $writer->setFilename($this->_module_config->main->config->path.'routes.ini');
         $writer->setConfig($route_config);
         $writer->write();
         
@@ -137,7 +140,7 @@ class News_Admin_NewsInstall extends InstallModuleAbstract
     
     protected function ClearRoute()
     {
-        $route_config = new Zend_Config_Ini($this->_news_config->main->config->path.'routes.ini',null,
+        $route_config = new Zend_Config_Ini($this->_module_config->main->config->path.'routes.ini',null,
                               array('skipExtends'        => true,
                                     'allowModifications' => true));
         
@@ -148,7 +151,7 @@ class News_Admin_NewsInstall extends InstallModuleAbstract
         $writer = new Zend_Config_Writer_Ini();
       
      
-        $writer->setFilename($this->_news_config->main->config->path.'routes.ini');
+        $writer->setFilename($this->_module_config->main->config->path.'routes.ini');
         $writer->setConfig($route_config);
         $writer->write();
         
