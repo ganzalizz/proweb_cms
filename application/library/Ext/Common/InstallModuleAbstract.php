@@ -10,7 +10,7 @@ abstract class Ext_Common_InstallModuleAbstract
      *
      * @var InstallModuleAbstract 
      */
-    protected static $instance;
+   // protected static $_instance;
     /**
      *
      * @var _db - Zend_Db_Adapter_Pdo_Mysql
@@ -33,14 +33,15 @@ abstract class Ext_Common_InstallModuleAbstract
      */
     protected $_module_tableName = null;
     
-    /**
+   
+     /**
      *
      * @param string $module_sys_name 
      */
-    protected function  __construct($module_sys_name) 
+    public function  __construct($module_sys_name) 
     {
         $this->_module_config = new Ext_Common_Config($module_sys_name, 'config');
-        
+        echo "Module name: $module_sys_name";
         $this->_moduleName = $this->_module_config->module->sys->name;
         $this->_module_tableName = $this->_module_config->module->table->name;
         
@@ -56,24 +57,47 @@ abstract class Ext_Common_InstallModuleAbstract
     }
     
    
-   
     
-    abstract public function Install();
-   
-    
-    abstract public function Uninstall();
-   
-    
-     private function  __destruct() {
-        
-        $this->_db->closeConnection();
-    }
-    /**
-     *
-     * @return Zend_Config_Ini 
-     */
+//    public static function getInstance($module_sys_name)
+//   {   echo "Instance";
+//
+//        if (self::$_instance === null)
+//        {
+//            self::$_instance = new self($module_sys_name);
+//        }
+//        return self::$_instance;
+//
+//   }
+   /**
+    * 
+    */
+//    private final function __clone()
+//    {
+//        trigger_error( "Cannot clone instance of Singleton pattern", E_USER_ERROR );
+//    }
+//   
+   /**
+    *
+    * @return Zend_Config_Ini
+    */
     public function getModuleConfig()
     {
         return $this->_module_config;
     }
+    
+     public function  __destruct() {
+        
+        $this->_db->closeConnection();
+    }
+    
+    abstract public function Install(); 
+    
+   
+    
+    abstract public function Uninstall();
+    
+   
+    
+    
+    
 }

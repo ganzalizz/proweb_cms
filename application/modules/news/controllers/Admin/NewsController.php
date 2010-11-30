@@ -276,9 +276,9 @@ class News_Admin_NewsController extends MainAdminController {
 //                     ->addJavascriptFile('/js/jquery-ui-1.8.6.custom.min.js');
        require_once 'NewsInstall.php';
        echo 'Begin';
-       $install = News_Admin_NewsInstall::getInstance('news')->Install();
-       echo var_dump($install);
-       //$install->Install();
+       $install = new News_Admin_NewsInstall('news');
+       //$install->Uninstall();
+       $install->Install();
        
     }
     

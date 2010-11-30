@@ -4,9 +4,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once APPLICATION_PATH.'/library/Ext/Common/InstallModule.php';
+require_once APPLICATION_PATH.'/library/Ext/Common/InstallModuleAbstract.php';
 
-class News_Admin_NewsInstall extends Ext_Common_InstallModule
+class News_Admin_NewsInstall extends Ext_Common_InstallModuleAbstract
 {
     
      
@@ -16,6 +16,7 @@ class News_Admin_NewsInstall extends Ext_Common_InstallModule
     
     public function Install()
     {
+       
         echo 'Fufel----------------';
         $this->RegisterModule();
         $this->DoRoute();
@@ -23,13 +24,14 @@ class News_Admin_NewsInstall extends Ext_Common_InstallModule
     
     public function Uninstall()
     {
+        echo 'Fufel----------------';
         $this->UnregisteredModule();
         $this->ClearRoute();
     }
     
     
     
-    protected function RegisterModule()
+    private function RegisterModule()
     {
         
         
