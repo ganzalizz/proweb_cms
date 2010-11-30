@@ -82,6 +82,7 @@ class Search_IndexController extends Zend_Controller_Action {
 			$paginator = Search_Index::getInstance()->search($search,$this->_current_page,  $onpage);
 			Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
 			
+			$this->view->url_params[] = array('keywords'=>$this->_getParam('keywords'));
 			$paginator->setView($this->view);
 	        $hits =  $paginator->getCurrentItems();
 	        $this->view->paginator = $paginator;
