@@ -1,6 +1,7 @@
+AddDefaultCharset utf-8
 SetEnv APPLICATION_ENV development
 
-AddDefaultCharset UTF-8
+
 
 RewriteCond %{REQUEST_URI} ^/kcaptcha
 RewriteRule ^(.*)$ $1 [L]
