@@ -76,7 +76,7 @@ class News_Admin_NewsController extends MainAdminController {
         
         $row = News::getInstance()->find($id)->current();
         //if (isset($row->small_img))
-        $data[]['small_img'] = '/pics/news/small_img_thumb/'.$row->small_img;
+        $data['small_img'] = '/pics/news/small_img_thumb/'.$row->small_img;
         echo  '/pics/news/small_img_thumb/'.$row->small_img;
         $form = new Form_FormNews($data);
         
@@ -89,6 +89,7 @@ class News_Admin_NewsController extends MainAdminController {
         $this->processForm($form, $this->getRequest());
       
         $this->view->form = $form;
+        
            // $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
        
     }
@@ -270,9 +271,14 @@ class News_Admin_NewsController extends MainAdminController {
     
     public function installAction()
     {
-        
-        require_once 'NewsInstall.php';
-       News_Admin_NewsInstall::getInstance()->Uninstall();
+//        $view = Zend_Layout::getMvcInstance()->getView();
+//        $view->jQuery->addJavascriptFile('/js/jquery-1.4.2.min')
+//                     ->addJavascriptFile('/js/jquery-ui-1.8.6.custom.min.js');
+       require_once 'NewsInstall.php';
+       echo 'Begin';
+       $install = News_Admin_NewsInstall::getInstance('news')->Install();
+       echo var_dump($install);
+       //$install->Install();
        
     }
     

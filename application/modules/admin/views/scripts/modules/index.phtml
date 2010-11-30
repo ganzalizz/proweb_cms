@@ -10,17 +10,17 @@
 								</tr>
 								<?php
 									foreach ($this->items as $key => $data){
-										
+									 	$stl = $data->installed ? "style=\"color:green;\"" : "style=\"color:red;\""; 
 										?>
 											<tr>														
-												<td class="main">
+												<td class="main" >
 													<a  href ="<?=$this->currentModule?>/edit/name/<?=$data['name']?>/" title="редактировать"><strong><?=$data['name']?></strong></a>
 												</td>
-												<td class="main" >
+												<td class="main" <?php echo $stl ?>>
 													<?=$data['title'] ?>
 												</td>											
 												<td class="main" >
-													<?=$data['description'] ?>
+													<?=$data['describe'] ?>
 												</td>										
 												<td class="options">
 													<a href = '<?=$this->currentModule?>/edit/name/<?=$data['name']?>'><img src="/img/admin/redact.gif" /></a>
