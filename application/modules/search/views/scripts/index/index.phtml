@@ -4,7 +4,7 @@
 	<input type="text" name="keywords" value="<?=$this->layout()->search?>">
 	<input type="submit" value="Искать">
 	</form>
-    <p>по запросу "<?=$this->layout()->search?>" найдено результатов <?=(int)count($this->hits)?></p>
+    <p>по запросу "<?=$this->layout()->search?>" найдено результатов <?php echo $this->total?></p>
         <?foreach($this->hits as $hit) {?>
     <div class="news_item overflow">
         <div class="text_news overflow">
@@ -26,4 +26,5 @@
         </div>
     <?}?>
     
-    <?php echo $this->paginator?>
+    
+    <?php echo $this->paginationControl($this->paginator, null, null, array('url_params'=>$this->url_params))?>

@@ -277,7 +277,7 @@ class News_Admin_NewsController extends MainAdminController {
        require_once 'NewsInstall.php';
        echo 'Begin';
        $install = new News_Admin_NewsInstall('news');
-       //$install->Uninstall();
+     // $install->Uninstall();
        $install->Install();
        
     }
