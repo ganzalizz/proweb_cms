@@ -10,7 +10,8 @@
 								</tr>
 								<?php
 									foreach ($this->items as $key => $data){
-									 	$stl = $data->installed ? "style=\"color:green;\"" : "style=\"color:red;\""; 
+									 	$stl = $data->installed ? "style=\"color:green;\"" : "style=\"color:red;\"";
+                                                                                $instlnk =  $data->installed ? "<a href=\"\">Удалить</a>" : "<a href=\"\">Установить</a>";
 										?>
 											<tr>														
 												<td class="main" >
@@ -25,6 +26,8 @@
 												<td class="options">
 													<a href = '<?=$this->currentModule?>/edit/name/<?=$data['name']?>'><img src="/img/admin/redact.gif" /></a>
 													<a href = '<?=$this->currentModule?>/delete/name/<?=$data['name']?>'><img src="/img/admin/delete.gif"></a>
+                                                                                                        <?php echo $instlnk ?>
+                                                                                                        
 												</td>
 											</tr>
 										<?php

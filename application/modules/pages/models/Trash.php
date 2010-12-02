@@ -49,7 +49,7 @@ class Trash extends Zend_Db_Table {
 		
 		foreach ($all as $data){
 			//$ids[] = $data->id;
-			Router::getInstance()->deleteRoute($data->name, $data->id);			
+			Router::getInstance()->deleteRoute($data->path);			
 			Pages::getInstance()->remove($data->id);
 		}
 		return true;	
