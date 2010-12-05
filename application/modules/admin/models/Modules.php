@@ -129,9 +129,9 @@ class Modules extends Zend_Db_Table
          */
         private function AddModule($module_name)
         {
-            require_once APPLICATION_PATH.'/library/Ext/Common/InstallModule.php';
+            require_once APPLICATION_PATH.'/library/Ext/Common/InstallModuleAbstract.php';
             echo "$module_name<br/>";
-            $config_module = Ext_Common_InstallModule::getInstance($module_name)->getModuleConfig();
+            $config_module = new Ext_Common_Config($module_name, 'config');
             $data = array(
             'name'  => $config_module->module->sys->name,
             'module_ver' => $config_module->module->version,    

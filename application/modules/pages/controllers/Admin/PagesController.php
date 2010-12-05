@@ -77,7 +77,7 @@ class Pages_Admin_PagesController extends MainAdminController {
 
 			$ok = 1;
 			$err = array();
-			if (trim($data['name'])==''){
+			if (trim($data['title'])==''){
 				$err[] = 'Незаполнено поле название';
 				$ok = 0;
 			}
@@ -202,7 +202,7 @@ class Pages_Admin_PagesController extends MainAdminController {
                 $ok = 0;
             }
 
-            Pages::getInstance()->editPage($data);
+              Pages::getInstance()->editPage($data);
             $error = $this->editRoute($data);
             $page = Pages::getInstance()->find($id)->current();
             $img_name = $_FILES['image']['name'];

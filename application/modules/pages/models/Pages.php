@@ -103,7 +103,7 @@ class Pages extends Zend_Db_Table {
 	 * @return object
 	 */
 	public function getVersionPage($data) {
-		$where = array ($this->getAdapter ()->quoteInto ( 'path = ?', $data->path ), $this->getAdapter ()->quoteInto ( 'version = ?', $data->version ), $this->getAdapter ()->quoteInto ( 'type = ?', $data->type ) );
+		$where = array ($this->getAdapter ()->quoteInto ( 'path = ?', $data->path ) );
 		$page = $this->fetchRow ( $where );
 		
 		return $page;
@@ -166,7 +166,7 @@ class Pages extends Zend_Db_Table {
 	public function getPageByParam($name, $value, $version='ru') {
 		$where =array(
 			$this->getAdapter ()->quoteInto ( "$name = ?", $value ),
-			$this->getAdapter ()->quoteInto ( "version = ?", $version )
+			//$this->getAdapter ()->quoteInto ( "version = ?", $version )
 		);		
 		return $this->fetchRow ( $where );
 	}
@@ -180,7 +180,7 @@ class Pages extends Zend_Db_Table {
 	 * @return array
 	 */
 	public function getVersionPages($lang, $module) {
-		$where = array ($this->getAdapter ()->quoteInto ( "version = ?", $lang ), $this->getAdapter ()->quoteInto ( "module = ?", $module ) );
+		$where = array ($this->getAdapter ()->quoteInto ( "module = ?", $module ) );
 		
 		return $this->fetchAll ( $where );
 	}
@@ -240,7 +240,7 @@ class Pages extends Zend_Db_Table {
 		$return = array ( );
 		$nodes = array ( );
 		$where = array (
-			$this->getAdapter ()->quoteInto ( 'version = ?', $version ), 
+			//$this->getAdapter ()->quoteInto ( 'version = ?', $version ), 
 			$this->getAdapter ()->quoteInto ( 'level = ?', $level ), 
 			$this->getAdapter ()->quoteInto ( 'id_parent = ?', $id_parent ), 
 			$this->getAdapter ()->quoteInto ( 'deleted = ?', 0 ),
@@ -254,7 +254,7 @@ class Pages extends Zend_Db_Table {
 				
 				if ($this->getCountOfChildren ( $data->id ) > 0) {
 					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->title</a>";
-					$html.=$this->getSitemap ( $version, $data->id, $data->level + 1 );
+					//$html.=$this->getSitemap ( $version, $data->id, $data->level + 1 );
 					$html.="</li>";
 					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'cls' => 'master-task', 'iconCls' => 'task-folder', 'children' => $this->getTree ( $version, $data->id, $data->level + 1 ) );
 				} else {
@@ -566,7 +566,7 @@ class Pages extends Zend_Db_Table {
 	 * @return bool
 	 */
 	public function checkPath($path, $id=null, $lang){
-		$where = "path='$path' AND version='$lang' AND type!='root'";
+		$where = "path='$path'";
 		if ($id!=null){
 			$where.= " AND id!=".(int)$id;
 		}
@@ -732,7 +732,7 @@ class Pages extends Zend_Db_Table {
 		
 		$parent = $this->getPage ( ( int ) $data ['parent_id'] );
 		$countOfChildren = $this->getCountOfChildren ( $parent->id );
-		$maxId = $this->getMaxId ();
+		//$maxId = $this->getMaxId ();
 		$url = isset ( $data ['path'] ) ? $data ['path'] : '';
 		if (isset ( $data['id_div_type'] ) && $data['id_div_type']!=0){
 			$type = SiteDivisionsType::getInstance()->find($data['id_div_type'])->current();
@@ -743,7 +743,7 @@ class Pages extends Zend_Db_Table {
 		$result = array (
 			//'id' => $maxId + 1,
 			'type' => 'page',
-			'version' => isset ( $data ['lang'] ) ? $data ['lang'] : $parent->version,
+			//'version' => isset ( $data ['lang'] ) ? $data ['lang'] : $parent->version,
 			'is_active' => isset ( $data ['is_active'] ) ? '1' : '0',
 			'pubDate' => date ( "Y-m-d H:i:s" ),
 			'sitemap' => isset ( $data ['sitemap'] ) ? '1' : '0',

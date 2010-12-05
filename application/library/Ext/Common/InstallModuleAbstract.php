@@ -80,7 +80,7 @@ abstract class Ext_Common_InstallModuleAbstract
     *
     * @return Zend_Config_Ini
     */
-    public function getModuleConfig()
+    public static function getModuleConfig()
     {
         return $this->_module_config;
     }

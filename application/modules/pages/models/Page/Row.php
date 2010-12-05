@@ -24,13 +24,13 @@ class Page_Row extends Zend_Db_Table_Row {
 	}
 	
 	public function issetChild() {
-		if (count ( Pages::getInstance ()->fetchAll ( 'parentId=' . ( int ) $this->id . ' AND published=1 ' ) ) > 0) {
+		if (count ( Pages::getInstance ()->fetchAll ( 'parentId=' . ( int ) $this->id . ' AND is_active=1 ' ) ) > 0) {
 			return true;
 		} else
 			return false;
 	}
 	public function getChild($count = 0) {
-		return Pages::getInstance ()->fetchAll ( 'parentId=' . $this->id . ' AND published=1 ', 'sortId ASC', $count );
+		return Pages::getInstance ()->fetchAll ( 'parentId=' . $this->id . ' AND is_active=1 ', 'sortId ASC', $count );
 	}
 	
 	public function getRightMenu() {
@@ -41,7 +41,7 @@ class Page_Row extends Zend_Db_Table_Row {
 			if (sizeof ( $childs ) > 0) {
 				$html .= '<ul class="right_menu">';
 				foreach ( $childs as $child ) {
-					$html .= "<li><a href='/$child->path'>$child->name</a></li>\r\n";
+					$html .= "<li><a href='/$child->path'>$child->title</a></li>\r\n";
 				}
 				$html .= '</ul>';
 			}
@@ -66,7 +66,7 @@ class Page_Row extends Zend_Db_Table_Row {
 	 */
 	protected function _postUpdate() {
 		Ext_Search_Lucene::deleteItemFromIndex ( $this->id, Ext_Search_Lucene::PAGES );
-		if ($this->published == 1) {
+		if ($this->is_active == 1) {
 			$this->addItemToSearchIndex();
 		}
 	
@@ -82,7 +82,7 @@ class Page_Row extends Zend_Db_Table_Row {
 		/**
 		 * индексируются только опубликованные элементы
 		 */
-		if ($this->published == 1) {
+		if ($this->is_active == 1) {
 			$this->addItemToSearchIndex();
 		}
 	}
@@ -95,8 +95,8 @@ class Page_Row extends Zend_Db_Table_Row {
 	protected function addItemToSearchIndex(){
 		$index = Ext_Search_Lucene::open ( Ext_Search_Lucene::PAGES );
 			$doc = new Ext_Search_Lucene_Document ( );			
-			$doc->setUrl ( $this->path );
-			$doc->setTitle ( $this->name );
+		        $doc->setUrl ( $this->path );
+			$doc->setTitle ( $this->title );
 			$doc->setContent ( strip_tags ( $this->content ) );
 			$doc->setId ( $this->id );
 			$index->addDocument ( $doc );

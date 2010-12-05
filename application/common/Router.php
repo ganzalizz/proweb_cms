@@ -6,6 +6,12 @@ class Router
 	 * @var Router
 	 */
 	protected static $_instance = null;
+        
+        /**
+         *
+         * @var route.ini path with filename 
+         */
+        protected $_routeFileName = null;
 	
 	/**
 	 * Singleton instance
@@ -21,6 +27,7 @@ class Router
 		
 	public function init(){
 		Loader::loadCommon('Configurator');
+                $this->_routeFileName = Configurator::getConfigRoutesFileName();
 	}
 	
 	/**
@@ -52,30 +59,18 @@ class Router
 	 * @param int $id
 	 * @return boolean
 	 */
-	public function deleteRoute($name, $id){
+	public function deleteRoute($name)
+        {
+		                 
+          $config = new Zend_Config_Ini($this->_routeFileName, null, true);
+          $config->__unset($name);
+          
+          $writer = new Zend_Config_Writer_Ini();
+          $writer->setFilename($this->_routeFileName);
+          $writer->setConfig($config);
+          $writer->write();
+          
 		
-		$filename = Configurator::getConfigRoutesFileName();
-		$content = file_get_contents($filename);
-		
-		$first_pos = strpos($content, ";[$name-$id]");
-		
-		if(!$first_pos)
-			return true;
-			
-		$last_pos = strpos($content, ";[", $first_pos + 1);
-		$lenght = $last_pos - $first_pos;
-		
-		if($last_pos){
-			$lenght = $last_pos - $first_pos;
-			$content = substr_replace($content, '', $first_pos, $lenght);
-		}
-		else{
-			$content = substr_replace($content, '', $first_pos);
-		}
-			
-		file_put_contents($filename, $content);
-		
-		return true;
 	}
 	
 	/**
@@ -87,16 +82,25 @@ class Router
 	 * @param string $module
 	 * @return string
 	 */
-	public function replaceRoute($data, $action = 'index', $controller = 'page', $module = 'default'){
-		//Loader::loadPublicModel('Pages');
-		$old = Pages::getInstance()->getPage($data['id']);
-		$this->deleteRoute($old->name, $old->id);
-		
-		if($this->addRoute($data, $action, $controller, $module)){
-			return true;
-		}
-			
-		return false;
+	public function replaceRoute($data, $action = 'index', $controller = 'page', $module = 'default')
+        {
+	        
+                $route_name = $this->filtered($data['path']);
+                
+                $config = new Zend_Config_Ini($this->_routeFileName, null, true);
+                
+		$config->$route_name->routes->$route_name->type = "Zend_Controller_Router_Route";
+                $config->$route_name->routes->$route_name->route = $route_name;
+                $config->$route_name->routes->$route_name->defaults->module = $module;
+                $controller = (($module == 'default') && ($controller == 'index')) ? 'page' : $controller ;
+                $config->$route_name->routes->$route_name->defaults->controller = $controller;
+                $config->$route_name->routes->$route_name->defaults->action = $action;
+                $config->$route_name->routes->$route_name->defaults->id = $data['id'];
+                
+                $writer = new Zend_Config_Writer_Ini();
+                $writer->setFilename($this->_routeFileName);
+                $writer->setConfig($config);
+                $writer->write();	
 		
 	}
 	
@@ -127,36 +131,27 @@ class Router
 	 * @param string $module
 	 */
 	private function write($data, $action, $controller, $module){
-		$filename = Configurator::getConfigRoutesFileName();
-		//print_r($data);
-		$id = $data['id'];
-		$name = $data['name'];
-		$route = $route_name = $this->filtered($data['path']);
-		$version = $this->filtered($data['lang']);
-		$module = $this->filtered($module);
-		$action = $this->filtered($action);
-		$controller = $this->filtered($controller);
-		if($module == 'default' && $controller == 'index'){
-			$controller = 'page';
-		}
-		$string = "\n;[$name-$id]\n";
-		$string .= "routes.$route.type = \"Zend_Controller_Router_Route\"\n";
+            
+                
+                $route_name = $this->filtered($data['path']);
+                
+                $config = new Zend_Config_Ini($this->_routeFileName, null, true);
+                
+		$config->$route_name = array();
+                $config->$route_name->__set('routes.'.$route_name.'.type', "Zend_Controller_Router_Route");
+                $config->$route_name->__set('routes.'.$route_name.'.route', $route_name);
+                $config->$route_name->__set('routes.'.$route_name.'.defaults.module', $module);
+                $controller = (($module == 'default') && ($controller == 'index')) ? 'page' : $controller ;
+                $config->$route_name->__set('routes.'.$route_name.'.defaults.controller', $controller);
+                $config->$route_name->__set('routes.'.$route_name.'.defaults.action', $action);
+                $config->$route_name->__set('routes.'.$route_name.'.defaults.id', $data['id']);
+                
+                $writer = new Zend_Config_Writer_Ini();
+                $writer->setFilename($this->_routeFileName);
+                $writer->setConfig($config);
+                $writer->write();
 		
-		if($version != 'ru'){
-			$route = ($route == '') ? "$version" : "$version/$route";
-		}
-		//$str=$module!='default' ? '/*' :'';
-		if($route!=''){
-			$route.='/*';
-		}
-		$string .= "routes.$route_name.route = \"$route\" \n";
-		$string .= "routes.$route_name.defaults.module = \"$module\"\n";
-		$string .= "routes.$route_name.defaults.controller = \"$controller\"\n";
-		$string .= "routes.$route_name.defaults.action = \"$action\"\n";
-		$string .= "routes.$route_name.defaults.id = \"$id\" \n";
-		
-		$pre = file_get_contents($filename);
-		file_put_contents($filename, $pre . $string);
+
     }
     
     /**
@@ -187,5 +182,12 @@ class Router
     	$param = str_replace(" ", '', $param);
     	
     	return $param;
+    }
+    
+    private function DoRouteName($param)
+    {
+      $matches = null;  
+      preg_match('/[a-z,_,-]+/', $param, $matches);
+      return $maches[0];
     }
 }
