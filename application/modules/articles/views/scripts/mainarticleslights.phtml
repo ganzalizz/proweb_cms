@@ -1,13 +1,13 @@
 <div class="srs_bl">
    
 <?php for ($i=0; $i < count($this->mainarticleslights); $i++) { ?>    
-<div class="item stop"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['prizn'] == 1? '<a href="/articleslist/item/'.$this->mainarticleslights[$i]['id'].'">'.
+<div class="item stop"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['lighting'] == 1? '<a href="/articlesitem/item/'.$this->mainarticleslights[$i]['id'].'">'.
 $this->mainarticleslights[$i]['name'].'</a>': '' ?></div>
 
-<div class="item read"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['prizn'] == 2? '<a href="/articleslist/item/'.$this->mainarticleslights[$i]['id'].'">'.
+<div class="item read"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['lighting'] == 2? '<a href="/articlesitem/item/'.$this->mainarticleslights[$i]['id'].'">'.
 $this->mainarticleslights[$i]['name'].'</a>': '' ?></div>
 
-<div class="item start"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['prizn'] == 3? '<a href="/articleslist/item/'.$this->mainarticleslights[$i]['id'].'">'.
+<div class="item start"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['lighting'] == 3? '<a href="/articlesitem/item/'.$this->mainarticleslights[$i]['id'].'">'.
 $this->mainarticleslights[$i]['name'].'</a>': '' ?></div>
 <?php } ?>
 </div>

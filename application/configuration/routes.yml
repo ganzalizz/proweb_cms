@@ -1,0 +1,331 @@
+routes: 
+  routes: 
+    new: 
+      type: Zend_Controller_Router_Route
+      route: 404
+      default: 
+        module: admin
+        controller: pages
+        action: 404
+    admin: 
+      type: Zend_Controller_Router_Route
+      route: :module/:lang/:controller/:action/*
+      defaults: 
+        module: admin
+        lang: ru
+        controller: index
+        action: index
+    login: 
+      type: Zend_Controller_Router_Route
+      route: admin/login/*
+      defaults: 
+        module: admin
+        lang: ru
+        controller: index
+        action: login
+    847: 
+      type: Zend_Controller_Router_Route
+      route: menu/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 847
+    851: 
+      type: Zend_Controller_Router_Route
+      route: sitemap/*
+      defaults: 
+        module: pages
+        controller: index
+        action: sitemap
+        id: 851
+    search: 
+      type: Zend_Controller_Router_Route
+      route: search/*
+      defaults: 
+        module: search
+        controller: index
+        action: index
+        id: 853
+    863: 
+      type: Zend_Controller_Router_Route
+      route: order/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 863
+    873: 
+      type: Zend_Controller_Router_Route
+      route: delivery/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 873
+    893: 
+      type: Zend_Controller_Router_Route
+      route: discount/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 893
+    903: 
+      type: Zend_Controller_Router_Route
+      route: constructorhelp/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 903
+    913: 
+      type: Zend_Controller_Router_Route
+      route: guarantee/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 913
+    943: 
+      type: Zend_Controller_Router_Route
+      route: login/*
+      defaults: 
+        module: users
+        controller: index
+        action: login
+        id: 943
+    953: 
+      type: Zend_Controller_Router_Route
+      route: logout/*
+      defaults: 
+        module: users
+        controller: index
+        action: logout
+        id: 953
+    963: 
+      type: Zend_Controller_Router_Route
+      route: rememberpassword/*
+      defaults: 
+        module: users
+        controller: index
+        action: forgot
+        id: 963
+    933: 
+      type: Zend_Controller_Router_Route
+      route: registration/*
+      defaults: 
+        module: users
+        controller: index
+        action: registration
+        id: 933
+    923: 
+      type: Zend_Controller_Router_Route
+      route: profile/*
+      defaults: 
+        module: users
+        controller: index
+        action: userarea
+        id: 923
+    1013: 
+      type: Zend_Controller_Router_Route
+      route: dishmake/*
+      defaults: 
+        module: constructor
+        controller: index
+        action: index
+        id: 1013
+    993: 
+      type: Zend_Controller_Router_Route
+      route: cart/*
+      defaults: 
+        module: catalog
+        controller: cart
+        action: index
+        id: 993
+    973: 
+      type: Zend_Controller_Router_Route
+      route: katalog/*
+      defaults: 
+        module: catalog
+        controller: index
+        action: index
+        id: 973
+    1033: 
+      type: Zend_Controller_Router_Route
+      route: editprofile/*
+      defaults: 
+        module: users
+        controller: index
+        action: editprofile
+        id: 1033
+    1053: 
+      type: Zend_Controller_Router_Route
+      route: ordershistory/*
+      defaults: 
+        module: users
+        controller: index
+        action: ordershistory
+        id: 1053
+    1063: 
+      type: Zend_Controller_Router_Route
+      route: orderdetails/*
+      defaults: 
+        module: users
+        controller: index
+        action: orderdetails
+        id: 1063
+    1074: 
+      type: Zend_Controller_Router_Route
+      route: test/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 1074
+    883: 
+      type: Zend_Controller_Router_Route
+      route: payment/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 883
+    848: 
+      type: Zend_Controller_Router_Route
+      route: service/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 848
+    850: 
+      type: Zend_Controller_Router_Route
+      route: customers/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 850
+    1079: 
+      type: Zend_Controller_Router_Route
+      route: cms
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 1079
+    1080: 
+      type: Zend_Controller_Router_Route
+      route: podderzhka_sajta
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 1080
+    1081: 
+      type: Zend_Controller_Router_Route
+      route: prodvizhenie_sajta
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 1081
+    1082: 
+      type: Zend_Controller_Router_Route
+      route: zakazat_sajt/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 1082
+    1078: 
+      type: Zend_Controller_Router_Route
+      route: legkij_start
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 1078
+    849: 
+      type: Zend_Controller_Router_Route
+      route: contacts
+      defaults: 
+        module: forms
+        controller: forms
+        action: feedback
+        id: 849
+    844: 
+      type: Zend_Controller_Router_Route
+      route: 
+      defaults: 
+        module: pages
+        controller: index
+        action: main
+        id: 844
+    articles: 
+      type: Zend_Controller_Router_Route
+      route: articleslist/*
+      defaults: 
+        module: articles
+        controller: articles
+        action: index
+        id: 1076
+    articlesitem: 
+      type: Zend_Controller_Router_Route
+      route: articlesitemt/*
+      defaults: 
+        module: articles
+        controller: articles
+        action: articlesitem
+        id: 1076    
+        
+    1077: 
+      type: Zend_Controller_Router_Route
+      route: otzivyview
+      defaults: 
+        module: otzivy
+        controller: otzivy
+        action: index
+        id: 1077
+    portfolio: 
+      type: Zend_Controller_Router_Route
+      route: portfoliolist/*
+      defaults: 
+        module: portfolio
+        controller: portfolio
+        action: index
+        id: 1075
+    portfolioitem: 
+      type: Zend_Controller_Router_Route
+      route: portfolioitem/*
+      defaults: 
+        module: portfolio
+        controller: portfolio
+        action: portfolioitem
+        id: 1075
+    newslist: 
+      type: Zend_Controller_Router_Route
+      route: newslist/*
+      defaults: 
+        module: news
+        controller: news
+        action: index
+        id: 
+    newsitem: 
+      type: Zend_Controller_Router_Route
+      route: newsitem/*
+      defaults: 
+        module: news
+        controller: news
+        action: newsitem
+        id: 
+    about: 
+      type: Zend_Controller_Router_Route
+      newslist: 
+        route: about
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 845

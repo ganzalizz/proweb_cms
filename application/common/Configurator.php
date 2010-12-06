@@ -74,6 +74,7 @@ class Configurator {
      */
     public static function setupRoutes($router) {
         $routes = Configurator::getRoute('routes');
+        //echo var_dump($routes);
         $router->addConfig($routes, 'routes');
     }
 
@@ -105,7 +106,8 @@ class Configurator {
      * @return object
      */
     public static function getRoute($name) {
-        return new Zend_Config_Ini(DIR_APPLICATION . 'configuration/routes.ini', $name);
+        return  new Zend_Config_Yaml(DIR_APPLICATION . 'configuration/routes.yml', $name);
+        //print_r($config->toArray());
     }
 
     /**

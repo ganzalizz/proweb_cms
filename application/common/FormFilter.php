@@ -47,24 +47,5 @@ class FormFilter
         return $filter;
     }
     
-//    private function setErrorMessages(){
-//    	
-//    	$filter_prefix = "Zend_Validate_";
-//    	$messages = Configurator::getConfig('messages')->toArray();
-//    	if (isset($messages) && count($messages)){
-//    		foreach ($messages as $cur_filter=>$mess){
-//    			if (is_array($mess)){
-//    				$filter = $filter_prefix.$cur_filter;
-//    				$obj_filter = new $filter();   
-//    				//print_r($mess); 				
-//    				$obj_filter->setMessages($mess);
-//    				//print_r($obj_filter->getMessages());
-//    				//exit;
-//    				
-//    			}
-//    		}
-//    	}
-//    	
-//    	
-//    }
+
 }

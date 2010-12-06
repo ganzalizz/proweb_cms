@@ -11,12 +11,12 @@ class Portfolio_PortfolioController extends Zend_Controller_Action {
         $id = $this->_getParam('id');
         $page = Pages::getInstance()->getPage($this->_getParam('id'));
         if(!is_null($page)) {
-            if ($page->published == '0') {
+            if ($page->is_active == '0') {
                 $this->_redirect('/404');
             }
 
             $this->layout->page = $page;
-            $this->layout->lang = $page->version;
+           // $this->layout->lang = $page->version;
 
             $this->view->addScriptPath(DIR_LAYOUTS) ;
             $this->view->addHelperPath(Zend_Registry::get('helpersPaths'), 'View_Helper') ;
@@ -27,7 +27,7 @@ class Portfolio_PortfolioController extends Zend_Controller_Action {
             $this->view->placeholder('descriptions')->set($options->descriptions);
             $this->view->placeholder('id_page')->set($id);
             $this->view->placeholder('object_id')->set($id);
-            $this->view->placeholder('h1')->set($page->name);
+            $this->view->placeholder('h1')->set($page->title);
             $this->layout->current_type = 'pages';
             $this->view->page = $page;
             $this->layout->id_object = $page->id;
@@ -40,7 +40,7 @@ class Portfolio_PortfolioController extends Zend_Controller_Action {
         $id_page = $this->_getParam('id');
         
         $page =	Pages::getInstance()->getPageByParam('id', $this->_getParam('id'));
-        $this->view->child_pages = $child_pages = Pages::getInstance()->getPagesByParam('parentId', $this->_getParam('id'));
+       // $this->view->child_pages = $child_pages = Pages::getInstance()->getPagesByParam('parentId', $this->_getParam('id'));
         $this->view->page = $page;
         $this->_setParam('id',$page->id);
         $this->view->year = $year;
@@ -56,11 +56,11 @@ class Portfolio_PortfolioController extends Zend_Controller_Action {
         if (isset($item) && $item) {
             $this->view->item =$portfolio_row = $item;
             if ($portfolio_row!=''){
-            	$bread_items[] = array('title'=>$portfolio_row->name);
+            	$bread_items[] = array('title'=>$portfolio_row->title);
             	$this->view->placeholder('title')->set($portfolio_row->seo_title);
                 $this->view->placeholder('keywords')->set($portfolio_row->seo_keywords);
                 $this->view->placeholder('descriptions')->set($portfolio_row->seo_descriptions);
-                $this->view->placeholder('h1')->set($portfolio_row->name);
+                $this->view->placeholder('h1')->set($portfolio_row->title);
             	$this->view->layout()->bread_items =  $bread_items;
             }
             $this->render('portfolioitem');

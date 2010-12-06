@@ -11,12 +11,12 @@ class Articles_ArticlesController extends Zend_Controller_Action {
         $id = $this->_getParam('id');
         $page = Pages::getInstance()->getPage($this->_getParam('id'));
         if(!is_null($page)) {
-            if ($page->published == '0') {
+            if ($page->is_active == '0') {
                 $this->_redirect('/404');
             }
 
             $this->layout->page = $page;
-            $this->layout->lang = $page->version;
+           // $this->layout->lang = $page->version;
 
             $this->view->addScriptPath(DIR_LAYOUTS) ;
             $this->view->addHelperPath(Zend_Registry::get('helpersPaths'), 'View_Helper') ;
@@ -27,7 +27,7 @@ class Articles_ArticlesController extends Zend_Controller_Action {
             $this->view->placeholder('descriptions')->set($options->descriptions);
             $this->view->placeholder('id_page')->set($id);
             $this->view->placeholder('object_id')->set($id);
-            $this->view->placeholder('h1')->set($page->name);
+            //$this->view->placeholder('h1')->set($page->name);
             $this->layout->current_type = 'pages';
             $this->view->page = $page;
             $this->layout->id_object = $page->id;
@@ -35,13 +35,13 @@ class Articles_ArticlesController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        if ($this->_hasParam('item')) $this->_forward('articlesitem');
+         
 
-        $id_page = $this->_getParam('id');
-        $page =	Pages::getInstance()->getPageByParam('id', $this->_getParam('id'));
-        $this->view->child_pages = $child_pages = Pages::getInstance()->getPagesByParam('parentId', $this->_getParam('id'));
-        $this->view->page = $page;
-        $this->_setParam('id',$page->id);
+//        $id_page = $this->_getParam('id');
+//        $page =	Pages::getInstance()->getPageByParam('id', $this->_getParam('id'));
+//        $this->view->child_pages = $child_pages = Pages::getInstance()->getPagesByParam('parentId', $this->_getParam('id'));
+//        $this->view->page = $page;
+//        $this->_setParam('id',$page->id);
         $this->view->articles = Articles::getInstance()->getActiveArticles();
                 
         
