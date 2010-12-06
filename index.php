@@ -22,15 +22,10 @@ $application = new Zend_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configuration/configuration.ini'
 );
-try{
+
 $application->bootstrap()
             ->run();
-}
-catch(Exception $e)
-{
-  //echo var_dump(Zend_Controller_Front::getInstance()->getRouter()->getCurrentRoute()); 
-  echo $e->getTraceAsString();
-}
+
 
 include_once 'start.inc.php';
 
