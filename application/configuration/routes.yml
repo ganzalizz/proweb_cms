@@ -278,8 +278,7 @@ routes:
         module: articles
         controller: articles
         action: articlesitem
-        id: 1076    
-        
+        id: 1076
     1077: 
       type: Zend_Controller_Router_Route
       route: otzivyview
@@ -322,8 +321,7 @@ routes:
         id: 
     about: 
       type: Zend_Controller_Router_Route
-      newslist: 
-        route: about
+      route: about
       defaults: 
         module: pages
         controller: index

@@ -20,13 +20,14 @@ class Router
 	public static function getInstance(){
     		if (null === self::$_instance) {
         			self::$_instance = new self();
+                                self::$_instance->init();
     		}
 
     		return self::$_instance;
 	}
 		
-	public function init(){
-		Loader::loadCommon('Configurator');
+	protected function init(){
+		//Loader::loadCommon('Configurator');
                 $this->_routeFileName = Configurator::getConfigRoutesFileName();
 	}
 	
@@ -92,7 +93,6 @@ class Router
 		$config->routes->routes->$route_name->type = "Zend_Controller_Router_Route";
                 $config->routes->routes->$route_name->route = $route_name;
                 $config->routes->routes->$route_name->defaults->module = $module;
-                $controller = (($module == 'default') && ($controller == 'index')) ? 'page' : $controller ;
                 $config->routes->routes->$route_name->defaults->controller = $controller;
                 $config->routes->routes->$route_name->defaults->action = $action;
                 $config->routes->routes->$route_name->defaults->id = $data['id'];

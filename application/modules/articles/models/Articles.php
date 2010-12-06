@@ -252,14 +252,14 @@ $new->save();
     *
     */
     public function getMain($type='articles', $limit=0) {
-        $select = new Zend_Db_Select($this->getAdapter());
+        $select = $this->select();
         $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
                 ->where($this->getAdapter()->quoteInto('main= ?',1))
                 ->where($this->getAdapter()->quoteInto('type= ?',$type))
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('RAND()', null))
                 ->limit($limit);
-        return $this->getAdapter()->query($select);
+        return $this->fetchAll($select);
     }
 
     /*
@@ -273,14 +273,14 @@ $new->save();
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('created_at DESC', null))
                 ->limit($limit);
-        return $this->getAdapter()->query($select);
+        return $this->fetchAll($select);
     }
     
     /*
      *Выборка статьи по цвету светофора 
      * 
      * @param color int
-     * @return mixed or false eswhere
+     * @return mixed or false elswhere
      */
      public function getTrafficLightingByColor(){
          $ids = array(self::TRAFFIC_LIGHTS_RED,self::TRAFFIC_LIGHTS_YELLOW,self::TRAFFIC_LIGHTS_GREEN);
@@ -289,58 +289,12 @@ $new->save();
                 ->where('is_active = ?', 1)
                 ->where('lighting IN (?)', $ids);
              
-         $rez = $this->fetchAll($select);        
+         return $this->fetchAll($select);        
 
-         if (!count($rez)) return false;
-         else return $rez;    
+            
      }
     
-
-    public function search($search) {
-        $dbAdapter = Zend_Registry::get('db');
-        $sql = $dbAdapter->quoteInto("SELECT DISTINCT *, 'articles' AS TYPE FROM site_articles WHERE site_articles.name LIKE '%".$search."%'
-		    OR site_news.intro LIKE '%".$search."%'
-		 	OR site_news.content LIKE '%".$search."%'
-		    AND site_articles.is_active =1 ORDER BY site_articles.name ; ",null);
-        $result = $dbAdapter->query($sql);
-        return  $result->fetchAll();
-
-    }
-    /**
-     * reindex table for Zend_search_lucence
-     */
-    public function reindex() {
-        $index = new Ext_Search_Lucene(Ext_Search_Lucene::NEWS);
-        //$pages_rowset = $this->fetchAll('published=1')
-        $count = 10 ;
-        $offset = 0 ;
-        $this->setPaths();
-        while( ( $rowset = $this->fetchAll( 'is_active=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
-
-            while( $rowset->valid() ) {
-                $row = $rowset->current() ;
-                //
-                // Prepare document
-                //
-                if ($path = $this->getElemPath($row->id_page)) {
-                    $doc = new Ext_Search_Lucene_Document();
-                    $doc->setUrl($path .'/item/'.$row->id.'/');
-                    $doc->setTitle($row->name);
-                    $doc->setContent(strip_tags($row->content));
-                    $doc->setId($row->id);
-
-                    $index->addDocument( $doc ) ;
-                }
-                $rowset->next() ;
-            }
-            $offset += $count ;
-        }
-
-        $index->commit() ;
-        return $index->numDocs();
-
-    }
-
+      
     /**
      * выбираем все родительские страницы
      */
