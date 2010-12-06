@@ -64,20 +64,20 @@ class Search_IndexController extends Zend_Controller_Action {
 		$search = $this->_getParam( 'keywords' );
 		if ($search) {
 			
-			$charset = $this->detect_cyr_charset( $search );		
+			/*$charset = $this->detect_cyr_charset( $search );		
 			if ('w' == $charset || 'm' == $charset) {
 				$search = mb_convert_encoding( $search, 'utf-8', 'windows-1251' );
-			}
+			}*/
 			$this->view->placeholder( 'title' )->set( $this->view->placeholder( 'title' ) . ": $search" );
 			$this->view->placeholder( 'keywords' )->set( $this->view->placeholder( 'keywords' ) . ": $search" );
 			$this->view->placeholder( 'descriptions' )->set( $this->view->placeholder( 'descriptions' ) . ": $search" );
 			
 			$this->view->layout()->search = $search;
-			//$search = Zend_Search_Lucene_Search_QueryParser::parse( strip_tags( $search ), Ext_Search_Lucene::ENCODING );
+			
 			
 			$ini = new Ext_Common_Config('search','frontend');  
 			$onpage = $ini->results->per->page;
-			$onpage = 1;
+			
 			
 			$paginator = Search_Index::getInstance()->search($search,$this->_current_page,  $onpage);
 			Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
@@ -85,18 +85,19 @@ class Search_IndexController extends Zend_Controller_Action {
 			$paginator->setView($this->view);
 	        $hits =  $paginator->getCurrentItems();
 	        $this->view->paginator = $paginator;
+	        $this->view->url_params = array('keywords'=>$search);
 			
 			
 			
 			
 			if (! sizeof( $hits )) {
 				$this->view->err = $message = "найдено результатов 0";
-				//echo $message;
+				
 			} else {
-				//$this->view->total = $paginator->getItemCount();
+				$this->view->total = $paginator->getTotalItemCount();
 				$count = $this->_count;
 				$offset = ($this->_current_page - 1) * $this->_count;
-				//$hits = array_slice( $hits, $offset, $count );
+				
 				$this->view->hits = $hits;
 			}
 		}

@@ -1,10 +1,16 @@
+<?php $params = array();?>
+<?php if (isset($this->url_params)){?>
+	<?php $params = $this->url_params; ?>
+<?php }?>
+
 <div class="pagination" style="width:100%">
     <div style="float:left;width:28%">
     </div>
     <div style="float:right;width:70%;">
         <!-- First page link -->
         <?php if (isset($this->previous)): ?>
-              <a href="<?php echo  $this->url(array('page' => $this->first)); ?>">Start</a> |
+        	<?php $params['page'] = $this->first; ?>
+              <a href="<?php echo  $this->url($params); ?>">Start</a> |
         <?php else: ?>
                 <span class="disabled">Start</span> |
         <?php endif; ?>
@@ -12,31 +18,36 @@
         <!-- Previous page link -->
     
         <?php if (isset($this->previous)): ?>
-              <a href="<?php echo  $this->url(array('page' => $this->previous)); ?>">&lt; Previous</a> |
+        	<?php $params['page'] = $this->previous; ?>
+              <a href="<?php echo  $this->url($params); ?>">&lt; Previous</a> |
         <?php else: ?>
             <span class="disabled">&lt; Previous</span> |
         <?php endif; ?>
         <!-- Numbered page links -->
         <?php foreach ($this->pagesInRange as $page): ?>
             <?php if ($page != $this->current): ?>
-                <a href="<?php echo  $this->url(array('page' => $page)); ?>"><?php echo  $page; ?></a>
+            	<?php $params['page'] = $page;?>
+                <a href="<?php echo  $this->url($params); ?>"><?php echo  $page; ?></a>
             <?php else: ?>
                 <?php echo  $page; ?>
             <?php endif; ?>
         <?php endforeach; ?>
         <!-- Next page link -->
         <?php if (isset($this->next)): ?>
-              | <a href="<?php echo  $this->url(array('page' => $this->next)); ?>">Next &gt;</a> |
+        		<?php $params['page'] = $this->next; ?>
+              | <a href="<?php echo  $this->url($params); ?>">Next &gt;</a> |
         <?php else: ?>
             | <span class="disabled">Next &gt;</span> |
         <?php endif; ?>
         <!-- Last page link -->
         <?php if (isset($this->next)): ?>
-              <a href="<?php echo  $this->url(array('page' => $this->last)); ?>">End</a>
+        	  <?php $params['page'] = $this->last; ?>
+              <a href="<?php echo  $this->url($params); ?>">End</a>
         <?php else: ?>
             <span class="disabled">End</span>
         <?php endif; ?>
         &nbsp; Page <?php echo  $this->current; ?> of <?php echo  $this->last; ?>
     </div>
  </div>
+
     

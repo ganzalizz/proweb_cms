@@ -219,7 +219,7 @@ class Search_Index extends Zend_Db_Table {
     	return false;
     }
     /**
-     * 
+     * @todo сделать подсветку найденых слов
      * @param unknown_type $words
      * @param unknown_type $page
      * @param unknown_type $item_per_page
@@ -242,9 +242,7 @@ class Search_Index extends Zend_Db_Table {
 			if (count($fullList)){
 				$words = join(' ', array_keys($fullList));
 			}
-		}				
-	
-		
+		}	
     	
     	
     	$select = $this->select();
@@ -259,8 +257,33 @@ class Search_Index extends Zend_Db_Table {
          return $paginator->setItemCountPerPage($item_per_page);
     	
     	
-    	//echo $select->__toString(); 
-    	//return $this->fetchAll($select);
+    	
+    }
+    
+    /**
+     * 
+     * Enter description here ...
+     * @param Zend_Db_Table_Rowset $items
+     * @param string $search
+     */
+    public function highlightResults($items, $search){
+    	if ($items->count()){
+    		$all_forms = $this->procesText($search);
+    		$full_words = $search.' '.$all_forms;
+    		$words = explode(' ',$full_words );
+    		
+    		foreach ($items as $item){
+    			if ($item->original_content!=''){
+    				$positions = array();
+    				foreach ($words as $word){
+    					$point = mb_strpos($word, $item->original_content, 'UTF-8');
+    					if (!(false===$point)){
+    						
+    					}
+    				}
+    			}
+    		}
+    	}
     }
     
     /**
@@ -270,7 +293,7 @@ class Search_Index extends Zend_Db_Table {
      */
     private function textToWords($text){
     	$words = preg_replace('#\[.*\]#isU', '', strip_tags($text));
-		$words = preg_replace('/(&.+;)/isU', '', strip_tags($words));
+		$words = preg_replace('/(&.+;)/isU', '', $words);
 		$words = preg_split('#\s|[,.:;!?"\'()]#', $words, -1, PREG_SPLIT_NO_EMPTY);
    		
 		$bulk_words = array();
