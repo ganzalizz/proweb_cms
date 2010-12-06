@@ -46,6 +46,7 @@ class pages_IndexController extends Zend_Controller_Action {
         $this->layout->current_type = 'pages';
         $this->layout->lang = $this->lang;
         $this->layout->page = $this->_page;
+        
        
         
         
