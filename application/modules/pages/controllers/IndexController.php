@@ -71,7 +71,7 @@ class pages_IndexController extends Zend_Controller_Action {
     	//require_once DIR_LIBRARY.'Phpmorphy/examples/example-0.3.x.php';
     	
     	//Search_Index::getInstance()->procesText($this->_page->content);
-    	Search_Index::getInstance()->buildIndexes();
+    	//Search_Index::getInstance()->buildIndexes();
     	//Search_Index::getInstance()->search('pages', 'значительное событие');
     	
         

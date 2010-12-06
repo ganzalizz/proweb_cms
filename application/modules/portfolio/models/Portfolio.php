@@ -114,16 +114,16 @@ class Portfolio extends Zend_Db_Table {
     public function getAllPub($page_id, $ofset = null, $count = null) {
         $where=array();
         if (is_array($page_id)) {
-            $where[] =$this->getAdapter()->quoteInto('pub= ?',1);
+            $where[] =$this->getAdapter()->quoteInto('is_active= ?',1);
 //            foreach ($page_id as $id) {
 //                $where[] = $this->getAdapter()->quoteInto('page_id= ?',$id);
 //            }
         } else {
             $where =array(
-                    $this->getAdapter()->quoteInto('pub= ?',1),
+                    $this->getAdapter()->quoteInto('is_active= ?',1),
                     $this->getAdapter()->quoteInto('id_page= ?',(int)$page_id)
             );
-            //$where =array( $this->getAdapter()->quoteInto('pub= ?',1));
+            //$where =array( $this->getAdapter()->quoteInto('is_active= ?',1));
         }
 
         $order =array( $this->getAdapter()->quoteInto('created_at DESC',null),
@@ -143,7 +143,7 @@ class Portfolio extends Zend_Db_Table {
             $data['created_at'] =new Zend_Db_Expr('NOW()'); //date("d-m-Y H:i:s");
         }
 
-        if (isset($data['pub']) && $data['pub']==1) {
+        if (isset($data['is_active']) && $data['is_active']==1) {
             $data['pub_date'] =new Zend_Db_Expr('NOW()'); //date("d-m-Y H:i:s");
         }
         $id=$this->createRow()->setFromArray($data)->save();
@@ -162,7 +162,7 @@ class Portfolio extends Zend_Db_Table {
 
 
     public function pubPortfolio($id) {
-        $array = array('pub'=>1,'pub_date'=>new Zend_Db_Expr('NOW()'));
+        $array = array('is_active'=>1,'pub_date'=>new Zend_Db_Expr('NOW()'));
         $new = $this->find($id)->current();
         $new->setFromArray(array_intersect_key($array, $new->toArray()));
         $new->save();
@@ -174,7 +174,7 @@ class Portfolio extends Zend_Db_Table {
     *
     */
     public function unpubPortfolio($id) {
-        $array = array('pub'=>0);
+        $array = array('is_active'=>0);
         $new = $this->find($id)->current();
         $new->setFromArray(array_intersect_key($array, $new->toArray()));
         $new->save();
@@ -205,7 +205,7 @@ $new->save();
         $new = $new->toArray();
         $new['url'] = $new['url'].'_copy'.rand(1,20);
         $new['created_at'] = new Zend_Db_Expr('NOW()');
-        if ($new['pub']==1) {
+        if ($new['is_active']==1) {
             $new['pub_date']=new Zend_Db_Expr('NOW()');
         }
         unset($new['id']);
@@ -246,7 +246,7 @@ $new->save();
     */
     public function getMain($type='portfolio', $limit=0) {
         $select = new Zend_Db_Select($this->getAdapter());
-        $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
+        $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
                 ->where($this->getAdapter()->quoteInto('main= ?',1))
                 ->where($this->getAdapter()->quoteInto('type= ?',$type))
                 ->from($this->_name)
@@ -263,7 +263,7 @@ $new->save();
     public function getActivePortfolio($year, $type='portfolio', $limit=0) {
         if ($year == 'all'){
             $select = new Zend_Db_Select($this->getAdapter());
-            $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
+            $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
                     ->where($this->getAdapter()->quoteInto('type= ?',$type))
                     ->from($this->_name)
                     ->order($this->getAdapter()->quoteInto('created_at DESC', null))
@@ -272,7 +272,7 @@ $new->save();
         else {
         
             $select = new Zend_Db_Select($this->getAdapter());
-            $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
+            $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
                 ->where($this->getAdapter()->quoteInto('type= ?',$type))
                 ->where($this->getAdapter()->quoteInto('YEAR(created_at)= ?',$year))    
                 ->from($this->_name)
@@ -288,7 +288,7 @@ $new->save();
         $sql = $dbAdapter->quoteInto("SELECT DISTINCT *, 'portfolio' AS TYPE FROM site_portfolio WHERE site_portfolio.name LIKE '%".$search."%'
 		    OR site_news.intro LIKE '%".$search."%'
 		 	OR site_news.content LIKE '%".$search."%'
-		    AND site_portfolio.pub =1 ORDER BY site_portfolio.name ; ",null);
+		    AND site_portfolio.is_active =1 ORDER BY site_portfolio.name ; ",null);
         $result = $dbAdapter->query($sql);
         return  $result->fetchAll();
 
@@ -302,7 +302,7 @@ $new->save();
         $count = 10 ;
         $offset = 0 ;
         $this->setPaths();
-        while( ( $rowset = $this->fetchAll( 'pub=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
+        while( ( $rowset = $this->fetchAll( 'is_active=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
 
             while( $rowset->valid() ) {
                 $row = $rowset->current() ;

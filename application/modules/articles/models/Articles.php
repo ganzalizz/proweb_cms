@@ -70,15 +70,7 @@ class Articles extends Zend_Db_Table {
      *
      * @var array
      */
-    protected $_referenceMap = array(
-            'Pages' => array(
-                            'columns'           => array('id_page'),
-                            'refTableClass'     => 'Pages',
-                            'refColumns'        => array('id'),
-                            'onDelete'          => self::CASCADE,
-                            'onUpdate'          => self::RESTRICT
-            )
-            ) ;
+    protected $_referenceMap = array() ;
 
     /**
      * Class to use for rows.
@@ -135,10 +127,10 @@ class Articles extends Zend_Db_Table {
 //            }
         } else {
             $where =array(
-                    $this->getAdapter()->quoteInto('pub= ?',1),
+                    $this->getAdapter()->quoteInto('is_active= ?',1),
                     $this->getAdapter()->quoteInto('id_page= ?',(int)$page_id)
             );
-            //$where =array( $this->getAdapter()->quoteInto('pub= ?',1));
+            //$where =array( $this->getAdapter()->quoteInto('is_active= ?',1));
         }
 
         $order =array( $this->getAdapter()->quoteInto('created_at DESC',null),
@@ -158,7 +150,7 @@ class Articles extends Zend_Db_Table {
             $data['created_at'] =new Zend_Db_Expr('NOW()'); //date("d-m-Y H:i:s");
         }
 
-        if (isset($data['pub']) && $data['pub']==1) {
+        if (isset($data['is_active']) && $data['is_active']==1) {
             $data['pub_date'] =new Zend_Db_Expr('NOW()'); //date("d-m-Y H:i:s");
         }
         $id=$this->createRow()->setFromArray($data)->save();
@@ -177,7 +169,7 @@ class Articles extends Zend_Db_Table {
 
 
     public function pubArticle($id) {
-        $array = array('pub'=>1,'pub_date'=>new Zend_Db_Expr('NOW()'));
+        $array = array('is_active'=>1,'pub_date'=>new Zend_Db_Expr('NOW()'));
         $new = $this->find($id)->current();
         $new->setFromArray(array_intersect_key($array, $new->toArray()));
         $new->save();
@@ -189,7 +181,7 @@ class Articles extends Zend_Db_Table {
     *
     */
     public function unpubArticle($id) {
-        $array = array('pub'=>0);
+        $array = array('is_active'=>0);
         $new = $this->find($id)->current();
         $new->setFromArray(array_intersect_key($array, $new->toArray()));
         $new->save();
@@ -220,7 +212,7 @@ $new->save();
         $new = $new->toArray();
         $new['url'] = $new['url'].'_copy'.rand(1,20);
         $new['created_at'] = new Zend_Db_Expr('NOW()');
-        if ($new['pub']==1) {
+        if ($new['is_active']==1) {
             $new['pub_date']=new Zend_Db_Expr('NOW()');
         }
         unset($new['id']);
@@ -261,7 +253,7 @@ $new->save();
     */
     public function getMain($type='articles', $limit=0) {
         $select = new Zend_Db_Select($this->getAdapter());
-        $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
+        $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
                 ->where($this->getAdapter()->quoteInto('main= ?',1))
                 ->where($this->getAdapter()->quoteInto('type= ?',$type))
                 ->from($this->_name)
@@ -276,9 +268,8 @@ $new->save();
     *
     */
     public function getActiveArticles($type='articles', $limit=0) {
-        $select = new Zend_Db_Select($this->getAdapter());
-        $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
-                ->where($this->getAdapter()->quoteInto('type= ?',$type))
+        $select = $this->select();
+        $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('created_at DESC', null))
                 ->limit($limit);
@@ -293,12 +284,12 @@ $new->save();
      */
      public function getTrafficLightingByColor(){
          $ids = array(self::TRAFFIC_LIGHTS_RED,self::TRAFFIC_LIGHTS_YELLOW,self::TRAFFIC_LIGHTS_GREEN);
-         $select = new Zend_Db_Select($this->getAdapter());
+         $select = $this->select();
          $select->from($this->_name)
-                ->where('pub = ?', 1)
-                ->where('prizn IN (?)', $ids);
+                ->where('is_active = ?', 1)
+                ->where('lighting IN (?)', $ids);
              
-         $rez = $this->getAdapter()->query($select)->fetchAll();        
+         $rez = $this->fetchAll($select);        
 
          if (!count($rez)) return false;
          else return $rez;    
@@ -310,7 +301,7 @@ $new->save();
         $sql = $dbAdapter->quoteInto("SELECT DISTINCT *, 'articles' AS TYPE FROM site_articles WHERE site_articles.name LIKE '%".$search."%'
 		    OR site_news.intro LIKE '%".$search."%'
 		 	OR site_news.content LIKE '%".$search."%'
-		    AND site_articles.pub =1 ORDER BY site_articles.name ; ",null);
+		    AND site_articles.is_active =1 ORDER BY site_articles.name ; ",null);
         $result = $dbAdapter->query($sql);
         return  $result->fetchAll();
 
@@ -324,7 +315,7 @@ $new->save();
         $count = 10 ;
         $offset = 0 ;
         $this->setPaths();
-        while( ( $rowset = $this->fetchAll( 'pub=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
+        while( ( $rowset = $this->fetchAll( 'is_active=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
 
             while( $rowset->valid() ) {
                 $row = $rowset->current() ;

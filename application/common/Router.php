@@ -62,10 +62,10 @@ class Router
 	public function deleteRoute($name)
         {
 		                 
-          $config = new Zend_Config_Ini($this->_routeFileName, null, true);
+          $config = new Zend_Config_Yaml($this->_routeFileName, null, true);
           $config->__unset($name);
-          
-          $writer = new Zend_Config_Writer_Ini();
+         
+          $writer = new Zend_Config_Writer_Yaml();
           $writer->setFilename($this->_routeFileName);
           $writer->setConfig($config);
           $writer->write();
@@ -87,17 +87,17 @@ class Router
 	        
                 $route_name = $this->filtered($data['path']);
                 
-                $config = new Zend_Config_Ini($this->_routeFileName, null, true);
-                
-		$config->$route_name->routes->$route_name->type = "Zend_Controller_Router_Route";
-                $config->$route_name->routes->$route_name->route = $route_name;
-                $config->$route_name->routes->$route_name->defaults->module = $module;
+                $config = new Zend_Config_Yaml($this->_routeFileName, null, true);
+                                
+		$config->routes->routes->$route_name->type = "Zend_Controller_Router_Route";
+                $config->routes->routes->$route_name->route = $route_name;
+                $config->routes->routes->$route_name->defaults->module = $module;
                 $controller = (($module == 'default') && ($controller == 'index')) ? 'page' : $controller ;
-                $config->$route_name->routes->$route_name->defaults->controller = $controller;
-                $config->$route_name->routes->$route_name->defaults->action = $action;
-                $config->$route_name->routes->$route_name->defaults->id = $data['id'];
+                $config->routes->routes->$route_name->defaults->controller = $controller;
+                $config->routes->routes->$route_name->defaults->action = $action;
+                $config->routes->routes->$route_name->defaults->id = $data['id'];
                 
-                $writer = new Zend_Config_Writer_Ini();
+                $writer = new Zend_Config_Writer_Yaml();
                 $writer->setFilename($this->_routeFileName);
                 $writer->setConfig($config);
                 $writer->write();	
@@ -111,15 +111,10 @@ class Router
 	 * @param int $id
 	 * @return boolean
 	 */
-	public function hasRoute($name, $id){
-		$filename = Configurator::getConfigRoutesFileName();
-		$content = file_get_contents($filename);
-		
-		if(strstr($content, "\n;[$name-$id]")){
-			return true;
-		}
-		
-		return false;
+	public function hasRoute($name){
+		$config = new Zend_Config_Yaml($this->_routeFileName);
+		return $config->__isset($name);
+			
 	}
 	
 	/**
@@ -135,18 +130,20 @@ class Router
                 
                 $route_name = $this->filtered($data['path']);
                 
-                $config = new Zend_Config_Ini($this->_routeFileName, null, true);
+                $config = new Zend_Config_Yaml($this->_routeFileName, null, true);
                 
-		$config->$route_name = array();
-                $config->$route_name->__set('routes.'.$route_name.'.type', "Zend_Controller_Router_Route");
-                $config->$route_name->__set('routes.'.$route_name.'.route', $route_name);
-                $config->$route_name->__set('routes.'.$route_name.'.defaults.module', $module);
+		$config->routes->routes->$route_name = array();
+                $config->routes->routes->$route_name->__set('type', "Zend_Controller_Router_Route" );
+                $config->routes->routes->$route_name->__set('route', $route_name);
+                $config->routes->routes->$route_name->defaults = array();
+                $config->routes->routes->$route_name->defaults->__set('module', $module);
                 $controller = (($module == 'default') && ($controller == 'index')) ? 'page' : $controller ;
-                $config->$route_name->__set('routes.'.$route_name.'.defaults.controller', $controller);
-                $config->$route_name->__set('routes.'.$route_name.'.defaults.action', $action);
-                $config->$route_name->__set('routes.'.$route_name.'.defaults.id', $data['id']);
+                $config->routes->routes->$route_name->defaults->__set('controller', $controller);
+                $config->routes->routes->$route_name->defaults->__set('action', $action);
+                $config->routes->routes->$route_name->defaults->__set('id', $data['id']); 
                 
-                $writer = new Zend_Config_Writer_Ini();
+                
+                $writer = new Zend_Config_Writer_Yaml();
                 $writer->setFilename($this->_routeFileName);
                 $writer->setConfig($config);
                 $writer->write();

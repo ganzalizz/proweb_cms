@@ -2,12 +2,6 @@
 
 class News_NewsController extends Zend_Controller_Action {
 
-    private $_session;
-    
-    public function preDispatch() {
-        Ext_Form_Element_Uploadify::bypassSession();
-        $this->_session = new Zend_Session_Namespace('uplodify');
-    }
     
     
     public function init() {

@@ -166,6 +166,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //->addJavascriptFile('/js/jquery.jqUploader.js')
         //->addJavascriptFile('/js/jquery.flash.js');
         Configurator::setupRoutes(Zend_Controller_Front::getInstance()->getRouter());
+        
+
+
         Configurator::tuneEnvironment(); 
         
         Security::getInstance()->init();
