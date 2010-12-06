@@ -116,7 +116,7 @@ class Configurator {
      * @return string
      */
     public static function getConfigRoutesFileName() {
-        $file_name = DIR_APPLICATION . 'configuration/routes.ini';
+        $file_name = DIR_APPLICATION . 'configuration/routes.yml';
         return $file_name;
     }
 

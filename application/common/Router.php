@@ -20,14 +20,14 @@ class Router
 	public static function getInstance(){
     		if (null === self::$_instance) {
         			self::$_instance = new self();
+        			self::$_instance->init();
     		}
 
     		return self::$_instance;
 	}
 		
-	public function init(){
-		Loader::loadCommon('Configurator');
-                $this->_routeFileName = Configurator::getConfigRoutesFileName();
+	protected function init(){		
+        $this->_routeFileName = Configurator::getConfigRoutesFileName();
 	}
 	
 	/**
@@ -85,14 +85,19 @@ class Router
 	public function replaceRoute($data, $action = 'index', $controller = 'page', $module = 'default')
         {
 	        
+        		
+        	
                 $route_name = $this->filtered($data['path']);
+                
+                if (!$this->hasRoute($route_name)){
+                	return $this->addRoute($data, $action, $controller, $module);
+                }
                 
                 $config = new Zend_Config_Yaml($this->_routeFileName, null, true);
                                 
-		$config->routes->routes->$route_name->type = "Zend_Controller_Router_Route";
+				$config->routes->routes->$route_name->type = "Zend_Controller_Router_Route";
                 $config->routes->routes->$route_name->route = $route_name;
-                $config->routes->routes->$route_name->defaults->module = $module;
-                $controller = (($module == 'default') && ($controller == 'index')) ? 'page' : $controller ;
+                $config->routes->routes->$route_name->defaults->module = $module;                
                 $config->routes->routes->$route_name->defaults->controller = $controller;
                 $config->routes->routes->$route_name->defaults->action = $action;
                 $config->routes->routes->$route_name->defaults->id = $data['id'];
@@ -111,8 +116,8 @@ class Router
 	 * @param int $id
 	 * @return boolean
 	 */
-	public function hasRoute($name){
-		$config = new Zend_Config_Yaml($this->_routeFileName);
+	public function hasRoute($name){		
+		$config = new Zend_Config_Yaml($this->_routeFileName);		
 		return $config->__isset($name);
 			
 	}
@@ -132,12 +137,11 @@ class Router
                 
                 $config = new Zend_Config_Yaml($this->_routeFileName, null, true);
                 
-		$config->routes->routes->$route_name = array();
+				$config->routes->routes->$route_name = array();
                 $config->routes->routes->$route_name->__set('type', "Zend_Controller_Router_Route" );
                 $config->routes->routes->$route_name->__set('route', $route_name);
                 $config->routes->routes->$route_name->defaults = array();
-                $config->routes->routes->$route_name->defaults->__set('module', $module);
-                $controller = (($module == 'default') && ($controller == 'index')) ? 'page' : $controller ;
+                $config->routes->routes->$route_name->defaults->__set('module', $module);                
                 $config->routes->routes->$route_name->defaults->__set('controller', $controller);
                 $config->routes->routes->$route_name->defaults->__set('action', $action);
                 $config->routes->routes->$route_name->defaults->__set('id', $data['id']); 

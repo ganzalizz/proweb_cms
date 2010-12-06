@@ -54,46 +54,11 @@ class Otzivy extends Zend_Db_Table {
      */
     protected static $_instance = null;
 
-    /**
-     * Dependent tables.
-     *
-     * @var array
-     */
-    protected $_dependentTables = array(
-
-            ) ;
+   
 
 
 
-    /**
-     * Reference map.
-     *
-     * @var array
-     */
-    protected $_referenceMap = array(
-            'Pages' => array(
-                            'columns'           => array('id_page'),
-                            'refTableClass'     => 'Pages',
-                            'refColumns'        => array('id'),
-                            'onDelete'          => self::CASCADE,
-                            'onUpdate'          => self::RESTRICT
-            )
-            ) ;
-
-    /**
-     * Class to use for rows.
-     *
-     * @var string
-     */
-    protected $_rowClass = "Otzivy_Row" ;
-
-    /**
-     * Class to use for row sets.
-     *
-     * @var string
-     */
-    protected $_rowsetClass = "Otzivy_Rowset" ;
-
+   
 
     private $_Paths = null;
 
@@ -107,7 +72,7 @@ class Otzivy extends Zend_Db_Table {
     /**
      * Singleton instance
      *
-     * @return News
+     * @return Otzivy
      */
     public static function getInstance() {
         if (null === self::$_instance) {
@@ -159,13 +124,11 @@ class Otzivy extends Zend_Db_Table {
      * @return $id
      */
     public function addOtziv($data) {
-        if (!isset($data['created_at'])) {
-            $data['created_at'] =new Zend_Db_Expr('NOW()'); //date("d-m-Y H:i:s");
-        }
-        echo $data['content'];
-        $data['pub'] = 0;
-        echo var_dump($data);
-        $id=$this->createRow()->setFromArray($data)->save();
+        if (!isset($data['added'])) {
+            $data['added'] =new Zend_Db_Expr('NOW()'); //date("d-m-Y H:i:s");
+        }        
+        $data['is_active'] = 0;       
+        $id=$this->createRow($data)->save();
         return $id;
     }
 
@@ -269,50 +232,33 @@ class Otzivy extends Zend_Db_Table {
         return $this->getAdapter()->query($select);
     }
 
-    /*
-    * возвращает все отзывы устанавленные как опубликованные
-    * @param 
-    *
-    */
-    public function getActiveOtzivy($type='otzivy', $limit=0) {
-        $select = new Zend_Db_Select($this->getAdapter());
-        $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
-                //->where($this->getAdapter()->quoteInto('type= ?',$type))
-                ->from($this->_name)
-                ->order($this->getAdapter()->quoteInto('created_at DESC', null))
-                ->limit($limit);
-        return $this->getAdapter()->query($select);
+    /**
+     * получение активных отзывов | предложений 
+     * @param int $prizn
+     * @param int $page
+     * @param int $item_per_page
+     * @return Zend_Paginator
+     */
+    public function getActiveOtzivy($prizn = null, $page = 1, $item_per_page = 20) {
+    	$select = $this->select();
+        $select ->where('is_active= ?',1)
+        		->from($this->_name, array('*', 'date'=>'DATE_FORMAT(added, \'%d.%m.%Y\') '))
+                ->order('added DESC');
+                
+        if (!is_null($prizn)){
+        	$select->where('prizn = ?', (int)$prizn);
+        }               
+    	$adapter = new Zend_Paginator_Adapter_DbTableSelect($select);
+
+                $paginator = new Zend_Paginator($adapter);
+                $paginator->setCurrentPageNumber($page);
+         return $paginator->setItemCountPerPage($item_per_page);
+        
     }
     
-   /**
-     * выбираем все родительские страницы
-     */
-    public function setPaths() {
-        $sql = "SELECT DISTINCT id_page FROM $this->_name WHERE id_page>0";
-        $page_ids = $this->getAdapter()->fetchCol($sql);
-        if ($page_ids!=null) {
-            $pages = Pages::getInstance()->fetchAll("id in (".implode(',', $page_ids).")");
-            if ($pages->count()) {
-                foreach ($pages as $page) {
-                    $this->_Paths[$page->id]=$page->path;
-                }
-            }
-        }
-    }
+  
 
-    /**
-     * находим путь к родительской странице элемента
-     * @param int $id
-     */
-    public function getElemPath($id) {
-        if (is_null($this->_Paths)) {
-            $this->setPaths();
-        }
-        if (isset($this->_Paths[$id])) {
-            return $this->_Paths[$id];
-        }
-        return false;
-    }
+    
 
 
 

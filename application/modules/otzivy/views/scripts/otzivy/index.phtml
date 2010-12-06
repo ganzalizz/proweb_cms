@@ -1,13 +1,20 @@
 <?if(count($this->otzivy)) {?>
+<div class="portfolio_types">
+<a href="<?php echo $this->url(array('prizn'=>1))?>" <?php echo $this->prizn==1 ? 'class="active"' : ''?>>Предложения</a>
+<a href="<?php echo $this->url(array('prizn'=>0))?>" <?php echo $this->prizn==0 ? 'class="active"' : ''?>>Отзывы</a>
+<a href="<?php echo $this->url(array())?>" <?php echo is_null($this->prizn) ? 'class="active"' : ''?>>Все</a>
+</div>
 <div class="cont_inner news">
         <?foreach($this->otzivy as $otziv) {?>
    <div class="item">
-        <b class="date"><i><?=$this->dateFromDb($otziv['created_at']);?></i></b>
+        <b class="date"><i><?php echo $otziv->date?></i></b>
         <? //if($new['small_img']){?>
            <!-- <div class="photo"><a href="/newslist/item/<?//=$new['id']?>"><img src="/pics/news/<?//=$new['small_img']?>" alt="" /></a></div> -->
         <?//}?>
-        <?=$otziv['name'] ?><br/>
-        <?=$otziv['content'] ?>
+        <?php echo $otziv->name?>
+        <br/>
+        <?php echo $otziv->content?>
+       
         
             
         </div>
@@ -16,7 +23,7 @@
  
 <?}?>
 
-
+<?php echo $this->paginator?>
 
 </div>
 

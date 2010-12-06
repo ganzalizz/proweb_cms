@@ -19,7 +19,7 @@ class News_NewsController extends Zend_Controller_Action {
             if ($page->is_active == '0') {
                 $this->_redirect('/404');
             }
-            
+            $this->layout->id_page = $page->id;
             $this->view->options = $options = PagesOptions::getInstance()->getPageOptions($id);
             $this->view->placeholder('title')->set($options->title);
             $this->view->placeholder('keywords')->set($options->keywords);

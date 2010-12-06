@@ -13,7 +13,7 @@ class Form_FormOtzivy extends Ext_Form
         // Указываем action формы
         //$helperUrl = new Zend_View_Helper_Url();
         //$this->setAction($helperUrl->url(array(), 'otzivy'));
-        $this->setAction('otzivy');
+        //$this->setAction('otzivy');
         // Указываем метод формы
         $this->setMethod('post');
         
