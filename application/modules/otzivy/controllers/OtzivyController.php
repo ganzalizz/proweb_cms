@@ -35,7 +35,7 @@ class Otzivy_OtzivyController extends Zend_Controller_Action {
 
     public function indexAction() {
         
-        $form = new Form_FormOtzivy();
+        $form = new Form_FormOtzivy(); 
               
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_getAllParams())){
@@ -43,7 +43,6 @@ class Otzivy_OtzivyController extends Zend_Controller_Action {
                 $form = new Form_FormOtzivy();
                 
             }
-            
         }    
        $ini = new Ext_Common_Config('otzivy','frontend');
             
@@ -58,6 +57,8 @@ class Otzivy_OtzivyController extends Zend_Controller_Action {
        $this->view->otzivy =  $paginator->getCurrentItems();
        $this->view->paginator = $paginator;        
        $this->view->form = $form;
+       
+       
         
     }
 
