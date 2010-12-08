@@ -57,6 +57,7 @@ class News_Admin_NewsController extends MainAdminController {
      	
         $this->processForm($form, $this->getRequest());
 			
+        print_r($form->getDecorators());
        
         $this->view->form = $form;        
     }
