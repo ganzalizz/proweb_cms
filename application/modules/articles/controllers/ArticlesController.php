@@ -3,7 +3,9 @@
 class Articles_ArticlesController extends Zend_Controller_Action {
 
     public function init() {
-        $this->initView();
+        
+        $this->view->addScriptPath(DIR_LIBRARY.'Ext/View/Scripts/');
+        //$this->initView();
         $this->layout = $this->view->layout();
         $this->lang = $this->_getParam('lang', 'ru');
 
@@ -30,7 +32,7 @@ class Articles_ArticlesController extends Zend_Controller_Action {
             //$this->view->placeholder('h1')->set($page->name);
             $this->layout->current_type = 'pages';
             $this->view->page = $page;
-            $this->layout->id_object = $page->id;
+            $this->layout->id_page = $page->id;
         }
     }
 
@@ -42,7 +44,20 @@ class Articles_ArticlesController extends Zend_Controller_Action {
 //        $this->view->child_pages = $child_pages = Pages::getInstance()->getPagesByParam('parentId', $this->_getParam('id'));
 //        $this->view->page = $page;
 //        $this->_setParam('id',$page->id);
-        $this->view->articles = Articles::getInstance()->getActiveArticles();
+        
+        $ini = new Ext_Common_Config('articles','frontend');
+       
+            
+       $page = $this->_getParam('page',1);
+       $item_per_page = $ini->per->page;
+            
+       $paginator = Articles::getInstance()->getArticlesPaginator($item_per_page,$page);
+       Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
+      
+       $paginator->setView($this->view);
+       $this->view->articles =  $paginator->getCurrentItems();
+       $this->view->paginator = $paginator;
+       
                 
         
     }
@@ -51,13 +66,15 @@ class Articles_ArticlesController extends Zend_Controller_Action {
         $article_id = $this->_getParam('item', 0);
         $item = Articles::getInstance()->getArticleById($article_id);
         if (isset($item) && $item) {
+            Articles::getInstance()->addCountViews($article_id);
             $this->view->item =$articles_row = $item;
+            
             if ($articles_row!=''){
             	$bread_items[] = array('title'=>$articles_row->name);
             	$this->view->placeholder('title')->set($articles_row->seo_title);
                 $this->view->placeholder('keywords')->set($articles_row->seo_keywords);
                 $this->view->placeholder('descriptions')->set($articles_row->seo_descriptions);
-                $this->view->placeholder('h1')->set($articles_row->name);
+                //$this->view->placeholder('h1')->set($articles_row->name);
             	$this->view->layout()->bread_items =  $bread_items;
             }
             $this->render('articlesitem');

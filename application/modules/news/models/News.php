@@ -341,84 +341,8 @@ class News extends Zend_Db_Table {
         return $this->fetchAll($select);
     }
 
-
-    
-    public function search($search) {
-        $dbAdapter = Zend_Registry::get('db');
-        $sql = $dbAdapter->quoteInto("SELECT DISTINCT *, 'news' AS TYPE FROM site_news WHERE site_news.name LIKE '%".$search."%'
-		    OR site_news.intro LIKE '%".$search."%'
-		 	OR site_news.content LIKE '%".$search."%'
-		    AND site_news.pub =1 ORDER BY site_news.name ; ",null);
-        $result = $dbAdapter->query($sql);
-        return  $result->fetchAll();
-
-    }
-    /**
-     * reindex table for Zend_search_lucence
-     */
-    public function reindex() {
-        $index = new Ext_Search_Lucene(Ext_Search_Lucene::NEWS);
-        //$pages_rowset = $this->fetchAll('published=1')
-        $count = 10 ;
-        $offset = 0 ;
-        $this->setPaths();
-        while( ( $rowset = $this->fetchAll( 'pub=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
-
-            while( $rowset->valid() ) {
-                $row = $rowset->current() ;
-                //
-                // Prepare document
-                //
-                if ($path = $this->getElemPath($row->id_page)) {
-                    $doc = new Ext_Search_Lucene_Document();
-                    $doc->setUrl($path .'/item/'.$row->id.'/');
-                    $doc->setTitle($row->name);
-                    $doc->setContent(strip_tags($row->content));
-                    $doc->setId($row->id);
-
-                    $index->addDocument( $doc ) ;
-                }
-                $rowset->next() ;
-            }
-            $offset += $count ;
-        }
-
-        $index->commit() ;
-        return $index->numDocs();
-
-    }
-
-    /**
-     * выбираем все родительские страницы
-     */
-    public function setPaths() {
-        $sql = "SELECT DISTINCT id_page FROM $this->_name WHERE id_page>0";
-        $page_ids = $this->getAdapter()->fetchCol($sql);
-        if ($page_ids!=null) {
-            $pages = Pages::getInstance()->fetchAll("id in (".implode(',', $page_ids).")");
-            if ($pages->count()) {
-                foreach ($pages as $page) {
-                    $this->_Paths[$page->id]=$page->path;
-                }
-            }
-        }
-    }
-
-    /**
-     * находим путь к родительской странице элемента
-     * @param int $id
-     */
-    public function getElemPath($id) {
-        if (is_null($this->_Paths)) {
-            $this->setPaths();
-        }
-        if (isset($this->_Paths[$id])) {
-            return $this->_Paths[$id];
-        }
-        return false;
-    }
      /**
-     * @name addNews Добавить новость
+     * @name getNewsPaginator получить NewsPaginator
      * 
      * @param  $data mixed
      * 

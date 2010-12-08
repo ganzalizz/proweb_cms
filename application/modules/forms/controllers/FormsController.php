@@ -11,12 +11,12 @@ class Forms_FormsController extends Zend_Controller_Action {
         $id = $this->_getParam('id');
         $page = Pages::getInstance()->getPage($this->_getParam('id'));
         if(!is_null($page)) {
-            if ($page->published == '0') {
+            if ($page->is_active == '0') {
                 $this->_redirect('/404');
             }
 
             $this->layout->page = $page;
-            $this->layout->lang = $page->version;
+            //$this->layout->lang = $page->version;
 
             $this->view->addScriptPath(DIR_LAYOUTS) ;
             $this->view->addHelperPath(Zend_Registry::get('helpersPaths'), 'View_Helper') ;
@@ -27,10 +27,10 @@ class Forms_FormsController extends Zend_Controller_Action {
             $this->view->placeholder('descriptions')->set($options->descriptions);
             $this->view->placeholder('id_page')->set($id);
             $this->view->placeholder('object_id')->set($id);
-            $this->view->placeholder('h1')->set($page->name);
+            //$this->view->placeholder('h1')->set($page->name);
             $this->layout->current_type = 'pages';
             $this->view->page = $page;
-            $this->layout->id_object = $page->id;
+            $this->layout->id_page = $page->id;
         }
     }
     public function feedbackAction() {
@@ -67,7 +67,7 @@ class Forms_FormsController extends Zend_Controller_Action {
                 }
                 $template = preg_replace('/{.+}/Usi', '', $template);
                 $body = $template;
-                Loader::loadCommon('Mail');
+               // Loader::loadCommon('Mail');
                 $from = '';
                 foreach($emails as $email){
                     Mail::send($email, $body, $from, $subject, $recipient);

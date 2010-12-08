@@ -252,35 +252,39 @@ $new->save();
     *
     */
     public function getMain($type='articles', $limit=0) {
-        $select = new Zend_Db_Select($this->getAdapter());
+        $select = $this->select();
         $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
                 ->where($this->getAdapter()->quoteInto('main= ?',1))
                 ->where($this->getAdapter()->quoteInto('type= ?',$type))
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('RAND()', null))
                 ->limit($limit);
-        return $this->getAdapter()->query($select);
+        return $this->fetchAll($select);
     }
 
     /*
     * возвращает все статьи устанавленные как опубликованные
-    * @param array articles
+    * @param $year - год за который выбираются новости по умолчанию выборка за все годы
+    * @return mixed
     *
     */
-    public function getActiveArticles($type='articles', $limit=0) {
+    public function getActiveArticles($year = 'all') 
+    {
         $select = $this->select();
-        $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
+        $select ->where('is_active= ?',1)
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('created_at DESC', null))
                 ->limit($limit);
-        return $this->getAdapter()->query($select);
+        if ($year != 'all') $select->where(new Zend_Db_Expr('YEAR(created_at) = ?'), $year);
+        echo $select->__toString();
+        return $this->fetchAll($select);
     }
     
     /*
      *Выборка статьи по цвету светофора 
      * 
      * @param color int
-     * @return mixed or false eswhere
+     * @return mixed or false elswhere
      */
      public function getTrafficLightingByColor(){
          $ids = array(self::TRAFFIC_LIGHTS_RED,self::TRAFFIC_LIGHTS_YELLOW,self::TRAFFIC_LIGHTS_GREEN);
@@ -289,90 +293,42 @@ $new->save();
                 ->where('is_active = ?', 1)
                 ->where('lighting IN (?)', $ids);
              
-         $rez = $this->fetchAll($select);        
+         return $this->fetchAll($select);        
 
-         if (!count($rez)) return false;
-         else return $rez;    
+            
      }
     
-
-    public function search($search) {
-        $dbAdapter = Zend_Registry::get('db');
-        $sql = $dbAdapter->quoteInto("SELECT DISTINCT *, 'articles' AS TYPE FROM site_articles WHERE site_articles.name LIKE '%".$search."%'
-		    OR site_news.intro LIKE '%".$search."%'
-		 	OR site_news.content LIKE '%".$search."%'
-		    AND site_articles.is_active =1 ORDER BY site_articles.name ; ",null);
-        $result = $dbAdapter->query($sql);
-        return  $result->fetchAll();
-
+     public function getArticlesPaginator($item_per_page, $page, $year = 'all')
+     {
+       $adapter = new Zend_Paginator_Adapter_DbTableSelect(
+       $this->select()
+            ->from($this->_name)
+            ->where('is_active = ?', true)
+            ->order('created_at DESC'));
+       if ($year != 'all') $select->where(new Zend_Db_Expr('YEAR(created_at) = ?'), $year); 
+                $paginator = new Zend_Paginator($adapter);
+                $paginator->setCurrentPageNumber($page);
+         return $paginator->setItemCountPerPage($item_per_page);  
+     }
+     
+     public function getYearForFilter()
+     {
+         $select = $this->select();
+         $select->distinct()
+                ->columns(new Zend_Db_Expr('YEAR(created_at) as years'))
+                ->from($this->_name)
+                ->group('years')
+                ->order('years DESC');
+        return $this->getAdapter()->fetchCol($select);
+     }
+     
+     public function addCountViews($id)
+    {
+                  
+        $where = $this->select()->where('id = ?', $id);
+        $data['count_views'] = new Zend_Db_Expr('count_views+1');
+        $this->update($data, $where);
     }
-    /**
-     * reindex table for Zend_search_lucence
-     */
-    public function reindex() {
-        $index = new Ext_Search_Lucene(Ext_Search_Lucene::NEWS);
-        //$pages_rowset = $this->fetchAll('published=1')
-        $count = 10 ;
-        $offset = 0 ;
-        $this->setPaths();
-        while( ( $rowset = $this->fetchAll( 'is_active=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
-
-            while( $rowset->valid() ) {
-                $row = $rowset->current() ;
-                //
-                // Prepare document
-                //
-                if ($path = $this->getElemPath($row->id_page)) {
-                    $doc = new Ext_Search_Lucene_Document();
-                    $doc->setUrl($path .'/item/'.$row->id.'/');
-                    $doc->setTitle($row->name);
-                    $doc->setContent(strip_tags($row->content));
-                    $doc->setId($row->id);
-
-                    $index->addDocument( $doc ) ;
-                }
-                $rowset->next() ;
-            }
-            $offset += $count ;
-        }
-
-        $index->commit() ;
-        return $index->numDocs();
-
-    }
-
-    /**
-     * выбираем все родительские страницы
-     */
-    public function setPaths() {
-        $sql = "SELECT DISTINCT id_page FROM $this->_name WHERE id_page>0";
-        $page_ids = $this->getAdapter()->fetchCol($sql);
-        if ($page_ids!=null) {
-            $pages = Pages::getInstance()->fetchAll("id in (".implode(',', $page_ids).")");
-            if ($pages->count()) {
-                foreach ($pages as $page) {
-                    $this->_Paths[$page->id]=$page->path;
-                }
-            }
-        }
-    }
-
-    /**
-     * находим путь к родительской странице элемента
-     * @param int $id
-     */
-    public function getElemPath($id) {
-        if (is_null($this->_Paths)) {
-            $this->setPaths();
-        }
-        if (isset($this->_Paths[$id])) {
-            return $this->_Paths[$id];
-        }
-        return false;
-    }
-
-
-
-
-
+     
+      
 }

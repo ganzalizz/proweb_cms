@@ -30,7 +30,7 @@ class Portfolio_PortfolioController extends Zend_Controller_Action {
             $this->view->placeholder('h1')->set($page->title);
             $this->layout->current_type = 'pages';
             $this->view->page = $page;
-            $this->layout->id_object = $page->id;
+            $this->layout->id_page = $page->id;
         }
     }
 
