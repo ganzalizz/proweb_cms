@@ -240,5 +240,17 @@ ul.errors li {
 }
 
 .form .bg {
-	height: auto;
+	height: auto;	
+}
+.capcha {
+	background: none;
+}
+.captcha img {
+	float: left;
+	
+}
+
+.portfolio_types a.active {
+	color: #676465;
+	text-decoration: none;
 }
