@@ -264,15 +264,19 @@ $new->save();
 
     /*
     * возвращает все статьи устанавленные как опубликованные
-    * @param array articles
+    * @param $year - год за который выбираются новости по умолчанию выборка за все годы
+    * @return mixed
     *
     */
-    public function getActiveArticles($type='articles', $limit=0) {
+    public function getActiveArticles($year = 'all') 
+    {
         $select = $this->select();
-        $select ->where($this->getAdapter()->quoteInto('is_active= ?',1))
+        $select ->where('is_active= ?',1)
                 ->from($this->_name)
                 ->order($this->getAdapter()->quoteInto('created_at DESC', null))
                 ->limit($limit);
+        if ($year != 'all') $select->where(new Zend_Db_Expr('YEAR(created_at) = ?'), $year);
+        echo $select->__toString();
         return $this->fetchAll($select);
     }
     
@@ -294,39 +298,37 @@ $new->save();
             
      }
     
+     public function getArticlesPaginator($item_per_page, $page, $year = 'all')
+     {
+       $adapter = new Zend_Paginator_Adapter_DbTableSelect(
+       $this->select()
+            ->from($this->_name)
+            ->where('is_active = ?', true)
+            ->order('created_at DESC'));
+       if ($year != 'all') $select->where(new Zend_Db_Expr('YEAR(created_at) = ?'), $year); 
+                $paginator = new Zend_Paginator($adapter);
+                $paginator->setCurrentPageNumber($page);
+         return $paginator->setItemCountPerPage($item_per_page);  
+     }
+     
+     public function getYearForFilter()
+     {
+         $select = $this->select();
+         $select->distinct()
+                ->columns(new Zend_Db_Expr('YEAR(created_at) as years'))
+                ->from($this->_name)
+                ->group('years')
+                ->order('years DESC');
+        return $this->getAdapter()->fetchCol($select);
+     }
+     
+     public function addCountViews($id)
+    {
+                  
+        $where = $this->select()->where('id = ?', $id);
+        $data['count_views'] = new Zend_Db_Expr('count_views+1');
+        $this->update($data, $where);
+    }
+     
       
-    /**
-     * выбираем все родительские страницы
-     */
-    public function setPaths() {
-        $sql = "SELECT DISTINCT id_page FROM $this->_name WHERE id_page>0";
-        $page_ids = $this->getAdapter()->fetchCol($sql);
-        if ($page_ids!=null) {
-            $pages = Pages::getInstance()->fetchAll("id in (".implode(',', $page_ids).")");
-            if ($pages->count()) {
-                foreach ($pages as $page) {
-                    $this->_Paths[$page->id]=$page->path;
-                }
-            }
-        }
-    }
-
-    /**
-     * находим путь к родительской странице элемента
-     * @param int $id
-     */
-    public function getElemPath($id) {
-        if (is_null($this->_Paths)) {
-            $this->setPaths();
-        }
-        if (isset($this->_Paths[$id])) {
-            return $this->_Paths[$id];
-        }
-        return false;
-    }
-
-
-
-
-
 }

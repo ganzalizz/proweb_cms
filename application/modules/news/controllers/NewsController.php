@@ -20,6 +20,7 @@ class News_NewsController extends Zend_Controller_Action {
                 $this->_redirect('/404');
             }
             
+            
             $this->view->options = $options = PagesOptions::getInstance()->getPageOptions($id);
             $this->view->placeholder('title')->set($options->title);
             $this->view->placeholder('keywords')->set($options->keywords);
@@ -27,18 +28,17 @@ class News_NewsController extends Zend_Controller_Action {
             $this->view->placeholder('id_page')->set($id);
             $this->view->placeholder('object_id')->set($id);
             $this->view->placeholder('h1')->set($page->title);
-           
+            $this->layout->id_page = $page->id;
         }
     }
 
     public function indexAction() {
         
        $ini = new Ext_Common_Config('news','frontend');
-       $registry = $ini->getModuleConfigSection();      
-       $conf = $registry->get('frontend');  
+       
             
        $page = $this->_getParam('page',1);
-       $item_per_page = $conf->news->per->page;
+       $item_per_page = $ini->news->per->page;
             
        $paginator = News::getInstance()->getNewsPaginator($item_per_page,$page);
        Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');

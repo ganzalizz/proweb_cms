@@ -50,55 +50,5 @@ class Page_Row extends Zend_Db_Table_Row {
 		return $html;
 	}
 	
-	public function delete() {
-		/**
-		 * удаление элемента из индекса
-		 */
-		Ext_Search_Lucene::deleteItemFromIndex ( $this->id, Ext_Search_Lucene::PAGES );
-		return parent::delete ();
-	}
 	
-	/**
-	 * Allows post-update logic to be applied to row.
-	 * Subclasses may override this method.
-	 *
-	 * @return void
-	 */
-	protected function _postUpdate() {
-		Ext_Search_Lucene::deleteItemFromIndex ( $this->id, Ext_Search_Lucene::PAGES );
-		if ($this->is_active == 1) {
-			$this->addItemToSearchIndex();
-		}
-	
-	}
-	
-	/**
-	 * Allows post-insert logic to be applied to row.
-	 * Subclasses may override this method.
-	 *
-	 * @return void
-	 */
-	protected function _postInsert() {
-		/**
-		 * индексируются только опубликованные элементы
-		 */
-		if ($this->is_active == 1) {
-			$this->addItemToSearchIndex();
-		}
-	}
-	
-	/**
-	 * добавление элемента в индекс
-	 * @return void
-	 * 
-	 */
-	protected function addItemToSearchIndex(){
-		$index = Ext_Search_Lucene::open ( Ext_Search_Lucene::PAGES );
-			$doc = new Ext_Search_Lucene_Document ( );			
-		        $doc->setUrl ( $this->path );
-			$doc->setTitle ( $this->title );
-			$doc->setContent ( strip_tags ( $this->content ) );
-			$doc->setId ( $this->id );
-			$index->addDocument ( $doc );
-	}
 }

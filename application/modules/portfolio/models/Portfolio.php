@@ -55,15 +55,7 @@ class Portfolio extends Zend_Db_Table {
      *
      * @var array
      */
-    protected $_referenceMap = array(
-            'Pages' => array(
-                            'columns'           => array('id_page'),
-                            'refTableClass'     => 'Pages',
-                            'refColumns'        => array('id'),
-                            'onDelete'          => self::CASCADE,
-                            'onUpdate'          => self::RESTRICT
-            )
-            ) ;
+    protected $_referenceMap = array();
 
     /**
      * Class to use for rows.
@@ -162,7 +154,7 @@ class Portfolio extends Zend_Db_Table {
 
 
     public function pubPortfolio($id) {
-        $array = array('is_active'=>1,'pub_date'=>new Zend_Db_Expr('NOW()'));
+        $array = array('is_active'=>1,'added'=>new Zend_Db_Expr('NOW()'));
         $new = $this->find($id)->current();
         $new->setFromArray(array_intersect_key($array, $new->toArray()));
         $new->save();
@@ -283,50 +275,7 @@ $new->save();
         return $this->getAdapter()->query($select);
     }
     
-    public function search($search) {
-        $dbAdapter = Zend_Registry::get('db');
-        $sql = $dbAdapter->quoteInto("SELECT DISTINCT *, 'portfolio' AS TYPE FROM site_portfolio WHERE site_portfolio.name LIKE '%".$search."%'
-		    OR site_news.intro LIKE '%".$search."%'
-		 	OR site_news.content LIKE '%".$search."%'
-		    AND site_portfolio.is_active =1 ORDER BY site_portfolio.name ; ",null);
-        $result = $dbAdapter->query($sql);
-        return  $result->fetchAll();
-
-    }
-    /**
-     * reindex table for Zend_search_lucence
-     */
-    public function reindex() {
-        $index = new Ext_Search_Lucene(Ext_Search_Lucene::NEWS);
-        //$pages_rowset = $this->fetchAll('published=1')
-        $count = 10 ;
-        $offset = 0 ;
-        $this->setPaths();
-        while( ( $rowset = $this->fetchAll( 'is_active=1', null, $count, $offset ) ) && ( 0 < $rowset->count() ) ) {
-
-            while( $rowset->valid() ) {
-                $row = $rowset->current() ;
-                //
-                // Prepare document
-                //
-                if ($path = $this->getElemPath($row->id_page)) {
-                    $doc = new Ext_Search_Lucene_Document();
-                    $doc->setUrl($path .'/item/'.$row->id.'/');
-                    $doc->setTitle($row->name);
-                    $doc->setContent(strip_tags($row->content));
-                    $doc->setId($row->id);
-
-                    $index->addDocument( $doc ) ;
-                }
-                $rowset->next() ;
-            }
-            $offset += $count ;
-        }
-
-        $index->commit() ;
-        return $index->numDocs();
-
-    }
+   
 
     /**
      * выбираем все родительские страницы
@@ -364,6 +313,7 @@ $new->save();
      */
     public function getYearsForFilter()
     {
+        
         $sql = "SELECT YEAR( created_at ) AS year
                 FROM $this->_name
                 GROUP BY YEAR
