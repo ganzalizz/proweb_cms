@@ -2,7 +2,7 @@
 <div class="portfolio_types">
 <a href="<?php echo $this->url(array('prizn'=>1))?>" <?php echo $this->prizn==1 ? 'class="active"' : ''?>>Предложения</a>
 <a href="<?php echo $this->url(array('prizn'=>0))?>" <?php echo $this->prizn==0 ? 'class="active"' : ''?>>Отзывы</a>
-<a href="<?php echo $this->url(array())?>" <?php echo is_null($this->prizn) ? 'class="active"' : ''?>>Все</a>
+<a href="<?php echo $this->url(array(), null, true)?>" <?php echo is_null($this->prizn) ? 'class="active"' : ''?>>Все</a>
 </div>
 <div class="cont_inner news">
         <?foreach($this->otzivy as $otziv) {?>
@@ -25,7 +25,10 @@
 
 <?php echo $this->paginator?>
 
+
+	<?=$this->form->render() ?> 
+	
+
 </div>
 
 
-<?=$this->form->render() ?> 

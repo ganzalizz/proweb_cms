@@ -220,3 +220,25 @@ p.error {
 .pagination {
 	background: none;
 }
+
+.prizn label {
+	float: left;
+}
+.prizn {
+	clear: both;
+}
+
+ul.errors {	
+	padding: 5px 0px 5px 5px;
+	color: red;	
+	clear: both;
+}
+ul.errors li {
+	background: none;
+	padding: 0px;
+	
+}
+
+.form .bg {
+	height: auto;
+}

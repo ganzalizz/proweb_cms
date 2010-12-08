@@ -17,6 +17,8 @@ class Form_FormOtzivy extends Ext_Form
         // Указываем метод формы
         $this->setMethod('post');
         
+        $this->setDecorators( array( array( 'ViewScript', array( 'viewScript' => 'otzivy/formotzivy.phtml' ) ) ) );
+        
         // Задаем атрибут class для формы
         $this->setAttrib('class', 'otzivy');
         
@@ -28,8 +30,18 @@ class Form_FormOtzivy extends Ext_Form
                 array('Alnum', true, array(true)),
                 array('StringLength', true, array(5, 30))
              ),
+            'decorators' => array(
+				array( 'ViewHelper' ), 
+				array( 'Errors' ), 
+				array( 'HtmlTag', array( 'tag' => 'span' ) )
+             ), 
             'filters'     => array('StringTrim')
         ));
+        $name->setAttrib('class', 'input');
+       // $name->addDecorator('htmlTag', array('tag' => 'div', 'class'=>'item'));
+        //$name->removeDecorator('label');
+        
+        
          
 
           
@@ -39,35 +51,52 @@ class Form_FormOtzivy extends Ext_Form
        // $name->setName('name');
         
         $email = new Ext_Form_Element_Email('email', array(
-            'required' => true
+            'required' => true,
+        	'decorators' => array(        		
+				array( 'ViewHelper' ),
+				array( 'Errors' ), 
+				array( 'HtmlTag', array( 'tag' => 'span' ) )
+             )
         ));
-        
+        $email->setAttrib('class', 'input');
         $this->addElement($email);
           
                 
         $prizn = new Zend_Form_Element_Radio('prizn', array(
             'label' => 'Тип сообщения',
-            'multiOptions' => Otzivy::$otziv_vid
+        	'required' => true,
+            'multiOptions' => Otzivy::$otziv_vid,
+        	'decorators' => array(
+				array( 'ViewHelper' ), 
+				array( 'Errors' ),
+				array( 'HtmlTag',array( 'tag' => 'span', 'class'=>'prizn' ) )
+             )
             
         ));
-        
-        $prizn->setSeparator(' ');
+        $prizn->removeDecorator('label');        
+        $prizn->setSeparator(' ');        
                 
         $this->addElement($prizn); 
         
         $content = new Zend_Form_Element_Textarea('content', array(
             'label' => 'Сообщение',
             'required' => true,
-            'rows' => '5',
-            'cols' => '45',
+            //'rows' => '5',
+           // 'cols' => '45',
             'validators' => array(
                 array('StringLength', true, array(0, 5000))
             ),
+            'decorators' => array(
+				array( 'ViewHelper' ), 
+				array( 'Errors' ),
+				array( 'HtmlTag',
+				array( 'tag' => 'span' ) )
+             ), 
             'filters' => array('StringTrim')
             
             
         ));
-                
+        $content->setAttrib('class', 'textarea');        
         $this->addElement($content);
         
        // $captcha = new Ext_Form_Element_CaptchaWord('captcha');
@@ -83,9 +112,11 @@ class Form_FormOtzivy extends Ext_Form
                 'imgDir'    => Zend_Registry::get('config')->path->rootPublic . 'img/captcha/', // Путь к изобр.
                 'imgUrl'    => '/img/captcha/', // Адрес папки с изображениями
                 'gcFreq'    => 5        // Частота вызова сборщика мусора
-            ),
+            )
         ));
-                
+        $captcha->removeDecorator('label');
+        $captcha->addDecorator( 'HtmlTag', array( 'tag' => 'div' ));    
+            
         $this->addElement($captcha);
         
          
