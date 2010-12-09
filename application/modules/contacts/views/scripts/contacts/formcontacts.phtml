@@ -1,0 +1,59 @@
+<div class="clear"></div>	
+<div class="form">
+	<h3>Форма обратной связи</h3>
+	<form action="<?= $this->escape( $this->element->getAction() ); ?>" 
+		method="<?= $this->escape( $this->element->getMethod() ); ?>" >
+		
+		<div class="bg">
+			<div class="item">
+				<label for="<?php echo $this->element->name->getId()?>">
+					<?php echo $this->element->name->getLabel(); ?>
+				</label>
+				<?php echo $this->element->name; ?>
+				
+				
+			
+			</div>
+			
+			<div class="item">
+				<label for="<?php echo $this->element->email->getId()?>">
+					<?php echo $this->element->email->getLabel(); ?>
+				</label>
+				<?php echo $this->element->email; ?>
+			
+			</div>
+                        
+                        <div class="item">
+				<label for="<?php echo $this->element->subject->getId()?>">
+					<?php echo $this->element->subject->getLabel(); ?>
+				</label>
+				<?php echo $this->element->subject; ?>
+			
+			</div>
+			
+			<div class="item">
+				<label for="<?php echo $this->element->message->getId()?>">
+					<?php echo $this->element->message->getLabel(); ?>
+				</label>
+				<?php echo $this->element->message; ?>
+			
+			</div>
+		</div>
+		<div class="capcha">
+			<label for="<?php echo $this->element->captcha->getId()?>">
+				<?php echo $this->element->captcha->getLabel(); ?>
+			</label>
+			<div class="overflow">
+				<?php echo $this->element->captcha; ?>			 			
+				<?php echo $this->element->submit; ?>
+				<div class="clear"></div>
+			</div>
+		</div>
+		
+		
+		
+		
+		
+	
+	</form>
+</div>	

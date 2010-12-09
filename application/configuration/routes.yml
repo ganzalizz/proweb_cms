@@ -327,3 +327,11 @@ routes:
         controller: otzivy
         action: index
         id: 1077
+    contacts: 
+      type: Zend_Controller_Router_Route
+      route: contacts
+      defaults: 
+        module: contacts
+        controller: contacts
+        action: index
+        id: 849

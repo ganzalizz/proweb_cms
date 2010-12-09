@@ -40,8 +40,10 @@ abstract class Ext_Common_InstallModuleAbstract
      */
     public function  __construct($module_sys_name) 
     {
+        $this->_module_sys_Name = $module_sys_name;
+        
         $this->_module_config = new Ext_Common_Config($module_sys_name, 'config');
-        echo "Module name: $module_sys_name";
+        
         $this->_moduleName = $this->_module_config->module->sys->name;
         $this->_module_tableName = $this->_module_config->module->table->name;
         
@@ -53,29 +55,11 @@ abstract class Ext_Common_InstallModuleAbstract
             'password' => $config_db->db->config->password,
             'dbname' => $config_db->db->config->dbname,
             'charset' => 'utf8'));
-        echo "Initialize Database";
+        
     }
     
    
-    
-//    public static function getInstance($module_sys_name)
-//   {   echo "Instance";
-//
-//        if (self::$_instance === null)
-//        {
-//            self::$_instance = new self($module_sys_name);
-//        }
-//        return self::$_instance;
-//
-//   }
-   /**
-    * 
-    */
-//    private final function __clone()
-//    {
-//        trigger_error( "Cannot clone instance of Singleton pattern", E_USER_ERROR );
-//    }
-//   
+ 
    /**
     *
     * @return Zend_Config_Ini
@@ -89,6 +73,19 @@ abstract class Ext_Common_InstallModuleAbstract
         
         $this->_db->closeConnection();
     }
+    
+    protected function IsModuleRegistered()
+    {
+        $select = $this->_db->select()
+                            ->from('site_divisions_type')
+                            ->where('system_name = ?', $this->_module_sys_Name);
+                           
+        print_r($select);
+        return ($this->_db->fetchRow($select))? true: false;
+        
+    }
+    
+    
     
     abstract public function Install(); 
     

@@ -35,14 +35,14 @@ class Contacts_ContactsController extends Zend_Controller_Action
     
     public function indexAction()
     {
-        $form = new Form_FormOtzivy();
+        $form = new Form_FormContacts();
         
-        if ()
+        if ($this->_request->isPost())
         {
             if ($form->isValid($form->getValues()))
             $mail = new Ext_Common_Mail();
             $mail->setMailBodyType('text');
-            $mail->SendMail($email_to,
+            $mail->SendMail('avenger999@gmail.com',
                             $form->getValue('message'),
                             $form->getValue('subject'), 
                             $form->getValue('name'));
@@ -50,4 +50,6 @@ class Contacts_ContactsController extends Zend_Controller_Action
         
         $this->view->form = $form;
     }
+    
+    
 }

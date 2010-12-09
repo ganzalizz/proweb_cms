@@ -55,7 +55,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         define('DIR_ADMIN_CONTROLLERS', DIR_MODULES  . 'admin' . DS . 'controllers' . DS);
         define('DIR_LIBRARY', DIR_APPLICATION . 'library' . DS);
         define('DIR_ZEND', DIR_LIBRARY . 'Zend' . DS);
-        define('DIR_PEAR', DIR_LIBRARY . 'Pear' . DS);
+        define('DIR_PEAR', DIR_APPLICATION . 'modules' . DS);
         define('DIR_COMMON', DIR_APPLICATION . 'common' .  DS);
         define('DIR_MODELS', DIR_APPLICATION . 'models' . DS);
         define('DIR_ADMIN_MODELS', DIR_MODULES . 'admin' . DS. 'models' . DS);

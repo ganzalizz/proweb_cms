@@ -271,9 +271,7 @@ class News_Admin_NewsController extends MainAdminController {
     
     public function installAction()
     {
-//        $view = Zend_Layout::getMvcInstance()->getView();
-//        $view->jQuery->addJavascriptFile('/js/jquery-1.4.2.min')
-//                     ->addJavascriptFile('/js/jquery-ui-1.8.6.custom.min.js');
+
        require_once 'NewsInstall.php';
        echo 'Begin';
        $install = new News_Admin_NewsInstall('news');
