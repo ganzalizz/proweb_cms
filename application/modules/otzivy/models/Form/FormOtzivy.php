@@ -10,11 +10,7 @@ class Form_FormOtzivy extends Ext_Form
     {
         parent::init();
         
-        // Указываем action формы
-        //$helperUrl = new Zend_View_Helper_Url();
-        //$this->setAction($helperUrl->url(array(), 'otzivy'));
-        //$this->setAction('otzivy');
-        // Указываем метод формы
+       
         $this->setMethod('post');
         
         $this->setDecorators( array( array( 'ViewScript', array( 'viewScript' => 'otzivy/formotzivy.phtml' ) ) ) );

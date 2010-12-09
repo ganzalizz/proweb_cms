@@ -4,6 +4,12 @@ class Form_FormContacts extends Ext_Form
 {
     public function init()
     {
+        $this->setMethod('post');
+        
+        //$this->setDecorators( array( array( 'ViewScript', array( 'viewScript' => 'contacts/formcontacts.phtml' ) ) ) );
+        
+        $this->setAttrib('class', 'contacts');
+        
         $name = new Zend_Form_Element_Text('name', array(
             'label' => 'Ваше имя',
             'required' => true,
