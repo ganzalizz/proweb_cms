@@ -196,18 +196,20 @@ class News extends Zend_Db_Table {
 
     /**
      * @name addNews Добавить новость
+     * @param Zend_Db_Table_Row $row
+     * @param  array $data
      * 
-     * @param  $data mixed
-     * 
-     * @return $id inserted news
+     * @return Zend_Db_Table_Row inserted news
      */
-    public function addNews($data) 
+    public function addNews($row, $data) 
     {
        
         $data['created_at'] = (!isset($data['created_at'])) ? new Zend_Db_Expr('NOW()'): date('Y-m-d', strtotime($data['created_at']));
         $data['date_news'] = (!isset($data['date_news'])) ? new Zend_Db_Expr('NOW()') : date('Y-m-d', strtotime($data['date_news']));
         unset($data['id']); 
-        return $this->createRow($data)->save(); 
+        $row->setFromArray($data);
+        $row->save();
+        return $row; 
        
     }
 
@@ -243,17 +245,26 @@ class News extends Zend_Db_Table {
         $new->setFromArray(array_intersect_key($array, $new->toArray()));
         $new->save();
     }
-    /*
-    *Редактирование новости
-    *@param $data array
-    *@param $id int
-    *
-    */
-    public function editNews($data,$id) 
-    {
-        $where = $this->getAdapter()->quoteInto('id = ?', $id);
-        unset($data['id']);        
-        return $this->update($data, $where);
+    /**
+     * редактирование новости
+     * @param Zend_Db_Table_Row $row
+     * @param array $data
+     * @return Zend_Db_Table_Row
+     */
+    public function editNews($row, $data) 
+    {         
+        
+        unset($data['id']);
+        if ($data['date_news']!=''){
+        	$data['date_news'] = date('Y-m-d', strtotime($data['date_news']));
+        }
+        if ($data['created_at']!=''){
+        	$data['created_at'] = date('Y-m-d', strtotime($data['created_at']));
+        }        
+        $row->setFromArray($data)->save();
+       
+        return $row;
+        
     }
     
     public function addCountViews($id)

@@ -15,6 +15,9 @@ class Form_FormNews extends Ext_Form
         
         //$this->setName('news');
         $this->setAction('');
+        
+        $this->setDecorators( array( array( 'ViewScript', array( 'viewScript' => 'admin/news/form.phtml' ) ) ) );
+        
         // Указываем метод формы
         $this->setMethod('post');
         
@@ -25,36 +28,27 @@ class Form_FormNews extends Ext_Form
         $this->setAttrib('class', 'news');
         $this->setAttrib('enctype', 'multipart/form-data');
         
+        
         $id = new Zend_Form_Element_Hidden('id');
         
         $this->addElement($id);
         
         $name = new Zend_Form_Element_Text('name', array(
-            'required' => true,
-            'label' => 'Название',
-            'maxlength'   => '150',
-            'validators'  => array(
+			'required'		=> true,
+			'label'			=> 'Название',
+			'description'	=> 'от 5 до 150 символов',
+            'maxlength'		=> '150',
+            'validators'	=> array(
                 array('Alnum', true, array(true)),
                 array('StringLength', true, array(5, 150))
-             ),
+             ),             
             'filters'     => array('StringTrim')
         ));
       
-         
+        
         $this->addElement($name);
         
-       /* $teaser = new Zend_Form_Element_Textarea('teaser', array(
-            'label' => 'Анонс',
-            'required' => true,
-            'rows' => '5',
-            'cols' => '45',
-            'validators' => array(
-                array('StringLength', true, array(0, 1000))
-            ),
-            'filters' => array('StringTrim')
-            
-            
-        ));*/
+       
          $teaser = new Ext_Form_Element_CkEditor('teaser', array(
                     'label' => 'Анонс',
          			'description' => 'не более 1000 символов',
@@ -65,7 +59,7 @@ class Form_FormNews extends Ext_Form
         $this->addElement($teaser);
         
         $content = new Ext_Form_Element_CkEditor('content', array(
-                    'label' => 'Новость',
+                    'label' => 'Текст новости',
                     'required' => true,
                     'filters' => array('StringTrim')
                 ));
@@ -87,9 +81,11 @@ class Form_FormNews extends Ext_Form
         $this->addElement($link);
         
         $date_news = new ZendX_JQuery_Form_Element_DatePicker('date_news', array(
-           'label' => 'Дата новости',
-           
-       ));
+           'label' => 'Дата новости',           
+        ));
+       $date_news->removeDecorator('label');
+       $date_news->removeDecorator('htmlTag');
+       
        
        $date_news->setJQueryParam('dateFormat', 'dd.mm.yy');
        
@@ -112,126 +108,41 @@ class Form_FormNews extends Ext_Form
            'label' => 'Дата публикации',
            
        ));
+       $created_at->removeDecorator('label');
+       $created_at->removeDecorator('htmlTag');
        
        $created_at->setJQueryParam('dateFormat', 'dd.mm.yy');
        
        $this->addElement($created_at);
        
        
-//        $small_img = new Ext_Form_Element_File('small_img');
-//        $small_img->setOptions(array(
-//            'required' => true, 
-//            'label' => 'Upload file:'
-//        ))->setDestination(realpath(APPLICATION_PATH . self::DIR_TMP))->addValidators(array(
-//            array('Count', 
-//                true, 
-//                1
-//            ), 
-//            array('Extension', 
-//                true, 
-//                array(
-//                    'csv',
-//                    'txt',
-//					'jpg',
-//					'png',
-//					'gif'
-//                )
-//            ), 
-//            array('Size', 
-//                true, 
-//                self::MAX_FILE_SIZE
-//            )
-//            /*array('MimeType', 
-//                true, 
-//                array(
-//                    'text/anytext', 
-//                    'text/comma-separated-values', 
-//                    'text/csv', 
-//                    'text/plain', 
-//                    'application/csv', 
-//                    'application/excel', 
-//                    'application/msexcel', 
-//                    'application/vnd.ms-excel', 
-//                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
-//                    'application/x-excel', 
-//                    'application/x-msexcel', 
-//                    'application/x-ms-excel', 
-//                    'application/xls', 
-//                    'application/xlt', 
-//                    'application/octet-stream'
-//                )
-//            )*/
-//        ))->addPrefixPath('Ext_Form_Decorator', 'Ext/Form/Decorator/', 'decorator')->setDecorators(array(
-//            'File', 
-//            'Description', 
-//            'Label', 
-//            array('Uploadify', 
-//                array(
-//                    'text' => 'Закачать'
-//                )
-//            ), 
-//            array('Errors', 
-//                array(
-//                    'placement' => 'prepend'
-//                )
-//            )
-//        ))->create();
-       // $this->addElement($file);
+        $small_img = new Ext_Form_Element_Image('small_img');
        
-       
-//        $small_img = new Ext_Form_Element_File( 'small_img' );
-//        $small_img->setOptions(array(
-//            'required' => false,
-//            'label' => 'Картинка'
-//        ))
-//        ->setDestination( '/tmp' )
-//        ->addValidators(array(
-//            array( 'Count', true, 1 )
-//           
-//        ))
-//        ->addPrefixPath('Ext_Form_Decorator', 'Ext/Form/Decorator/', 'decorator')
-//        ->setDecorators(array(
-//            'File',
-//            'Description',
-//            'Label',
-//            array('Errors', array('placement' => 'prepend')),
-//            array('Uploadify', array('text' => 'Загрузить'))
-//        ))
-//        ->create();
- //       $this->addElement($small_img);
-       
-       
-       // $options['small_img'] = '/pics/news/small_img_thumb/test.jpg'; 
-        $small_img = new Ext_Form_Element_Image('small_img', null, $options);
-       
-        $small_img->addValidator('Count', false, 1);
+        $small_img->addValidator('Count', false, 2);
         $small_img->addValidator('Extension', false, 'jpg,png,gif');
         $small_img->setLabel('Маленькая фотография');
-        $fields[] = $small_img;
+        //$fields[] = $small_img;
         $this->addElement($small_img,'small_img');
+        
+        $big_img = new Ext_Form_Element_Image('big_img');
+       
+        $big_img->addValidator('Count', false, 2);
+        $big_img->addValidator('Extension', false, 'jpg,png,gif');
+        $big_img->setLabel('Большая фотография');
+        $big_img->setAttrib('is_big', true);
+       // $fields[] = $big_img;
+        $this->addElement($big_img,'big_img');
 
        
        
-       
-//       $small_img = new Ext_Form_Element_File('small_img', 
-//       array('label' => 'Картинка')); 
-////       $small_img->setLabel('Маленькое изображение');
-//       //$small_img->addValidator('Count', false, 1);
-//       //$small_img->addValidator('Extension', false, 'jpg,png,gif');
-//       //$small_img->setLabel('My Image');
-//       //$fields[] = $small_img;
-//       $this->addElement($small_img);
-       
-       
-       //$big_img = new Ext_Form_Element_FileUpload('big_img', null, $options);
-      // $this->addElement($big_img);
+      
        
        //TODO: Date element
        
-       $is_active = new Zend_Form_Element_Checkbox('is_active', array(
-            'label'       => 'Новость активна',
-            'filters'     => array('Int')
-       ));
+		$is_active = new Zend_Form_Element_Checkbox('is_active', array(
+			'label'		=> 'Новость активна',       				
+			'filters'	=> array('Int')
+       ));     
        
        $this->addElement($is_active);
        
@@ -289,7 +200,7 @@ class Form_FormNews extends Ext_Form
        $this->addElement($seo_keywords);
        
        $this->addDisplayGroup(
-             array('name', 'teaser', 'content','link','date_news','author','created_at','small_img'), 'newsDataGroup',
+             array('id', 'name', 'teaser', 'content','link','date_news','author','created_at','small_img', 'big_img'), 'newsDataGroup',
              array(
                      'legend' => 'Новость'
                     ));
@@ -306,16 +217,30 @@ class Form_FormNews extends Ext_Form
                     ));
        
         
-         
+       
         
-        // Кнопка Submit
-        $submit = new Zend_Form_Element_Submit('submit', array(
-            'label'       => 'Послать',
-        ));
         
+        
+        $submit = new Zend_Form_Element_Button('submit','<span><em>Сохранить</em></span>');
+        $submit->setAttrib('escape', false);
+        $submit->setAttrib('type', 'submit');
+        //$submit->setAttrib('content', '<span><em>Сохранить</em></span>');
         $this->addElement($submit);
 
              
+        foreach ($this->getElements() as $element){
+        	
+        	if (!strpos($element->getType(), 'JQuery')){        	
+	        	$element->setDecorators(array(
+	        		array( 'ViewHelper' ),	
+	        		array( 'Errors' )
+	        	));
+        	}
+        }
+        
+        
+        
+        
         
    
         

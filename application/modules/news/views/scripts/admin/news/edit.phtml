@@ -1,17 +1,8 @@
-<script type="text/javascript" src="/js/jquery/ui.core.js"></script>
-<script type="text/javascript" src="/js/jquery/ui.datepicker.js"></script>
-<script type="text/javascript" charset="utf-8">
-    $(function()
-    {
-        $("#datepicker").datepicker({ dateFormat: 'dd.mm.yy' });
-    });
-</script>
+
 
 <script type="text/javascript" src="/js/translit.js"></script>
 
-<div class="description_page">
-    <h2>Редактировать</h2>
-</div>
+
 
 <div class="content">
     <div id="left_block" class="form_page">
@@ -21,8 +12,8 @@
         <div class="block_r gray">
             <h3><b>Действия</b></h3>
             <ul>
-                <li><a href="<?=$this->currentModul?>/index/id_page/<?=$this->id_page?>">Список элементов</a></li>               
-                <li><a href="<?=$this->currentModul?>/add/id_page/<?=$this->id_page?>">Добавить</a></li>
+                <li><a href="<?=$this->currentModul?>/index">Список элементов</a></li>               
+                <li><a href="<?=$this->currentModul?>/edit">Добавить</a></li>
             </ul>
         </div>
     </div>

@@ -102,6 +102,8 @@ function show_hide_block(id, img_id){
 
 		});
 		
+		$("input[type='checkbox']").addClass('checkbox');
+		
 		 $("#select_all").toggle(
 				  function () {
 					$(".checkbox").attr("checked", "checked");
