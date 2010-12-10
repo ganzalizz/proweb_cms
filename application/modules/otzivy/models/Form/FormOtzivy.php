@@ -28,8 +28,7 @@ class Form_FormOtzivy extends Ext_Form
              ),
             'decorators' => array(
 				array( 'ViewHelper' ), 
-				array( 'Errors' ), 
-				array( 'HtmlTag', array( 'tag' => 'span' ) )
+				array( 'Errors' )
              ), 
             'filters'     => array('StringTrim')
         ));
@@ -50,8 +49,8 @@ class Form_FormOtzivy extends Ext_Form
             'required' => true,
         	'decorators' => array(        		
 				array( 'ViewHelper' ),
-				array( 'Errors' ), 
-				array( 'HtmlTag', array( 'tag' => 'span' ) )
+				array( 'Errors' )
+				
              )
         ));
         $email->setAttrib('class', 'input');
@@ -64,8 +63,7 @@ class Form_FormOtzivy extends Ext_Form
             'multiOptions' => Otzivy::$otziv_vid,
         	'decorators' => array(
 				array( 'ViewHelper' ), 
-				array( 'Errors' ),
-				array( 'HtmlTag',array( 'tag' => 'span', 'class'=>'prizn' ) )
+				array( 'Errors' )
              )
             
         ));
@@ -84,9 +82,7 @@ class Form_FormOtzivy extends Ext_Form
             ),
             'decorators' => array(
 				array( 'ViewHelper' ), 
-				array( 'Errors' ),
-				array( 'HtmlTag',
-				array( 'tag' => 'span' ) )
+				array( 'Errors' )
              ), 
             'filters' => array('StringTrim')
             
@@ -101,26 +97,35 @@ class Form_FormOtzivy extends Ext_Form
             'captcha' => array(
                 'captcha'   => 'Image', // Тип CAPTCHA
                 'wordLen'   => 4,       // Количество генерируемых символов
-                'width'     => 200,     // Ширина изображения
+                'width'     => 100,     // Ширина изображения                
+                'height'    => 40,     // Ширина изображения                
                 'timeout'   => 120,     // Время жизни сессии хранящей символы
                 'expiration'=> 300,     // Время жизни изображения в файловой системе
-                'font'      => Zend_Registry::get('config')->path->rootPublic . 'fonts/arial.ttf', // Путь к шрифту
+                'font'      => Zend_Registry::get('config')->path->rootPublic . 'fonts/arial.ttf', // Путь к шрифту                
+                'fontSize'  => 13,                 
                 'imgDir'    => Zend_Registry::get('config')->path->rootPublic . 'img/captcha/', // Путь к изобр.
                 'imgUrl'    => '/img/captcha/', // Адрес папки с изображениями
-                'gcFreq'    => 5        // Частота вызова сборщика мусора
+                'gcFreq'    => 5,        // Частота вызова сборщика мусора
+                'dotNoiseLevel' => 5, 	 // частота зашумления картинки точками, количество точек
+                'lineNoiseLevel' => 0 	 // частота зашумления картинки линиями, количество линий
+        		
             )
-        ));
+        ));        
         $captcha->removeDecorator('label');
-        $captcha->addDecorator( 'HtmlTag', array( 'tag' => 'div' ));    
+        $captcha->addDecorator( 'HtmlTag', array( 'tag' => 'span', 'class'=>'captcha' ));    
             
         $this->addElement($captcha);
         
          
-        
+        /*
         // Кнопка Submit
         $submit = new Zend_Form_Element_Submit('submit', array(
             'label'       => 'Послать',
-        ));
+        ));*/
+        
+        $submit = new Zend_Form_Element_Image('submit');
+        $submit->setAttrib('src', '/img/send.gif');
+        $submit->setDecorators(array( 'ViewHelper' ), array('HtmlTag', array( 'tag' => 'span' )) );
         
         $this->addElement($submit);
 

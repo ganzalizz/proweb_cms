@@ -1,29 +1,28 @@
 <?if(count($this->otzivy)) {?>
 <div class="portfolio_types">
-<a href="<?php echo $this->url(array('prizn'=>1))?>" <?php echo $this->prizn==1 ? 'class="active"' : ''?>>Предложения</a>
-<a href="<?php echo $this->url(array('prizn'=>0))?>" <?php echo $this->prizn==0 ? 'class="active"' : ''?>>Отзывы</a>
-<a href="<?php echo $this->url(array(), null, true)?>" <?php echo is_null($this->prizn) ? 'class="active"' : ''?>>Все</a>
+Смотреть: 
+<a href="<?php echo $this->url(array(), null, true)?>" <?php echo is_null($this->prizn) ? 'class="active"' : ''?>>Все</a>&nbsp;|&nbsp; 
+<a href="<?php echo $this->url(array('prizn'=>1))?>" <?php echo $this->prizn==1 ? 'class="active"' : ''?>>Предложения</a>&nbsp;|&nbsp; 
+<a href="<?php echo $this->url(array('prizn'=>0))?>" <?php echo (!is_null($this->prizn) && $this->prizn!=1 ) ? 'class="active"' : ''?>>Отзывы</a>
 </div>
+
 <div class="cont_inner news">
         <?foreach($this->otzivy as $otziv) {?>
    <div class="item">
-        <b class="date"><i><?php echo $otziv->date?></i></b>
-        <? //if($new['small_img']){?>
-           <!-- <div class="photo"><a href="/newslist/item/<?//=$new['id']?>"><img src="/pics/news/<?//=$new['small_img']?>" alt="" /></a></div> -->
-        <?//}?>
+        <b class="date"><i><?php echo $otziv->date?></i></b>       
         <?php echo $otziv->name?>
         <br/>
         <?php echo $otziv->content?>
        
         
             
-        </div>
+     </div>
    
   <?}?>
  
 <?}?>
+<?php echo $this->paginationControl($this->paginator, null, null, array('url_params'=>$this->url_params))?>
 
-<?php echo $this->paginator?>
 
 
 	<?=$this->form->render() ?> 

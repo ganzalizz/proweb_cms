@@ -35,30 +35,33 @@ class Otzivy_OtzivyController extends Zend_Controller_Action {
 
     public function indexAction() {
         
-        $form = new Form_FormOtzivy();
-        $form->setDecorators(array('FormElements' => array('tag' => 'p'), 'Label' => array('tag' => 'td')));
-        
+        $form = new Form_FormOtzivy(); 
+              
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_getAllParams())){
                 Otzivy::getInstance()->addOtziv($form->getValues());
                 $form = new Form_FormOtzivy();
                 
             }
-            
         }    
        $ini = new Ext_Common_Config('otzivy','frontend');
             
        $page = $this->_getParam('page',1);
-       $item_per_page = $ini->onpage;
+       $item_per_page = $ini->onpage;       
        Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
        $prizn = $this->_getParam('prizn', null);      
-            
+	       
        $paginator = Otzivy::getInstance()->getActiveOtzivy($prizn, $page, $item_per_page);
        $paginator->setView($this->view);
        $this->view->prizn = $prizn;
        $this->view->otzivy =  $paginator->getCurrentItems();
        $this->view->paginator = $paginator;        
        $this->view->form = $form;
+       if (!is_null($prizn)){
+			$this->view->url_params = array('prizn'=>$prizn);
+			
+       } 
+       
         
     }
 

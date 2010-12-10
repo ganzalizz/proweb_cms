@@ -313,3 +313,13 @@ span.complete {
 .new_order td {
 	background-color: #a6e098;
 }
+
+.required {
+	color:red;
+}
+
+.form_page h3 {
+	color:#005B7F;
+	font-weight:bold;
+	padding-bottom:10px;	
+}
