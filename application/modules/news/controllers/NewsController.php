@@ -38,7 +38,7 @@ class News_NewsController extends Zend_Controller_Action {
        
             
        $page = $this->_getParam('page',1);
-       $item_per_page = $ini->news->per->page;
+       $item_per_page = $ini->countOnPage;
             
        $paginator = News::getInstance()->getNewsPaginator($item_per_page,$page);
        Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
@@ -50,11 +50,11 @@ class News_NewsController extends Zend_Controller_Action {
     }
 
     public function newsitemAction() {
-        $new_id = $this->_getParam('item', 0);
-        $item = News::getInstance()->getNewsById($new_id);
+        $new_url = $this->_getParam('item', '');
+        $item = News::getInstance()->getItemByUrl($new_url);
         
-        if (isset($item) && $item) {
-            News::getInstance()->addCountViews($new_id);
+        if (!is_null($item)) {
+            News::getInstance()->addCountViews($item->id);
             $this->view->item =$news_row = $item;
             
             if ($news_row!=''){

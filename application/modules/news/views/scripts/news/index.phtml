@@ -2,13 +2,13 @@
 <div class="cont_inner news">
         <?foreach($this->news as $new) {?>
    <div class="item">
-       <b class="date"><i><?=  date('d.m.Y',strtotime($new->created_at));?></i></b>
+       <b class="date"><i><?php echo $new->date?></i></b>
         <? //if($new['small_img']){?>
            <!-- <div class="photo"><a href="/newslist/item/<?//=$new['id']?>"><img src="/pics/news/<?//=$new['small_img']?>" alt="" /></a></div> -->
         <?//}?>
         
-        <h3><a href="/newslist/item/<?=$new->id?>" class="head_news"><?=$new->name?></a></h3>
-            <p><?=$new->teaser?>&nbsp;<a href="/newsitem/item/<?=$new->id?>">читать...</a></p>
+        <h3><a href="/newsitem/item/<?=$new->url?>" class="head_news"><?=$new->name?></a></h3>
+            <p><?=$new->teaser?>&nbsp;<a href="/newsitem/item/<?=$new->url?>">читать...</a></p>
             
         </div>
    

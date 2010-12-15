@@ -1,10 +1,16 @@
 <?php
 
 
-class Ext_View_Helper_AjaxLink extends Zend_View_Helper_Abstract
+class Ext_View_Helper_AjaxStatusLink extends Zend_View_Helper_Abstract
 {
-    public function ajaxlink($options=array())
+    public function ajaxStatusLink($options=array())
     {
+		
+    	if (!isset($options['error_mess'])){
+    		$options['error_mess'] = 'error';
+    	}
+    	
+    	
         return $scr = '<script type="text/javascript" >'.
                        '
 
@@ -12,7 +18,8 @@ class Ext_View_Helper_AjaxLink extends Zend_View_Helper_Abstract
                         
                         $(document).ready(function(){
                             var target_id = "'.$options['target_id'].'";
-                            var loader_id = "'.$options['loader_id'].'";
+                            var loader_img = "'.$options['loader_img'].'";
+                            var error_mess = "'.$options['error_mess'].'";
 
                             $("#"+"'.$options['link_id'].'").click(function()
                             {
@@ -21,10 +28,10 @@ class Ext_View_Helper_AjaxLink extends Zend_View_Helper_Abstract
                                var url_data = '.$options['url_data'].';
                                                    
 
-                                ajaxLinkSend(link_id, target_url, url_data, target_id, loader_id);
+                                ajaxStatusLinkSend(link_id, target_url, url_data, target_id, loader_img);
                             });
 
-                                            function ajaxLinkSend(link_id, target_url, url_data, target_id, loader_id)
+                                            function ajaxStatusLinkSend(link_id, target_url, url_data, target_id, loader_img)
                                             {
                                               $.ajax({
                                                     url: target_url,
@@ -40,15 +47,21 @@ class Ext_View_Helper_AjaxLink extends Zend_View_Helper_Abstract
 
                                             function showLoading()
                                             {
-                                                $("#"+target_id).hide();
-                                                //$("#"+loader_id).show();
+                                                //$("#"+target_id).html("<img src=\'/img/loader.gif\'>");
+                                                if(loader_img!=""){
+                                                	$("#"+target_id).html("<img src=\'"+loader_img+"\'>");
+                                                }
+                                                
                                             }
 
                                             function showResponse(data)
                                             {
-                                              $("#"+target_id).html(data);
-                                              //$("#"+loader_id).hide();
-                                              $("#"+target_id).show();
+                                              if(data!=error_mess){                                            	
+                                            	$("#"+target_id).html(data);	                                           
+	                                          } else {
+    											alert("Ошибка.");					
+    										  }  	
+                                              
                                             }
 
                                                });

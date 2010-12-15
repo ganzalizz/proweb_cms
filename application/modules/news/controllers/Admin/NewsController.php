@@ -19,24 +19,27 @@ class News_Admin_NewsController extends MainAdminController {
 	private $_onPage = null;
 	
 	public function init() {
-		$this->view->addHelperPath( Zend_Registry::get( 'helpersPaths' ), 'View_Helper' );
+		$this->view->addScriptPath(DIR_LIBRARY.'Ext/View/Scripts/');
 		$ini = new Ext_Common_Config( 'news', 'backend' );
 		$this->_basePicsPath = $ini->basePicsPath;
 		$this->_onPage = $ini->countOnPage;
 		
 		$this->checkDirs();
-		
+		$this->view->layout()->title = "Новости";
 		$this->view->lang = $lang = $this->_getParam( 'lang', 'ru' );
 		$this->view->currentModul = $this->_curModule = SP . 'news' . SP . $lang . SP . $this->getRequest()->getControllerName();
+		
 	}
 	
-	public function indexAction() {
+	public function indexAction() {		
 		$this->view->layout()->action_title = "Список элементов";
 		$page = $this->view->current_page = $this->_getParam( 'page', 1 );
-		$onPage = $this->view->onpage = 50;
-		$this->view->counter = ($page - 1) * $onPage;
-		$this->view->news = News::getInstance()->fetchAll();
-		// $this->view->total = News::getInstance()->getCount("id_page='".$this->_id_page."'");
+		
+		Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
+		$paginator = News::getInstance()->getAll($this->_onPage, $page);
+		$this->view->news = $paginator->getCurrentItems();
+		$this->view->paginator = $paginator;		
+		
 	
 
 	}
@@ -56,15 +59,21 @@ class News_Admin_NewsController extends MainAdminController {
 	}
 	
 	public function editAction() {
-		$form = new Form_FormNews();
+		
 		$id = $this->_getParam('id');
 		if ($id){
+			Form_FormNews::setRecordId($id);	
 			$this->view->layout()->action_title = "Редактировать элемент";				
-			$row = News::getInstance()->find( (int)$this->_getParam('id') )->current();				
+			$row = News::getInstance()->find( (int)$this->_getParam('id') )->current();	
+					
 		} else {
 			$this->view->layout()->action_title = "Создать элемент";
 			$row = News::getInstance()->fetchNew();
 		}
+		
+		$form = new Form_FormNews();
+    	
+    	
 			
 		if (!is_null($row)){
 			
@@ -108,105 +117,91 @@ class News_Admin_NewsController extends MainAdminController {
 		}
 		exit();
 	}
-	
+	/**
+	 * удаление элемента 
+	 */
 	public function deleteAction() {
-		$lang = $this->getRequest()->getParam( 'lang', 'ru' );
-		$curModul = SP . 'news' . SP . $lang . SP . $this->getRequest()->getControllerName();
-		if (! $this->_hasParam( 'id' )) {
-			$this->_redirect( $curModul . '/index/id_page/' . $this->_id_page );
-		} else {
-			$id = ( int ) $this->getRequest()->getParam( 'id' );
-			
-			$novost = News::getInstance()->getNewById( $id );
-			
-			News::getInstance()->deleteNew( $id );
-			$sortSession = new Zend_Session_Namespace( 'sortSearch' );
-			$pageSession = new Zend_Session_Namespace( 'pageSearch' );
-			
-			if (isset( $pageSession->page )) {
-				$page_link = "/page/" . $pageSession->page;
-			} else
-				$page_link = "";
-			
-			if (isset( $sortSession->sort )) {
-				$sort_link = "/sort/" . strtolower( $sortSession->sort );
-			} else
-				$sort_link = "";
-			
-			$this->_redirect( $curModul . '/index/id_page/' . $this->_id_page );
+		if ($this->_request->isXmlHttpRequest()){			
+			$id = $this->_getParam('id');			
+			$row = News::getInstance()->find($id)->current();
+			if ($row!=null) {
+				if ($row->small_img!=''){
+					@unlink($this->_basePicsPath . 'small_img/'.$row->small_img);
+				}
+				if ($row->big_img!=''){
+					@unlink($this->_basePicsPath . 'big_img/'.$row->big_img);
+				}
+				$row->delete();
+				echo 'ok';
+			} else {
+				echo 'error';
+			}
 		}
+		exit;
+		
+		
 	
 	}
-	
-	public function setmainAction() {
-		$lang = $this->getRequest()->getParam( 'lang', 'ru' );
-		$curModul = SP . 'news' . SP . $lang . SP . $this->getRequest()->getControllerName();
-		if (! $this->_hasParam( 'id' )) {
-			$this->_redirect( $curModul . '/index/id_page/' . $this->_id_page );
-		} else {
-			$id = ( int ) $this->getRequest()->getParam( 'id' );
-			News::getInstance()->setMainNew( $id );
-			$sortSession = new Zend_Session_Namespace( 'sortSearch' );
-			$pageSession = new Zend_Session_Namespace( 'pageSearch' );
-			
-			if (isset( $pageSession->page )) {
-				$page_link = "/page/" . $pageSession->page;
-			} else
-				$page_link = "";
-			
-			if (isset( $sortSession->sort )) {
-				$sort_link = "/sort/" . strtolower( $sortSession->sort );
-			} else
-				$sort_link = "";
-			
-			$this->_redirect( $curModul . '/index/id_page/' . $this->_id_page );
+	/**
+	 * изменение активности
+	 */
+	public function changeactiveAction(){
+		// проверка пришел ли запрос аяксом
+		if ($this->_request->isXmlHttpRequest()){			
+			$id = $this->_getParam('id');			
+			$row = News::getInstance()->find($id)->current();
+			if ($row!=null) {
+				$row->is_active = abs($row->is_active-1);
+				$row->save();
+				echo '<img src="/img/admin/active_'.$row->is_active.'.png" />';
+			} else {
+				echo 'error';
+			}
 		}
+		exit;
+		
 	}
 	
-	public function unsetmainAction() {
-		$lang = $this->getRequest()->getParam( 'lang', 'ru' );
-		$curModul = SP . 'news' . SP . $lang . SP . $this->getRequest()->getControllerName();
-		if (! $this->_hasParam( 'id' )) {
-			$this->_redirect( $curModul . '/index/id_page/' . $this->_id_page );
-		} else {
-			$id = ( int ) $this->getRequest()->getParam( 'id' );
-			News::getInstance()->unsetMainNew( $id );
-			$sortSession = new Zend_Session_Namespace( 'sortSearch' );
-			$pageSession = new Zend_Session_Namespace( 'pageSearch' );
-			
-			if (isset( $pageSession->page )) {
-				$page_link = "/page/" . $pageSession->page;
-			} else
-				$page_link = "";
-			
-			if (isset( $sortSession->sort )) {
-				$sort_link = "/sort/" . strtolower( $sortSession->sort );
-			} else
-				$sort_link = "";
-			
-			$this->_redirect( $curModul . '/index/id_page/' . $this->_id_page );
+	/**
+	 * изменение отображение на главной
+	 */
+	public function changemainAction(){
+		// проверка пришел ли запрос аяксом
+		if ($this->_request->isXmlHttpRequest()){			
+			$id = $this->_getParam('id');			
+			$row = News::getInstance()->find($id)->current();
+			if ($row!=null) {
+				$row->is_main = abs($row->is_main-1);
+				$row->save();
+				echo '<img src="/img/admin/main_'.$row->is_main.'.gif" />';
+			} else {
+				echo 'error';
+			}
 		}
+		exit;
+		
+	}
+	/**
+	 * установить снять флаг
+	 * горячая новость
+	 */
+	public function changehotAction(){
+		// проверка пришел ли запрос аяксом
+		if ($this->_request->isXmlHttpRequest()){			
+			$id = $this->_getParam('id');			
+			$row = News::getInstance()->find($id)->current();
+			if ($row!=null) {
+				$row->is_hot = abs($row->is_hot-1);
+				$row->save();
+				echo '<img src="/img/admin/hot_'.$row->is_hot.'.png" />';
+			} else {
+				echo 'error';
+			}
+		}
+		exit;
+		
 	}
 	
-	public function activateAction() {
-		if ($this->_hasParam( 'id' )) {
-			$id = ( int ) $this->getRequest()->getParam( 'id' );
-			Pages::getInstance()->pubPage( $id );
-		}
-		$this->view->lang = $this->_getParam( 'lang' );
-		$lang = $this->_hasParam( 'lang' ) ? $this->getParam( 'lang' ) : 'ru';
-		$this->_redirect( "/news/$lang/admin_news/" );
-	}
-	
-	public function unactivateAction() {
-		if ($this->_hasParam( 'id' )) {
-			$id = ( int ) $this->getRequest()->getParam( 'id' );
-			Pages::getInstance()->unpubPage( $id );
-		}
-		$lang = $this->_getParam( 'lang' );
-		$this->view->lang = $lang;
-		$this->_redirect( "/news/$lang/admin_news/" );
-	}
 	
 	/**
 	 * 
@@ -223,8 +218,8 @@ class News_Admin_NewsController extends MainAdminController {
 				$row = News::getInstance()->addNews($row,  $form->getValidValues($form->getValues()) );
 				
 			   // редактирование записи
-			} elseif ($form->isValid( $this->_getAllParams() ) && $row->id > 0) {				
-				$row = News::getInstance()->editNews($row, $form->getValidValues($form->getValues()));				
+			} elseif ($form->isValid( $this->_getAllParams() ) && $row->id > 0) {							
+				$row = News::getInstance()->editNews($row, $form->getValidValues($this->_getAllParams()));				
 			}
 			
 			
@@ -278,7 +273,9 @@ class News_Admin_NewsController extends MainAdminController {
 		
 		$uploaded_images = array();
 		
-		
+		if (!$id){
+			return $uploaded_images;
+		}
 		
 		// загрузка маленькой картинки
 		if ($upload->getFileInfo('small_img')){		

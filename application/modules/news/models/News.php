@@ -4,7 +4,7 @@
  * @author Vitaly
  * @version 1.0
  * @copyright www.proweb.by
- * @package roweb
+ * @package proweb
  *
  */
 class News extends Zend_Db_Table {
@@ -38,35 +38,7 @@ class News extends Zend_Db_Table {
      */
     protected static $_instance = null;
 
-    /**
-     * Dependent tables.
-     *
-     * @var array
-     */
-    protected $_dependentTables = array(
-
-            ) ;
-
-
-	
     
-
-    /**
-     * Class to use for rows.
-     *
-     * @var string
-     */
-    protected $_rowClass = "News_Row" ;
-
-    /**
-     * Class to use for row sets.
-     *
-     * @var string
-     */
-    protected $_rowsetClass = "News_Rowset" ;
-
-
-    private $_Paths = null;
 
     /**
      * тут хранятся значения главных тэгов для таблицы
@@ -91,39 +63,9 @@ class News extends Zend_Db_Table {
     
     
     
-    public function getCount($where) {
-        $sql = "SELECT	 COUNT(*) AS count FROM site_news WHERE $where";
-        return $this->getAdapter()->fetchOne($sql);
-    }
-
-    /**
-     * @name getAllActive Получить все is_active = true новости
-     *
-     * @param $is_main =
-     *
-     * @return mixed|false 
-     *
-     * @see
-     */
-    public function getAllActive() 
-    {
-       
-        $select = $this->select();
-        $select->where('is_active = ?', true)
-               ->order('created_at DESC');
-        return $result = $this->fetchAll($select);
-    }
     
-    public function getAllActivePage($item_per_page, $offset)
-    {
-        $select =   $this->select()
-                         ->from($this->_name)
-                         ->where('is_active = ?', true)
-                         ->order('created_at DESC')
-                         ->limit($item_per_page, $offset);
-        return $result = $this->fetchAll($select);
-                
-    }        
+
+   
     
     /**
      * @name getAllActiveExt Получить все is_active = true новости
@@ -218,7 +160,7 @@ class News extends Zend_Db_Table {
      *
      *@param $id int
      * 
-     *@return mixed|false
+     *@return mixed|null
      *
     */
     public function getNewsById($id) 
@@ -227,24 +169,17 @@ class News extends Zend_Db_Table {
         return $result = $this->fetchRow($where);
     }
 
-
-    public function setNewsIsActive($id) {
-        
-        $where = $this->getAdapter()->quoteInto('id = ?', $id);
-        return $this->update(array('is_active' => 1), $where);
-     }
-    /*
-    *заблокировать новость
-    *@param $id int
-    *
-    */
-    public function unpubNew($id) {
-        $this->
-        $array = array('pub'=>0);
-        $new = $this->find($id)->current();
-        $new->setFromArray(array_intersect_key($array, $new->toArray()));
-        $new->save();
+    
+    public function getItemByUrl($url){
+    	$select = $this->select()
+    		->from($this->_name, array('*', 'date'=>'DATE_FORMAT(date_news, \'%d.%m.%Y\')'))
+    		->where('is_active = ?', 1)
+    		->where('url = ?', $url);
+    	return $this->fetchRow($select);	
     }
+
+    
+    
     /**
      * редактирование новости
      * @param Zend_Db_Table_Row $row
@@ -276,81 +211,26 @@ class News extends Zend_Db_Table {
 
 
 
-    /*
-	*копирование новости
-	*@param $id int
-	*
-    */
-    public function CopyNew($id) {
-
-        $new= $this->getNewById($id);
-        $new = $new->toArray();
-        $new['url'] = $new['url'].'_copy'.rand(1,20);
-        $new['created_at'] = new Zend_Db_Expr('NOW()');
-        if ($new['pub']==1) {
-            $new['pub_date']=new Zend_Db_Expr('NOW()');
-        }
-        unset($new['id']);
-
-        return $this->insert($new);
-    }
+    
 
     /**
-     * Удалить новость
-     * @param <type> $id
+     * получение списка всех новостей 
+     * используется для админки
+     * @param int $onpage
+     * @param int $page
+     * @return Zend_Paginator
      */
-    public function deleteNews($id) {
-        $new = $this->find($id)->current();
-        if($new!=null) $new->delete();
-    }
-    
-    /*
-    *сделать новость главной (для отображения на главной странице)
-    *@param $id int
-    *
-    */
-    public function setMainNew($id) {
-        $where = $this->getAdapter()->quoteInto('id= ?',$id);
-        $data=array('main'=>1);
-        return $this->update($data,$where);
-    }
+ 	public function getAll($onpage, $page){
+ 		$select = $this->select()
+ 			->from($this->_name, array('*', 'date'=>'DATE_FORMAT(date_news, \'%d.%m.%Y\')'))
+ 			->order('date_news DESC');
+ 		return $this->getPaginator($select, $onpage, $page);	
+ 	}  
+  
 
-    public function unsetMainNew($id) {
-        $where = $this->getAdapter()->quoteInto('id= ?',$id);
-        $data=array('main'=>0);
-        return $this->update($data,$where);
-    }
+   
 
-    /*
-    *возвращает все новости устанавленные как главные и опубликованные
-    * @param array news
-    *
-    */
-    public function getMain($type='news', $limit=0) {
-        $select = new Zend_Db_Select($this->getAdapter());
-        $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
-                ->where($this->getAdapter()->quoteInto('main= ?',1))
-               // ->where($this->getAdapter()->quoteInto('type= ?',$type))
-                ->from($this->_name)
-                ->order($this->getAdapter()->quoteInto('RAND()', null))
-                ->limit($limit);
-        return $this->getAdapter()->query($select);
-    }
-
-    /*
-    * возвращает все новости устанавленные как опубликованные
-    * @param array news
-    *
-    */
-    public function getActiveNews($type='news', $limit=0) {
-        $select = new Zend_Db_Select($this->getAdapter());
-        $select ->where($this->getAdapter()->quoteInto('pub= ?',1))
-               // ->where($this->getAdapter()->quoteInto('type= ?',$type))
-                ->from($this->_name)
-                ->order($this->getAdapter()->quoteInto('created_at DESC', null))
-                ->limit($limit);
-        return $this->fetchAll($select);
-    }
+   
 
      /**
      * @name getNewsPaginator получить NewsPaginator
@@ -363,15 +243,29 @@ class News extends Zend_Db_Table {
     { 
         $adapter = new Zend_Paginator_Adapter_DbTableSelect(
                 $this->select()
-                     ->from($this->_name)
+                     ->from($this->_name, array('*', 'date'=>'DATE_FORMAT(date_news, \'%d.%m.%Y\')'))
                      ->where('is_active = ?', true)
-                     ->order('created_at DESC'));
+                     ->order('date_news DESC'));
 
                 $paginator = new Zend_Paginator($adapter);
                 $paginator->setCurrentPageNumber($page);
          return $paginator->setItemCountPerPage($item_per_page);
                 
        
+    }
+    /**
+     * 
+     * @param Zend_Db_Table_Select $select
+     * @param int $item_per_page
+     * @param int $page
+     * @return Zend_Paginator
+     */
+    private function getPaginator($select, $item_per_page, $page){
+    	$adapter = new Zend_Paginator_Adapter_DbTableSelect($select);
+        $paginator = new Zend_Paginator($adapter);
+        $paginator->setCurrentPageNumber($page);
+        return $paginator->setItemCountPerPage($item_per_page);
+        
     }
     
 

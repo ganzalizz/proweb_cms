@@ -9,6 +9,18 @@ class Form_FormNews extends Ext_Form
     const DIR_TMP = '/uploads/';
     const MAX_FILE_SIZE = 5120000;
     
+    private static $_idRecord = null;
+    
+    
+    /**
+     * установка id записи в базе 
+     * для проверки уникальность поля url
+     * @param $id
+     */
+    public static function setRecordId($id){
+    	return self::$_idRecord = $id;
+    }
+    
      public function init()
     {
         parent::init();
@@ -44,9 +56,35 @@ class Form_FormNews extends Ext_Form
              ),             
             'filters'     => array('StringTrim')
         ));
-      
         
         $this->addElement($name);
+        
+        $url = new Zend_Form_Element_Text('url', array(
+			'required'		=> true,
+			'label'			=> 'Url',
+			'description'	=> 'Только латинские символы',
+            'maxlength'		=> '150',
+            'validators'	=> array(
+                //array('Alnum', true, array(true)),               
+				array('Regex', false, array('/^[a-z0-9_-]{1,}$/'))
+             ),             
+            'filters'     => array('StringTrim')
+        ));
+        
+        $url_validator = new Zend_Validate_Db_NoRecordExists(array(
+        	'table' => 'site_news',
+        	'field' => 'url'
+    	));
+    	if (self::$_idRecord!=null){
+    		$url_validator->setExclude(array(
+				'field' => 'id',
+	            'value' => self::$_idRecord
+	
+	        ));
+    	}
+        $url->addValidator($url_validator);
+        
+        $this->addElement($url);
         
        
          $teaser = new Ext_Form_Element_CkEditor('teaser', array(
@@ -96,7 +134,7 @@ class Form_FormNews extends Ext_Form
             'label' => 'Автор новости',
             'maxlength'   => '150',
             'validators'  => array(
-                array('Alnum', true, array(true)),
+                //array('Alnum', true, array(true)),
                 array('StringLength', true, array(5, 150))
              ),
             'filters'     => array('StringTrim')
@@ -165,7 +203,7 @@ class Form_FormNews extends Ext_Form
             'label' => 'Заголовок страницы',
             'maxlength'   => '150',
             'validators'  => array(
-                array('Alnum', true, array(true)),
+                //array('Alnum', true, array(true)),
                 array('StringLength', true, array(5, 150))
              ),
             'filters'     => array('StringTrim')
@@ -178,7 +216,7 @@ class Form_FormNews extends Ext_Form
             'label' => 'Описание страницы',
             'maxlength'   => '300',
             'validators'  => array(
-                array('Alnum', true, array(true)),
+              //  array('Alnum', true, array(true)),
                 array('StringLength', true, array(5, 300))
              ),
             'filters'     => array('StringTrim')
@@ -191,7 +229,7 @@ class Form_FormNews extends Ext_Form
             'label' => 'Ключевые слова страницы',
             'maxlength'   => '500',
             'validators'  => array(
-                array('Alnum', true, array(true)),
+               // array('Alnum', true, array(true)),
                 array('StringLength', true, array(5, 500))
              ),
             'filters'     => array('StringTrim')
@@ -200,7 +238,7 @@ class Form_FormNews extends Ext_Form
        $this->addElement($seo_keywords);
        
        $this->addDisplayGroup(
-             array('id', 'name', 'teaser', 'content','link','date_news','author','created_at','small_img', 'big_img'), 'newsDataGroup',
+             array('id', 'name', 'url', 'teaser', 'content','link','date_news','author','created_at','small_img', 'big_img'), 'newsDataGroup',
              array(
                      'legend' => 'Новость'
                     ));

@@ -1,10 +1,16 @@
 <?php
 
 
-class Ext_View_Helper_AjaxLink extends Zend_View_Helper_Abstract
+class Ext_View_Helper_AjaxDeleteLink extends Zend_View_Helper_Abstract
 {
-    public function ajaxlink($options=array())
+    public function ajaxDeleteLink($options=array())
     {
+		
+    	if (!isset($options['error_mess'])){
+    		$options['error_mess'] = 'error';
+    	}
+    	
+    	
         return $scr = '<script type="text/javascript" >'.
                        '
 
@@ -12,19 +18,22 @@ class Ext_View_Helper_AjaxLink extends Zend_View_Helper_Abstract
                         
                         $(document).ready(function(){
                             var target_id = "'.$options['target_id'].'";
-                            var loader_id = "'.$options['loader_id'].'";
+                            var delete_id = "'.$options['delete_id'].'";
+                            var loader_img = "'.$options['loader_img'].'";
+                            var error_mess = "'.$options['error_mess'].'";
 
                             $("#"+"'.$options['link_id'].'").click(function()
                             {
                                var link_id = "'.$options['link_id'].'";
                                var target_url = "'.$options['target_url'].'";
                                var url_data = '.$options['url_data'].';
-                                                   
-
-                                ajaxLinkSend(link_id, target_url, url_data, target_id, loader_id);
+                               var sure = confirm("Вы уверены?");	                       
+								if(sure){
+                                	ajaxDeleteLinkSend(link_id, target_url, url_data, target_id, delete_id, loader_img);
+                                }
                             });
 
-                                            function ajaxLinkSend(link_id, target_url, url_data, target_id, loader_id)
+                                            function ajaxDeleteLinkSend(link_id, target_url, url_data, target_id, delete_id, loader_img)
                                             {
                                               $.ajax({
                                                     url: target_url,
@@ -40,15 +49,21 @@ class Ext_View_Helper_AjaxLink extends Zend_View_Helper_Abstract
 
                                             function showLoading()
                                             {
-                                                $("#"+target_id).hide();
-                                                //$("#"+loader_id).show();
+                                                //$("#"+target_id).html("<img src=\'/img/loader.gif\'>");
+                                                if(loader_img!=""){
+                                                	$("#"+target_id).prepend("<img src=\'"+loader_img+"\'>");
+                                                }
+                                                
                                             }
 
                                             function showResponse(data)
                                             {
-                                              $("#"+target_id).html(data);
-                                              //$("#"+loader_id).hide();
-                                              $("#"+target_id).show();
+                                              if(data!=error_mess){                                            	
+                                            	$("#"+delete_id).remove();	                                           
+	                                          } else {
+    											alert("Ошибка.");					
+    										  }  	
+                                              
                                             }
 
                                                });
