@@ -31,12 +31,6 @@ class Templates extends Zend_Db_Table
      */
     protected static $_instance = null;
 
-   
-
-
-
-   
-
     private $_Paths = null;
 
     /**
@@ -62,9 +56,30 @@ class Templates extends Zend_Db_Table
     public function getCount()
     {
         $select = $this->select()
-                       ->from($this->_name, new Zend_Db_Expr('COUNT(id)'));
+                       ->from($this->_name, new Zend_Db_Expr('COUNT(id)'))
+                       ->where('is_active = ?', 1);
         return $this->fetchRow($select);
     }
+    
+    public function getIsActiveTemplates()
+    {
+        return $this->fetchAll($this->select->where('is_active = ?', 1));
+    }
+    /**
+     *
+     * @param integer $id 
+     */
+    public function addCountViews($id)
+    {
+        $where = $this->getAdapter()->quoteInto('id = ?', $id);
+        $data['count_views'] = new Zend_Db_Expr('count_views+1');
+        $this->update($data, $where);
+        
+    }
+    
+    
+    
+    
     
     
     
