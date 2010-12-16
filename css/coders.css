@@ -36,3 +36,16 @@ ul.errors li {
 	color: #676465;
 	text-decoration: none;	
 }
+
+.photo {
+	width: auto;
+	float: left;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.cont_inner p {
+    padding-bottom: 0px;
+    padding-left: 10px;	
+	
+}	

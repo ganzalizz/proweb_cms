@@ -29,10 +29,7 @@ class pages_IndexController extends Zend_Controller_Action {
         }        
         
         $this->lang = $this->_getParam('lang', 'ru');
-        $this->_page = $page;
-        if($this->_page->path =='404'){
-			header("HTTP/1.0 404 Not Found");
-		}
+        $this->_page = $page;        
         $this->view->content = $page->content;
         $this->view->options = $options = PagesOptions::getInstance()->getPageOptions($id);
         $this->view->placeholder('title')->set($options->title);
@@ -75,6 +72,19 @@ class pages_IndexController extends Zend_Controller_Action {
     	//Search_Index::getInstance()->search('pages', 'значительное событие');
     	
         
+    }
+    
+    public function errorActon(){
+    	
+    	$this->getResponse()->setHeader('HTTP/1.1','404 Not Found');
+		$this->getResponse()->setHeader('Status','404 File not found');
+    	
+    	$page = Pages::getInstance()->getPageByParam('path', '404');    	
+   	 
+    	if (!is_null($page)){
+    		$this->view->page = $page;
+    	}
+    	
     }
 
     /**

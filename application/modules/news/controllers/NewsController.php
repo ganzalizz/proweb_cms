@@ -14,13 +14,11 @@ class News_NewsController extends Zend_Controller_Action {
         
         $this->layout->setLayout("front/default");
         $id = $this->_getParam('id');
-        $page = Pages::getInstance()->getPage($this->_getParam('id'));
-        if(!is_null($page)) {
-            if ($page->is_active == '0') {
-                $this->_redirect('/404');
-            }
+        $page = Pages::getInstance()->getPage($id);        
+        if(!is_null($page) && $page->is_active!=0) {
             
             
+            $this->view->page = $page;
             $this->view->options = $options = PagesOptions::getInstance()->getPageOptions($id);
             $this->view->placeholder('title')->set($options->title);
             $this->view->placeholder('keywords')->set($options->keywords);
@@ -29,6 +27,8 @@ class News_NewsController extends Zend_Controller_Action {
             $this->view->placeholder('object_id')->set($id);
             $this->view->placeholder('h1')->set($page->title);
             $this->layout->id_page = $page->id;
+        } else {
+           $this->_redirect('/404');
         }
     }
 

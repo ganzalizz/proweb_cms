@@ -114,13 +114,16 @@ class Pages extends Zend_Db_Table {
 	 *
 	 * @param int $id
 	 * @param string $order
-	 * @return object
+	 * @return Zend_Db_Table_Row
 	 */
 	public function getPage($id, $order = null) {
-		$where = $this->getAdapter ()->quoteInto ( 'id = ?', ( int ) $id );
-		$page = $this->fetchRow ( $where, $order );		
-		
-		return $page;
+		$select = $this->select()
+			->where('is_active = ?', 1)
+			->where('id = ?', $id);
+			if ($order!=null){
+				$select->order($order);
+			}
+		return $this->fetchRow($select);
 	}
 	
 	/**
@@ -161,14 +164,12 @@ class Pages extends Zend_Db_Table {
 	 *
 	 * @param string $name
 	 * @param string $value
-	 * @return array
+	 * @return Zend_Db_Table_Row
 	 */
-	public function getPageByParam($name, $value, $version='ru') {
-		$where =array(
-			$this->getAdapter ()->quoteInto ( "$name = ?", $value ),
-			//$this->getAdapter ()->quoteInto ( "version = ?", $version )
-		);		
-		return $this->fetchRow ( $where );
+	public function getPageByParam($name, $value) {			
+		$select = $this->select()
+			->where("$name = ?", $value);	
+		return $this->fetchRow ( $select );
 	}
 	
 	/**
