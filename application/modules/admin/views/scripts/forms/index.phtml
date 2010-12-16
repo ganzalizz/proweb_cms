@@ -1,0 +1,67 @@
+<div id="left_block">
+<form action="" method="post">
+<div class="content_block">
+	<p class="form_name">Название таблицы</p>
+		<?php echo $this->formSelect('table_name', $this->table_name, null, $this->all_tables)?>
+		
+	<p class="form_name">Имя класса</p>
+		<?php echo $this->formText('class_name', $this->class_name, array('class'=>'input'))?>
+		
+	</div>							
+
+	<?php if (isset ( $this->metadata )) { 	?>
+
+	<div class="prava_dostupa">
+
+
+
+	<table id="news_table" cellspacing="0" cellpadding="0" border="0">
+		<tr class="head">
+			<th>Название</th>
+			<th>Тип данных</th>
+			<th>Заголовок</th>
+			<th>Тип элемента</th>			
+		</tr>
+		<?php foreach ( $this->metadata as $name => $field ) { ?>
+		<tr>
+			<td>
+				<strong>
+					<?php echo $field['COLUMN_NAME']?>
+				</strong>
+			</td>
+			<td >
+				<?php echo $field['DATA_TYPE'] ?>
+			</td>
+			<td >
+				<?php echo $this->formText('titles['.$name.']', isset($field['TITLE']) ? $field['TITLE'] : null )?>
+			</td>
+			<td >
+				<?php echo $this->formSelect('types['.$name.']', $field['ELEMENT_TYPE'], null, $this->element_types)?>			
+			</td>
+		</tr>
+	
+	                                                                         
+		<?php } ?>
+
+	
+
+	</table>
+	<?php echo $this->formHidden('metadata', 1)?>
+	</div>
+	<?php } ?>
+		<?php echo $this->formSubmit('submit','Отправить')?>
+ </form>								
+</div>
+		
+							
+</div>
+
+<div id="right_block">
+<div class="block_r gray">
+<h3><b>Действия</b></h3>
+
+</div>
+</div>
+
+
+

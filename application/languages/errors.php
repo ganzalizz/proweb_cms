@@ -66,7 +66,10 @@
         
       Zend_Validate_StringLength::TOO_SHORT => 'Длина введённого значения "%value%", меньше чем %min% симв.',  
       Zend_Validate_StringLength::TOO_LONG => 'Длина введённого значения "%value%", больше чем %max% симв.',
-      Zend_Captcha_Word::BAD_CAPTCHA => 'Не верно введена Капча'
+      Zend_Captcha_Word::BAD_CAPTCHA => 'Не верно введена Капча',
+      
+      Zend_Validate_Db_NoRecordExists::ERROR_RECORD_FOUND => 'Запись со значением "%value%" уже существует',
+      Zend_Validate_Db_NoRecordExists::ERROR_NO_RECORD_FOUND => 'Записей со значением "%value%" не найдено'
        
        
      );  

@@ -1,7 +1,7 @@
 <?php
 
 require_once APPLICATION_PATH . '/../ckeditor/ckeditor.php';
-require_once APPLICATION_PATH . '/../ckeditor/ckfinder/ckfinder.php';
+require_once APPLICATION_PATH . '/../ckfinder/ckfinder.php';
 
 
 // папка где лежит редактор
