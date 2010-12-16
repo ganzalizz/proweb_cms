@@ -15,7 +15,9 @@
   <?}?>
  
 </div><?}?>
-
+<?php if ($this->paginator->count() > 1) { ?>
 <?php echo $this->paginator ?>
+<?php } ?>
+
 
 

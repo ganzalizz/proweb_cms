@@ -36,3 +36,36 @@ ul.errors li {
 	color: #676465;
 	text-decoration: none;	
 }
+
+.page {
+	background:url(/img/pager_blue/page.png) no-repeat;
+	float: left;
+	width: 24px;
+	height: 24px;
+	text-align: center;
+	padding-top: 4px;
+	margin-right: 5px;
+	color: white;
+}
+
+.page_active {
+	background:url(/img/pager_blue/page_active.png) no-repeat;
+	float: left;
+	width: 24px;
+	height: 24px;
+	text-align: center;
+	padding-top: 4px;
+	margin-right: 5px;
+	color: blue;
+}
+
+.disabled{
+   margin-right: 5px;
+	float: left;
+}
+
+.pager_total{
+	float:left;
+	color:blue;
+	padding-top: 4px;
+}

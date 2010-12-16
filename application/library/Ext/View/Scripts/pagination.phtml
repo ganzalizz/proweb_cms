@@ -10,43 +10,45 @@
         <!-- First page link -->
         <?php if (isset($this->previous)): ?>
         	<?php $params['page'] = $this->first; ?>
-              <a href="<?php echo  $this->url($params); ?>">Start</a> |
+              <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/first.png"></a> 
         <?php else: ?>
-                <span class="disabled">Start</span> |
+                <div class="disabled"><img src="/img/pager_blue/first.png"></div> 
         <?php endif; ?>
     
         <!-- Previous page link -->
     
         <?php if (isset($this->previous)): ?>
         	<?php $params['page'] = $this->previous; ?>
-              <a href="<?php echo  $this->url($params); ?>">&lt; Previous</a> |
+              <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/left.png"></a> 
         <?php else: ?>
-            <span class="disabled">&lt; Previous</span> |
+            <div class="disabled"><img src="/img/pager_blue/left.png"></div> 
         <?php endif; ?>
         <!-- Numbered page links -->
         <?php foreach ($this->pagesInRange as $page): ?>
             <?php if ($page != $this->current): ?>
             	<?php $params['page'] = $page;?>
-                <a href="<?php echo  $this->url($params); ?>"><?php echo  $page; ?></a>
+                <a href="<?php echo  $this->url($params); ?>" > <div class="page"><?php echo  $page; ?></div></a>
             <?php else: ?>
-                <?php echo  $page; ?>
+                <div class="page_active"><?php echo  $page; ?></div>
             <?php endif; ?>
         <?php endforeach; ?>
         <!-- Next page link -->
         <?php if (isset($this->next)): ?>
         		<?php $params['page'] = $this->next; ?>
-              | <a href="<?php echo  $this->url($params); ?>">Next &gt;</a> |
+               <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/right.png"></a> 
         <?php else: ?>
-            | <span class="disabled">Next &gt;</span> |
+            <div class="disabled"><img src="/img/pager_blue/right.png"></div> 
         <?php endif; ?>
         <!-- Last page link -->
         <?php if (isset($this->next)): ?>
         	  <?php $params['page'] = $this->last; ?>
-              <a href="<?php echo  $this->url($params); ?>">End</a>
+              <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/end.png"></a>
         <?php else: ?>
-            <span class="disabled">End</span>
+            <div class="disabled"><img src="/img/pager_blue/end.png"></div>
         <?php endif; ?>
-        &nbsp; Page <?php echo  $this->current; ?> of <?php echo  $this->last; ?>
+            <div class="pager_total">    
+                &nbsp; Страница <?php echo  $this->current; ?> из <?php echo  $this->last; ?>
+            </div>
     </div>
  </div>
 
