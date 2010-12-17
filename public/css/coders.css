@@ -36,9 +36,7 @@ ul.errors li {
 	color: #676465;
 	text-decoration: none;	
 }
-
-.page {
-	background:url(/img/pager_blue/page.png) no-repeat;
+.page {	background:url(/img/pager_blue/page.png) no-repeat;
 	float: left;
 	width: 24px;
 	height: 24px;
@@ -69,3 +67,15 @@ ul.errors li {
 	color:blue;
 	padding-top: 4px;
 }
+.photo {
+	width: auto;
+	float: left;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.cont_inner p {
+    padding-bottom: 0px;
+    padding-left: 10px;	
+	
+}	
