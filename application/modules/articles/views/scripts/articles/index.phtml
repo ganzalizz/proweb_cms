@@ -1,20 +1,35 @@
-<?if(count($this->articles)) {?>
 <div class="cont_inner news">
-        <?foreach($this->articles as $article) {?>
-   <div class="item">
-        <b class="date"><i><?=$this->dateFromDb($article['created_at']);?></i></b>
-        <? //if($new['small_img']){?>
-           <!-- <div class="photo"><a href="/newslist/item/<?//=$new['id']?>"><img src="/pics/news/<?//=$new['small_img']?>" alt="" /></a></div> -->
-        <?//}?>
-        <a href="<?php echo $this->url(array('page' =>1)); ?>"><?=$article['name']?></a>
-        <h3><a href="/articleslist/item/<?=$article['id']?>" class="head_news"><?=$article['name']?></a></h3>
-            <p><?=$article['intro']?>&nbsp;<a href="/articleslist/item/<?=$article['id']?>">читать...</a></p>
-            
-        </div>
+	
+	<?php echo $this->page->content?>
+
+<?if(count($this->articles)) {?>
+
+        <?foreach($this->articles as $item) {?>
+   <div class="item overflow">
+       <b class="date"><i><?php echo $item->date?></i></b>
+        <h3><a href="/articlesitem/item/<?=$item->url?>" class="head_articles"><?=$item->name?></a></h3>
+        <? if($item->small_img!=''){?>
+            <div class="photo">
+            	<a href="/articlesitem/item/<?php echo $item->url?>">
+            		<img src="/pics/articles/thumbs/<?php echo $item->small_img?>" alt="<?php echo $item->name?>" />
+            	</a>
+            </div> 
+        <?}?> 
+                
+       <?=$item->teaser?>            
+           
+    </div>
    
   <?}?>
  
-</div><?}?>
 
-<?php echo $this->paginator ?>
+</div>
+<?php } ?>
+<?php if ($this->paginator->count() > 1) { ?>
+	<?php echo $this->paginator ?>
+ <?}?>
+
+
+
+
 

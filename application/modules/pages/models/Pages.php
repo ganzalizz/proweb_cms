@@ -119,7 +119,7 @@ class Pages extends Zend_Db_Table {
 	public function getPage($id, $order = null) {
 		$select = $this->select()
 			->where('is_active = ?', 1)
-			->where('id = ?', $id);
+			->where('id = ?', (int)$id);
 			if ($order!=null){
 				$select->order($order);
 			}

@@ -12,7 +12,7 @@
         	<?php $params['page'] = $this->first; ?>
               <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/first.png"></a> 
         <?php else: ?>
-                <div class="disabled"><img src="/img/pager_blue/first.png"></div> 
+                <div class="disabled"><img src="/img/pager_blue/first_off.png"></div> 
         <?php endif; ?>
     
         <!-- Previous page link -->
@@ -21,13 +21,15 @@
         	<?php $params['page'] = $this->previous; ?>
               <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/left.png"></a> 
         <?php else: ?>
-            <div class="disabled"><img src="/img/pager_blue/left.png"></div> 
+            <div class="disabled"><img src="/img/pager_blue/left_off.png"></div> 
         <?php endif; ?>
         <!-- Numbered page links -->
         <?php foreach ($this->pagesInRange as $page): ?>
             <?php if ($page != $this->current): ?>
             	<?php $params['page'] = $page;?>
-                <a href="<?php echo  $this->url($params); ?>" > <div class="page"><?php echo  $page; ?></div></a>
+                <a href="<?php echo  $this->url($params); ?>" >
+                	<div class="page"><?php echo  $page; ?></div>
+                </a>	
             <?php else: ?>
                 <div class="page_active"><?php echo  $page; ?></div>
             <?php endif; ?>
@@ -37,14 +39,14 @@
         		<?php $params['page'] = $this->next; ?>
                <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/right.png"></a> 
         <?php else: ?>
-            <div class="disabled"><img src="/img/pager_blue/right.png"></div> 
+            <div class="disabled"><img src="/img/pager_blue/right_off.png"></div> 
         <?php endif; ?>
         <!-- Last page link -->
         <?php if (isset($this->next)): ?>
         	  <?php $params['page'] = $this->last; ?>
-              <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/end.png"></a>
+              <a href="<?php echo  $this->url($params); ?>"><img src="/img/pager_blue/last.png"></a>
         <?php else: ?>
-            <div class="disabled"><img src="/img/pager_blue/end.png"></div>
+            <div class="disabled"><img src="/img/pager_blue/last_off.png"></div>
         <?php endif; ?>
             <div class="pager_total">    
                 &nbsp; Страница <?php echo  $this->current; ?> из <?php echo  $this->last; ?>

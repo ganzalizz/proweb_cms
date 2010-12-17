@@ -1,13 +1,6 @@
 routes: 
   routes: 
-    new: 
-      type: Zend_Controller_Router_Route
-      route: 404
-      default: 
-        module: pages
-        controller: pages
-        action: error
-    admin: 
+    Default: 
       type: Zend_Controller_Router_Route
       route: :module/:lang/:controller/:action/*
       defaults: 
@@ -15,6 +8,13 @@ routes:
         lang: ru
         controller: index
         action: index
+    error: 
+      type: Zend_Controller_Router_Route
+      route: 404
+      defaults: 
+        module: pages
+        controller: index
+        action: page
     login: 
       type: Zend_Controller_Router_Route
       route: admin/login/*
@@ -273,7 +273,7 @@ routes:
         id: 1076
     articlesitem: 
       type: Zend_Controller_Router_Route
-      route: articlesitemt/*
+      route: articlesitem/*
       defaults: 
         module: articles
         controller: articles
@@ -297,7 +297,7 @@ routes:
         id: 1075
     newslist: 
       type: Zend_Controller_Router_Route
-      route: newslist
+      route: newslist/*
       defaults: 
         module: news
         controller: news
@@ -335,3 +335,11 @@ routes:
         controller: contacts
         action: index
         id: 849
+    articleslist: 
+      type: Zend_Controller_Router_Route
+      route: articleslist
+      defaults: 
+        module: articles
+        controller: articles
+        action: index
+        id: 1076
