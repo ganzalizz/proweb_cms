@@ -12,6 +12,7 @@ class Pages_Admin_PagesController extends MainAdminController {
     public function init() {
         $lang = $this->_getParam('lang', 'ru');
         $this->view->currentModule = $this->_curModule = SP.'pages'.SP.$lang.SP.$this->getRequest()->getControllerName();
+        
 
     }
 
