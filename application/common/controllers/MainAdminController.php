@@ -3,15 +3,19 @@
 //require_once('Zend/Controller/Action.php');
 
 abstract class MainAdminController extends Zend_Controller_Action {
+    
     public function __call($method, $args) {
 
     }
-
-    /**
+    
+    
+    
+   /**
      * Все страницы  админки кроме формы авторизации проходят этот метод
      *
      */
     public function preDispatch() {
+        Security::getInstance()->init();
         $this->initView();
         $this->view->strictVars(false);
         $this->view->addScriptPath(DIR_LAYOUTS) ;

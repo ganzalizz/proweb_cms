@@ -74,6 +74,8 @@ class Security {
        /* if(!$this->_user || !isset($this->_user->role))     
             $this->_user = (object)array('username' => ROLE_GUEST, 'role' => ROLE_GUEST);
 		*/
+        //echo var_dump($this->_auth);
+       // echo var_dump($this->_auth);
     	return $this->_auth->getStorage()->read();
        // return $this->_user;
     }
@@ -407,7 +409,9 @@ class Security {
     }
 
     private function initAuthAdapter() {
-        $this->_authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Registry::get('db'));
+        
+        
+        $this->_authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter());
         $this->_authAdapter->setTableName('users');
         $this->_authAdapter->setIdentityColumn('username');
         $this->_authAdapter->setCredentialColumn('password');
@@ -418,6 +422,7 @@ class Security {
 
     private function initAuth() {
         $this->_auth = Zend_Auth::getInstance();
+       // echo var_dump($this->_auth);
         $this->_auth->setStorage(new Zend_Auth_Storage_Session('backend'));
         //$this->_user = (object)array('username' => ROLE_GUEST, 'role' => ROLE_GUEST);
 //			Zend_Registry::set('auth', $this->_auth);

@@ -86,7 +86,7 @@ class Configurator {
      * @return unknown
      */
     public static function getConfig($blockName) {
-        $file_name =DIR_APPLICATION . 'configuration/configuration.ini';
+        $file_name = APPLICATION_PATH . '/configuration/configuration.ini';
         return new Zend_Config_Ini($file_name, $blockName);
     }
 
@@ -106,7 +106,7 @@ class Configurator {
      * @return object
      */
     public static function getRoute($name) {
-        return  new Zend_Config_Yaml(DIR_APPLICATION . 'configuration/routes.yml', $name);
+        return  new Zend_Config_Yaml(APPLICATION_PATH . '/configuration/routes.yml', $name);
         //print_r($config->toArray());
     }
 

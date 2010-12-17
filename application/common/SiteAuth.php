@@ -297,7 +297,7 @@ class SiteAuth {
     }
 
     private function initAuthAdapter() {
-        $this->_authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Registry::get('db'));
+        $this->_authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter());
         $this->_authAdapter->setTableName($this->_users_table);
         $this->_authAdapter->setIdentityColumn($this->_Identity);
         $this->_authAdapter->setCredentialColumn($this->_Credential);
