@@ -37,6 +37,7 @@ class Templates_Admin_TemplatesController extends MainAdminController
             require_once 'TemplatesInstall.php';
             $install = new TemplatesInstall('templates');
             $install->Install();
+            $this->_redirect("/admin/ru/modules");
         }
         
         public function uninstallAction()
@@ -44,5 +45,6 @@ class Templates_Admin_TemplatesController extends MainAdminController
             require_once 'TemplatesInstall.php';
 	    $install = new TemplatesInstall('templates');
 	    $install->Uninstall();
+            $this->_redirect("/admin/ru/modules");
         }
 }

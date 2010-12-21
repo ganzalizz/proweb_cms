@@ -47,14 +47,8 @@ abstract class Ext_Common_InstallModuleAbstract
         $this->_moduleName = $this->_module_config->module->sys->name;
         $this->_module_tableName = $this->_module_config->module->table->name;
         
-        $config_db = new Zend_Config_Ini($this->_module_config->main->config->path.'configuration.ini', 'db');
-                
-        $this->_db = new Zend_Db_Adapter_Pdo_Mysql(array(
-            'host' => $config_db->db->config->host,
-            'username' => $config_db->db->config->username,
-            'password' => $config_db->db->config->password,
-            'dbname' => $config_db->db->config->dbname,
-            'charset' => 'utf8'));
+        $this->_db = Zend_Db_Table::getDefaultAdapter();        
+
         
     }
     

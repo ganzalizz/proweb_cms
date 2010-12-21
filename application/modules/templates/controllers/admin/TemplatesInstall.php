@@ -6,7 +6,7 @@
  */
 
 
-require_once APPLICATION_PATH.'/library/Ext/Common/InstallModuleAbstract.php';
+require_once APPLICATION_PATH.'/../library/Ext/Common/InstallModuleAbstract.php';
 
 class TemplatesInstall extends Ext_Common_InstallModuleAbstract
 {
@@ -33,7 +33,7 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
         $create_table = "CREATE TABLE IF NOT EXISTS ".$this->_module_tableName."(
                                           id int(11) unsigned NOT NULL AUTO_INCREMENT,
                                           title varchar(255) NOT NULL,
-                                          describe text NOT NULL,
+                                          describe_template text NOT NULL,
                                           price int(11) unsigned NOT NULL DEFAULT '100',
                                           template_image varchar(255) NOT NULL,
                                           is_active tinyint(1) NOT NULL DEFAULT '1',
@@ -122,7 +122,7 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
        $route_config = new Zend_Config_Yaml($this->_module_config->main->config->path.'routes.yml',null,
                               array('skipExtends'        => true,
                                     'allowModifications' => true));
-       $route_config->__unset($this->_module_sys_Name.'item');
+       $route_config->routes->routes->__unset($this->_module_sys_Name.'item');
        
        $writer = new Zend_Config_Writer_Yaml();
                 $writer->setFilename($this->_module_config->main->config->path.'routes.yml');

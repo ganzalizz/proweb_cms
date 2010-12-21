@@ -63,7 +63,7 @@ class Router
         {
 		                 
           $config = new Zend_Config_Yaml($this->_routeFileName, null, true);
-          $config->__unset($name);
+          $config->routes->routes->__unset($name);
          
           $writer = new Zend_Config_Writer_Yaml();
           $writer->setFilename($this->_routeFileName);
@@ -96,7 +96,7 @@ class Router
                 $config = new Zend_Config_Yaml($this->_routeFileName, null, true);
                                 
 		$config->routes->routes->$route_name->type = "Zend_Controller_Router_Route";
-                $config->routes->routes->$route_name->route = $route_name;
+                $config->routes->routes->$route_name->route = $route_name.'/*';
                 $config->routes->routes->$route_name->defaults->module = $module;                
                 $config->routes->routes->$route_name->defaults->controller = $controller;
                 $config->routes->routes->$route_name->defaults->action = $action;

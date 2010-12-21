@@ -96,7 +96,7 @@ class Configurator {
      * @return string
      */
     public static function getConfigFileName() {
-        return DIR_APPLICATION . 'configuration/configuration.ini';
+        return APPLICATION_PATH . '/configuration/configuration.ini';
     }
 
     /**

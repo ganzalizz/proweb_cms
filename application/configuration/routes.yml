@@ -335,3 +335,11 @@ routes:
         controller: contacts
         action: index
         id: 849
+    templatesitem: 
+      type: Zend_Controller_Router_Route
+      route: templatesitem
+      defaults: 
+        module: templates
+        controller: templates
+        action: templatesitem
+        id: 

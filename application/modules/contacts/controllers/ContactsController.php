@@ -37,18 +37,18 @@ class Contacts_ContactsController extends Zend_Controller_Action
     {
         $form = new Form_FormContacts();
         
-      //  if ($this->_request->isPost())
-       // {
-           // if ($form->isValid($form->getValues()))
-           // {         
-            $mail = new Ext_Common_Mail();
-            $mail->setMailBodyType('text');
-            $mail->SendMail('yura@ladoni.by',
+        if ($this->_request->isPost())
+       {
+          if ($form->isValid($form->getValues()))
+            {         
+             $mail = new Ext_Common_Mail();
+             $mail->setMailBodyType('text');
+             $mail->SendMail('yura@ladoni.by',
                             $form->getValue('message'),
                             $form->getValue('subject'), 
                             $form->getValue('name'));
-           // }
-       // }
+            }
+        }
         
         $this->view->form = $form;
     }
