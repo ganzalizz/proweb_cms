@@ -343,3 +343,19 @@ routes:
         controller: articles
         action: index
         id: 1076
+    podderzhka_sajta: 
+      type: Zend_Controller_Router_Route
+      route: podderzhka_sajta
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 1080
+    path: 
+      type: Zend_Controller_Router_Route
+      route: path
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 1084

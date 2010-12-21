@@ -1,34 +1,8 @@
 AddDefaultCharset utf-8
 SetEnv APPLICATION_ENV development
 
-
-
-RewriteCond %{REQUEST_URI} ^/kcaptcha
-RewriteRule ^(.*)$ $1 [L]
-
-RewriteCond %{REQUEST_URI} !^/kcaptcha
-RewriteRule ^kcaptcha/(.*)$ kcaptcha/$1 [L]
-
-RewriteCond %{REQUEST_URI} ^/fckeditor
-RewriteRule ^(.*)$ $1 [L]
-
-RewriteCond %{REQUEST_URI} ^/forum
-RewriteRule ^(.*)$ $1 [L]
-
-RewriteCond %{REQUEST_URI} !^/fckeditor
-RewriteRule ^fckeditor/(.*)$ fckeditor/$1 [L]
-
-RewriteCond %{REQUEST_URI} ^/extjs
-RewriteRule ^(.*)$ $1 [L]
-
-RewriteCond %{REQUEST_URI} ^/openx
-RewriteRule ^(.*)$ $1 [L]
-
-RewriteCond %{REQUEST_URI} !^/extjs
-RewriteRule ^extjs/(.*)$ extjs/$1 [L]
-
-
 RewriteEngine on
+
 RewriteRule !\.(js|ico|gif|jpg|jpeg|png|css|json|swf|xls|doc|rar|zip|pdf|txt|xml|php)$ index.php [L]
 
 php_flag magic_quotes_gpc off
