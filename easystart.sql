@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.3
+-- version 3.2.4
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Дек 06 2010 г., 18:08
--- Версия сервера: 5.0.45
--- Версия PHP: 5.2.4
+-- Время создания: Дек 21 2010 г., 17:18
+-- Версия сервера: 5.1.41
+-- Версия PHP: 5.3.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -27,10 +27,10 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `title` varchar(255) collate utf8_unicode_ci NOT NULL,
-  PRIMARY KEY  (`id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
 
 --
@@ -49,31 +49,34 @@ INSERT INTO `roles` (`id`, `name`, `title`) VALUES
 
 DROP TABLE IF EXISTS `site_articles`;
 CREATE TABLE IF NOT EXISTS `site_articles` (
-  `id` int(11) unsigned NOT NULL auto_increment,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(150) NOT NULL DEFAULT '',
   `name` varchar(255) NOT NULL,
-  `link` varchar(255) default NULL,
+  `link` varchar(255) DEFAULT NULL,
   `teaser` varchar(1000) NOT NULL,
   `content` text NOT NULL,
-  `date_news` datetime NOT NULL,
-  `author` varchar(150) NOT NULL default 'Администратор',
+  `date` datetime NOT NULL,
+  `author` varchar(150) NOT NULL DEFAULT 'Администратор',
   `created_at` date NOT NULL,
-  `is_active` tinyint(1) NOT NULL default '0',
-  `is_main` tinyint(1) NOT NULL default '0',
-  `is_hot` tinyint(1) NOT NULL default '0',
-  `lighting` tinyint(1) unsigned NOT NULL default '0',
-  `count_views` int(11) unsigned NOT NULL default '0',
-  `seo_title` varchar(150) NOT NULL default 'Title',
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `is_main` tinyint(1) NOT NULL DEFAULT '0',
+  `is_hot` tinyint(1) NOT NULL DEFAULT '0',
+  `lighting` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `count_views` int(11) unsigned NOT NULL DEFAULT '0',
+  `seo_title` varchar(150) NOT NULL DEFAULT 'Title',
   `seo_descriptions` varchar(300) NOT NULL,
   `seo_keywords` varchar(500) NOT NULL,
-  `small_img` varchar(255) default NULL,
-  `big_img` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `small_img` varchar(255) DEFAULT NULL,
+  `big_img` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Дамп данных таблицы `site_articles`
 --
 
+INSERT INTO `site_articles` (`id`, `url`, `name`, `link`, `teaser`, `content`, `date`, `author`, `created_at`, `is_active`, `is_main`, `is_hot`, `lighting`, `count_views`, `seo_title`, `seo_descriptions`, `seo_keywords`, `small_img`, `big_img`) VALUES
+(1, 'article', 'Статья тестовая', '', '<p>\r\n	Suspendisse vulputate enim sed velit vehicula at tincidunt mauris placerat. Proin nec libero vel velit ultrices cursus ut feugiat neque. Vestibulum felis augue, viverra non venenatis varius, convallis vel odio. Duis egestas, ligula at viverra vulputate, quam metus tristique nulla, nec rutrum sem velit vel lectus. Nullam tincidunt mi eget tellus congue sodales. Etiam viverra purus ut nisl fermentum fringilla. Donec consequat, augue ut vulputate mattis, nisi mi adipiscing odio, id dapibus eros erat ac erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus placerat massa neque. Nam id felis magna. Morbi pellentesque aliquam felis quis ultrices. Pellentesque fringilla lacus eget orci bibendum fringilla.</p>', '<p>\r\n	Suspendisse vulputate enim sed velit vehicula at tincidunt mauris placerat. Proin nec libero vel velit ultrices cursus ut feugiat neque. Vestibulum felis augue, viverra non venenatis varius, convallis vel odio. Duis egestas, ligula at viverra vulputate, quam metus tristique nulla, nec rutrum sem velit vel lectus. Nullam tincidunt mi eget tellus congue sodales. Etiam viverra purus ut nisl fermentum fringilla. Donec consequat, augue ut vulputate mattis, nisi mi adipiscing odio, id dapibus eros erat ac erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus placerat massa neque. Nam id felis magna. Morbi pellentesque aliquam felis quis ultrices. Pellentesque fringilla lacus eget orci bibendum fringilla.</p>\r\n<p>\r\n	Suspendisse vulputate enim sed velit vehicula at tincidunt mauris placerat. Proin nec libero vel velit ultrices cursus ut feugiat neque. Vestibulum felis augue, viverra non venenatis varius, convallis vel odio. Duis egestas, ligula at viverra vulputate, quam metus tristique nulla, nec rutrum sem velit vel lectus. Nullam tincidunt mi eget tellus congue sodales. Etiam viverra purus ut nisl fermentum fringilla. Donec consequat, augue ut vulputate mattis, nisi mi adipiscing odio, id dapibus eros erat ac erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus placerat massa neque. Nam id felis magna. Morbi pellentesque aliquam felis quis ultrices. Pellentesque fringilla lacus eget orci bibendum fringilla.</p>\r\n<p>\r\n	<img alt="" src="/pics/images/hot_1.png" style="width: 16px; height: 16px;" /></p>', '2010-12-15 00:00:00', 'author', '2010-12-15', 1, 1, 1, 2, 11, 'seo_title', 'seo_descriptions', 'seo_keywords', '1_pejo_308.jpg', '1_pejo_308_3.jpg');
 
 -- --------------------------------------------------------
 
@@ -83,14 +86,14 @@ CREATE TABLE IF NOT EXISTS `site_articles` (
 
 DROP TABLE IF EXISTS `site_blocks`;
 CREATE TABLE IF NOT EXISTS `site_blocks` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `system_name` varchar(255) NOT NULL,
-  `title` varchar(255) default NULL,
-  `type` varchar(50) default NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
   `content` text,
-  `priority` int(5) default '500',
-  `active` tinyint(1) default '0',
-  PRIMARY KEY  (`id`),
+  `priority` int(5) DEFAULT '500',
+  `active` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
   UNIQUE KEY `system_name` (`system_name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=183 ;
 
@@ -119,20 +122,20 @@ INSERT INTO `site_blocks` (`id`, `system_name`, `title`, `type`, `content`, `pri
 
 DROP TABLE IF EXISTS `site_catalog_division`;
 CREATE TABLE IF NOT EXISTS `site_catalog_division` (
-  `id` int(11) unsigned NOT NULL auto_increment,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_page` int(11) unsigned NOT NULL,
-  `parent_id` int(10) NOT NULL default '0',
-  `level` tinyint(3) unsigned default '0',
-  `products_count` int(11) NOT NULL default '0',
-  `sortid` int(5) unsigned default '0',
+  `parent_id` int(10) NOT NULL DEFAULT '0',
+  `level` tinyint(3) unsigned DEFAULT '0',
+  `products_count` int(11) NOT NULL DEFAULT '0',
+  `sortid` int(5) unsigned DEFAULT '0',
   `name` varchar(255) NOT NULL,
   `intro` text,
   `description` text,
-  `img` varchar(255) default NULL,
-  `seo_title` varchar(255) default NULL,
+  `img` varchar(255) DEFAULT NULL,
+  `seo_title` varchar(255) DEFAULT NULL,
   `seo_description` tinytext,
   `seo_keywords` tinytext,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY (`id`),
   KEY `level` (`level`),
   KEY `sortid` (`sortid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='таблица разделов товаров' AUTO_INCREMENT=174 ;
@@ -162,32 +165,32 @@ INSERT INTO `site_catalog_division` (`id`, `id_page`, `parent_id`, `level`, `pro
 
 DROP TABLE IF EXISTS `site_catalog_orders`;
 CREATE TABLE IF NOT EXISTS `site_catalog_orders` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `id_user` int(11) unsigned default '0',
-  `id_manager` int(11) unsigned default '0',
-  `status` tinyint(3) unsigned default '0',
-  `restoran_num` tinyint(2) default '0',
-  `price` int(5) default '0',
-  `title` varchar(255) default '',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_user` int(11) unsigned DEFAULT '0',
+  `id_manager` int(11) unsigned DEFAULT '0',
+  `status` tinyint(3) unsigned DEFAULT '0',
+  `restoran_num` tinyint(2) DEFAULT '0',
+  `price` int(5) DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
   `content` text,
-  `added_time` datetime default '0000-00-00 00:00:00' COMMENT 'заказ упал в базу',
-  `processed_time` datetime default '0000-00-00 00:00:00' COMMENT 'заказ обработан менеджером',
-  `completed_time` datetime default '0000-00-00 00:00:00' COMMENT 'заказ готов, отправлен заказчику',
-  `edited_time` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'время последнего изменения заказа',
-  `user_name` varchar(255) default '',
+  `added_time` datetime DEFAULT '0000-00-00 00:00:00' COMMENT 'заказ упал в базу',
+  `processed_time` datetime DEFAULT '0000-00-00 00:00:00' COMMENT 'заказ обработан менеджером',
+  `completed_time` datetime DEFAULT '0000-00-00 00:00:00' COMMENT 'заказ готов, отправлен заказчику',
+  `edited_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'время последнего изменения заказа',
+  `user_name` varchar(255) DEFAULT '',
   `user_street` tinytext,
-  `user_house` varchar(255) character set utf8 collate utf8_unicode_ci default NULL,
-  `user_house_block` varchar(255) character set utf8 collate utf8_unicode_ci default NULL,
-  `user_flat` varchar(255) character set utf8 collate utf8_unicode_ci default NULL,
-  `user_phone` varchar(255) default '',
-  `user_email` varchar(255) default '',
+  `user_house` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_house_block` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_flat` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_phone` varchar(255) DEFAULT '',
+  `user_email` varchar(255) DEFAULT '',
   `cook_comment` text COMMENT 'коментарий поверу',
   `courier_comment` text COMMENT 'коментарий курьеру',
   `manager_comment` text COMMENT 'комент менеджера, добавляется через админку',
-  `discount` int(10) unsigned default '0' COMMENT 'скидка клиента',
-  `comment_title` varchar(255) default NULL,
+  `discount` int(10) unsigned DEFAULT '0' COMMENT 'скидка клиента',
+  `comment_title` varchar(255) DEFAULT NULL,
   `comment_text` text,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=258 ;
 
 --
@@ -229,20 +232,20 @@ INSERT INTO `site_catalog_orders` (`id`, `id_user`, `id_manager`, `status`, `res
 
 DROP TABLE IF EXISTS `site_catalog_product`;
 CREATE TABLE IF NOT EXISTS `site_catalog_product` (
-  `id` int(11) unsigned NOT NULL auto_increment,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `id_division` int(11) NOT NULL,
-  `priority` int(5) default '0',
-  `active` tinyint(1) default '0',
-  `title` varchar(255) NOT NULL default '',
-  `price` float default NULL,
+  `priority` int(5) DEFAULT '0',
+  `active` tinyint(1) DEFAULT '0',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `price` float DEFAULT NULL,
   `intro` text NOT NULL,
   `description` text,
-  `is_new` int(1) default '0',
-  `popular` smallint(1) NOT NULL default '0',
-  `seo_title` varchar(255) default '',
+  `is_new` int(1) DEFAULT '0',
+  `popular` smallint(1) NOT NULL DEFAULT '0',
+  `seo_title` varchar(255) DEFAULT '',
   `seo_keywords` tinytext,
   `seo_description` tinytext,
-  PRIMARY KEY  (`id`),
+  PRIMARY KEY (`id`),
   KEY `division_id` (`id_division`,`price`),
   KEY `prior` (`priority`),
   KEY `is_action` (`popular`),
@@ -271,14 +274,14 @@ INSERT INTO `site_catalog_product` (`id`, `id_division`, `priority`, `active`, `
 
 DROP TABLE IF EXISTS `site_catalog_product_default`;
 CREATE TABLE IF NOT EXISTS `site_catalog_product_default` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `title` varchar(255) default '',
-  `system_name` varchar(255) default '',
-  `active` tinyint(1) default '0',
-  `form_type` varchar(50) default 'input',
-  `default_value` varchar(255) default '',
-  `priority` int(5) default '500',
-  PRIMARY KEY  (`id`)
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT '',
+  `system_name` varchar(255) DEFAULT '',
+  `active` tinyint(1) DEFAULT '0',
+  `form_type` varchar(50) DEFAULT 'input',
+  `default_value` varchar(255) DEFAULT '',
+  `priority` int(5) DEFAULT '500',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=94 ;
 
 --
@@ -296,11 +299,11 @@ INSERT INTO `site_catalog_product_default` (`id`, `title`, `system_name`, `activ
 
 DROP TABLE IF EXISTS `site_catalog_product_default_values`;
 CREATE TABLE IF NOT EXISTS `site_catalog_product_default_values` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `id_default` int(11) default '0',
-  `id_product` int(11) default '0',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_default` int(11) DEFAULT '0',
+  `id_product` int(11) DEFAULT '0',
   `value` text,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=374 ;
 
 --
@@ -325,14 +328,14 @@ INSERT INTO `site_catalog_product_default_values` (`id`, `id_default`, `id_produ
 
 DROP TABLE IF EXISTS `site_catalog_product_images`;
 CREATE TABLE IF NOT EXISTS `site_catalog_product_images` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `id_product` int(11) default '0',
-  `priority` int(5) default '0',
-  `active` int(1) default '1',
-  `main` int(1) default '0',
-  `title` varchar(255) character set cp1251 default '',
-  `img` varchar(255) character set cp1251 default NULL,
-  PRIMARY KEY  (`id`)
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) DEFAULT '0',
+  `priority` int(5) DEFAULT '0',
+  `active` int(1) DEFAULT '1',
+  `main` int(1) DEFAULT '0',
+  `title` varchar(255) CHARACTER SET cp1251 DEFAULT '',
+  `img` varchar(255) CHARACTER SET cp1251 DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=144 ;
 
 --
@@ -365,9 +368,9 @@ INSERT INTO `site_catalog_product_images` (`id`, `id_product`, `priority`, `acti
 
 DROP TABLE IF EXISTS `site_catalog_product_options`;
 CREATE TABLE IF NOT EXISTS `site_catalog_product_options` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `title` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`id`)
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=74 ;
 
 --
@@ -387,14 +390,14 @@ INSERT INTO `site_catalog_product_options` (`id`, `title`) VALUES
 
 DROP TABLE IF EXISTS `site_catalog_product_options_enabled`;
 CREATE TABLE IF NOT EXISTS `site_catalog_product_options_enabled` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `priority` int(11) unsigned default '0',
-  `priority_site` int(11) unsigned default '0',
-  `id_option` int(11) unsigned default '0',
-  `id_product` int(11) unsigned default '0',
-  `required` tinyint(1) unsigned default '0',
-  `type` varchar(50) default '',
-  PRIMARY KEY  (`id`),
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `priority` int(11) unsigned DEFAULT '0',
+  `priority_site` int(11) unsigned DEFAULT '0',
+  `id_option` int(11) unsigned DEFAULT '0',
+  `id_product` int(11) unsigned DEFAULT '0',
+  `required` tinyint(1) unsigned DEFAULT '0',
+  `type` varchar(50) DEFAULT '',
+  PRIMARY KEY (`id`),
   KEY `id_option` (`id_option`),
   KEY `id_product` (`id_product`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=94 ;
@@ -421,12 +424,12 @@ INSERT INTO `site_catalog_product_options_enabled` (`id`, `priority`, `priority_
 
 DROP TABLE IF EXISTS `site_catalog_product_options_prices`;
 CREATE TABLE IF NOT EXISTS `site_catalog_product_options_prices` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `id_product` int(11) unsigned default '0',
-  `id_option` int(11) unsigned default '0',
-  `id_value` int(11) unsigned default '0',
-  `price` int(11) default '0',
-  PRIMARY KEY  (`id`)
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_product` int(11) unsigned DEFAULT '0',
+  `id_option` int(11) unsigned DEFAULT '0',
+  `id_value` int(11) unsigned DEFAULT '0',
+  `price` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=184 ;
 
 --
@@ -454,15 +457,15 @@ INSERT INTO `site_catalog_product_options_prices` (`id`, `id_product`, `id_optio
 
 DROP TABLE IF EXISTS `site_catalog_product_options_values`;
 CREATE TABLE IF NOT EXISTS `site_catalog_product_options_values` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `priority` int(11) unsigned default '0',
-  `id_product` int(11) unsigned default '0',
-  `id_option` int(11) unsigned default '0',
-  `title` varchar(255) default '',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `priority` int(11) unsigned DEFAULT '0',
+  `id_product` int(11) unsigned DEFAULT '0',
+  `id_option` int(11) unsigned DEFAULT '0',
+  `title` varchar(255) DEFAULT '',
   `description` tinytext,
-  `active` tinyint(1) unsigned default '0',
-  `default` tinyint(1) unsigned default '0',
-  PRIMARY KEY  (`id`)
+  `active` tinyint(1) unsigned DEFAULT '0',
+  `default` tinyint(1) unsigned DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=184 ;
 
 --
@@ -490,25 +493,25 @@ INSERT INTO `site_catalog_product_options_values` (`id`, `priority`, `id_product
 
 DROP TABLE IF EXISTS `site_companies`;
 CREATE TABLE IF NOT EXISTS `site_companies` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `id_category` int(11) NOT NULL default '0',
-  `active` tinyint(1) NOT NULL default '0',
-  `priority` int(5) NOT NULL default '100',
-  `title` varchar(255) default '',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_category` int(11) NOT NULL DEFAULT '0',
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `priority` int(5) NOT NULL DEFAULT '100',
+  `title` varchar(255) DEFAULT '',
   `intro` text,
   `content` longtext,
-  `adress` varchar(255) default '',
-  `phone` varchar(255) default '',
-  `phone_alter` varchar(255) default '',
-  `email` varchar(100) default '',
-  `icq` varchar(50) default '',
-  `skype` varchar(50) default '',
-  `city` varchar(100) default '',
-  `country` varchar(100) default '',
-  `logo` varchar(255) default NULL,
-  `site` varchar(255) default '',
-  `added` datetime default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`id`)
+  `adress` varchar(255) DEFAULT '',
+  `phone` varchar(255) DEFAULT '',
+  `phone_alter` varchar(255) DEFAULT '',
+  `email` varchar(100) DEFAULT '',
+  `icq` varchar(50) DEFAULT '',
+  `skype` varchar(50) DEFAULT '',
+  `city` varchar(100) DEFAULT '',
+  `country` varchar(100) DEFAULT '',
+  `logo` varchar(255) DEFAULT NULL,
+  `site` varchar(255) DEFAULT '',
+  `added` datetime DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=144 ;
 
 --
@@ -535,63 +538,65 @@ INSERT INTO `site_companies` (`id`, `id_category`, `active`, `priority`, `title`
 
 DROP TABLE IF EXISTS `site_content`;
 CREATE TABLE IF NOT EXISTS `site_content` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `id_parent` int(11) unsigned default NULL,
-  `level` int(11) unsigned NOT NULL default '0',
-  `id_div_type` int(10) default '0',
-  `priority` int(11) NOT NULL default '0',
-  `is_active` int(1) unsigned default NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_parent` int(11) unsigned DEFAULT NULL,
+  `level` int(11) unsigned NOT NULL DEFAULT '0',
+  `id_div_type` int(10) DEFAULT '0',
+  `priority` int(11) NOT NULL DEFAULT '0',
+  `is_active` int(1) unsigned DEFAULT NULL,
+  `path` varchar(150) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `intro` text NOT NULL,
   `content` longtext NOT NULL,
-  `module` varchar(50) NOT NULL default '',
-  `allow_delete` tinyint(1) unsigned NOT NULL default '1',
-  `deleted` int(1) unsigned NOT NULL default '0',
-  `title` varchar(255) NOT NULL default '',
-  `path` text NOT NULL,
-  `show_in_sitemap` tinyint(1) unsigned NOT NULL default '1',
-  `show_childs` tinyint(1) unsigned NOT NULL default '0',
-  `img` varchar(255) default NULL,
-  PRIMARY KEY  (`id`),
+  `module` varchar(50) NOT NULL,
+  `allow_delete` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `deleted` int(1) unsigned NOT NULL DEFAULT '0',
+  `show_in_sitemap` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `show_childs` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `img` varchar(255) DEFAULT NULL,
+  `inside_items` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'переход в модуль',
+  PRIMARY KEY (`id`),
   KEY `show_childs` (`show_childs`),
   KEY `FK_site_content` (`id_parent`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1084 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 PACK_KEYS=0 AUTO_INCREMENT=1085 ;
 
 --
 -- Дамп данных таблицы `site_content`
 --
 
-INSERT INTO `site_content` (`id`, `id_parent`, `level`, `id_div_type`, `priority`, `is_active`, `intro`, `content`, `module`, `allow_delete`, `deleted`, `title`, `path`, `show_in_sitemap`, `show_childs`, `img`) VALUES
-(1, NULL, 0, 0, 0, 0, '', '', '', 1, 0, 'Pokushat', '', 1, 0, NULL),
-(844, 1, 1, 424, 1, 1, '<h1>Система управления сайтом (CMS)</h1>\r\n<p>Система позволяет легко и быстро создавать и редактировать страницы вашего сайта за считанные минуты. Многие сайты-визитки организаций порой работают на громоздких системах управления сайтом, которые стоили значительных вложений в их покупку и разработку шаблона сайта. С нашей CMS системой мы можем предложить Вам недорогой и рабочий проект сайта компании, ничуть не уступающий по быстроте работы и управляемости.</p>\r\n\r\n<h2>Основные возможности системы:</h2>\r\n<ul>\r\n  <li>Создание категорий и страниц для материалов сайта.</li>\r\n  <li>Генерация ЧПУ для страниц сайта с возможностю указать вручную имя ссылки на страницу.</li>\r\n  <li>Встроенный визуальный редактор для редактирования страниц.</li>\r\n  <li>Загрузка изображений, файлов на сайт с последующей вставкой в материал.</li>\r\n  <li>Возможность выводить ссылки в список меню.</li>\r\n  <li>Редактрирование HTML-кода шаблона прямо в админке.</li>\r\n  <li>Добавление новых модулей для сайта.</li>\r\n  <li>Страница обратной связи пользователей с вами.</li>\r\n</ul>\r\n<h2>Благодаря нашей системе Вы сможете получить дополнительные\r\nпреимущества работы Вашего сайта, а это:</h2>\r\n<ul>\r\n  <li>Сайт можно разместить даже на бесплатном хостинге с поддержкой только PHP.</li>\r\n  <li>Сайт создает небольшую нагрузку на сервер.</li>\r\n  <li>Сайт продолжает работать на сервере хостера даже если у него дает сбой сервис, обслуживающий базу данных.</li>\r\n  <li>Сайт легко перенести с одного сервера на другой при помощи простого копирования файлов.</li>\r\n  <li>Сайт очень быстро загружается.</li>\r\n</ul>', '<h1>Система управления сайтом (CMS)</h1>\r\n<p>Система позволяет легко и быстро создавать и редактировать страницы вашего сайта за считанные минуты. Многие сайты-визитки организаций порой работают на громоздких системах управления сайтом, которые стоили значительных вложений в их покупку и разработку шаблона сайта. С нашей CMS системой мы можем предложить Вам недорогой и рабочий проект сайта компании, ничуть не уступающий по быстроте работы и управляемости.</p>\r\n\r\n<h2>Основные возможности системы:</h2>\r\n<ul>\r\n  <li>Создание категорий и страниц для материалов сайта.</li>\r\n  <li>Генерация ЧПУ для страниц сайта с возможностю указать вручную имя ссылки на страницу.</li>\r\n  <li>Встроенный визуальный редактор для редактирования страниц.</li>\r\n  <li>Загрузка изображений, файлов на сайт с последующей вставкой в материал.</li>\r\n  <li>Возможность выводить ссылки в список меню.</li>\r\n  <li>Редактрирование HTML-кода шаблона прямо в админке.</li>\r\n  <li>Добавление новых модулей для сайта.</li>\r\n  <li>Страница обратной связи пользователей с вами.</li>\r\n</ul>\r\n<h2>Благодаря нашей системе Вы сможете получить дополнительные\r\nпреимущества работы Вашего сайта, а это:</h2>\r\n<ul>\r\n  <li>Сайт можно разместить даже на бесплатном хостинге с поддержкой только PHP.</li>\r\n  <li>Сайт создает небольшую нагрузку на сервер.</li>\r\n  <li>Сайт продолжает работать на сервере хостера даже если у него дает сбой сервис, обслуживающий базу данных.</li>\r\n  <li>Сайт легко перенести с одного сервера на другой при помощи простого копирования файлов.</li>\r\n  <li>Сайт очень быстро загружается.</li>\r\n</ul>', 'pages', 1, 0, 'Главная', '', 1, 1, NULL),
-(845, 1, 1, 2, 7, 1, '', '<p>Компания &quot;Catering Team&quot; - это динамично развивающаяся компания в сфере корпоративного питания Москвы и Московской области. Приоритетными направлениями работы нашей компании являются:</p>\r\n<ul>\r\n    <li>Организация таких видов корпоративного питания, как кафе, буфетов, столовых на предприятиях и последующее обслуживание.</li>\r\n    <li>Кейтеринг: ресторан выездного обслуживания, фуршеты, организация корпоративных мероприятий и частных торжеств, организация банкетов.</li>\r\n    <li>Мы имеем большой опыт организации как крупных мероприятий до нескольких тысяч участников, так и небольших корпоративных мероприятий и праздников!</li>\r\n</ul>\r\n<h3>Как мы работаем</h3>\r\n<p>Организация банкетов, организация фуршета, свадебных торжеств, ресторан выездного обслуживания. Кейтеринг. Наша компания возьмет на себя весь комплекс услуг по выездному обслуживанию: организация фуршета, проведение свадеб, семейных праздников, корпоративных мероприятий. Специалисты высшего класса помогут вам в подготовке праздника, выборе меню и музыки для вашего мероприятия. Сотрудничество с нашей компанией &ndash; прекрасная возможность отпраздновать значительное событие, произошедшее в личной жизни или связанное<img width="133" height="105" class="f_left" style="padding-right: 10px;" src="/img/test_img.jpg" alt="" /> с профессиональной деятельностью. Мы поможем, если вам необходимо, отпраздновать Новый год, Международный женский день, 9 мая или другую дату. У вас наверняка останется в памяти праздник, организованный нашей компанией. Стоимость банкета в ресторане компании Catering Team, цены на банкет в ресторане вам подскажут наши специалисты. У нас работают отличные официанты и повара, обладающие большим опытом ресторанного обслуживания, а так же шоумены, мастера декора и музыканты.</p>\r\n<p><img width="133" height="105" class="f_right" src="/img/test_img.jpg" alt="" /></p>\r\n<p>Будем рады видеть вас в новом ресторане города Москвы &laquo;Драфт&raquo;! Для вас разнообразное меню с конкурентными ценами. Повара высшего класса, внимательный и вежливый персонал. Лучший выбор отдыха в Москве ресторан &laquo;Драфт&raquo;!</p>', 'pages', 1, 0, 'О компании', 'about', 1, 1, NULL),
-(846, 1, 1, 426, 5, 1, '', '', 'pages', 1, 0, 'Новости', 'newslist', 1, 1, NULL),
-(847, 1, 1, 2, 11, 0, '', '', '', 1, 1, 'Меню', 'menu', 1, 1, NULL),
-(848, 1, 1, 2, 15, 0, '', '<p>developer@proweb.by</p>', 'pages', 1, 1, 'Услуги', 'service', 1, 1, NULL),
-(849, 1, 1, 443, 9, 1, '', '<div class="f_left width_480">\r\n<p>Компания &quot;Pokushat.by&quot; - это динамично развивающаяся компания в сфере корпоративного питания Минска.</p>\r\n<p class="pad_left_50">119270, Минск<br />\r\nпр. Скорины 100<br />\r\nТелефоны: +(37517) 288-66-88, +(37517) 288-66-88<br />\r\n<a href="mailto:sale@pokushat.by">sale@pokushat.by</a></p>\r\n<p>Резюме направляйте по адресу или по факсу:</p>\r\n<p class="pad_left_50"><a href="mailto:sale@figaro.ru ">sale@figaro.ru</a><br />\r\n+7 (495) 788-66-88<br />\r\nПредложения для отдела маркетинга, рекламы и PR направляйте по адресу:<br />\r\nVinogradovaTV@corpusgroup.ru<br />\r\nПожелания нашему ресторану направляйте по адресу:<br />\r\n<a href="mailto:wish@figaro.ru">wish@figaro.ru</a></p>\r\n</div>\r\n<div class="f_right width_310"><img height="240" width="299" src="/img/map.jpg" alt="" /></div>', 'pages', 1, 0, 'Контакты', 'contacts', 1, 0, NULL),
-(851, 1, 1, 425, 22, 1, '', '', 'pages', 1, 0, 'Карта сайта', 'sitemap', 0, 1, NULL),
-(853, 1, 1, 433, 23, 1, '', '', '', 1, 0, 'Поиск', 'search', 1, 1, NULL),
-(923, 1, 1, 493, 24, 1, '', '', 'pages', 1, 0, 'Кабинет пользователя', 'profile', 0, 0, NULL),
-(933, 923, 2, 453, 1, 1, '', '', 'pages', 1, 0, 'Регистрация', 'registration', 0, 0, NULL),
-(943, 923, 2, 463, 2, 1, '', '', 'pages', 1, 0, 'Авторизация пользователя', 'login', 0, 1, NULL),
-(953, 923, 2, 473, 3, 1, '', '', 'pages', 1, 0, 'Выход из авторизации', 'logout', 0, 1, NULL),
-(963, 923, 2, 483, 4, 1, '', '', 'pages', 1, 0, 'Восстановление пароля', 'rememberpassword', 0, 1, NULL),
-(973, 1, 1, 503, 25, 1, '', '<p>Phasellus nulla ante, commodo quis pulvinar consequat, tincidunt vel  tortor. Cras cursus quam quis tortor faucibus posuere. Nunc a nibh et  ipsum congue sodales. Phasellus mattis, odio a mollis varius, urna  turpis aliquam orci, nec volutpat sem dui ut nibh. Nunc eget fringilla  erat. Quisque volutpat auctor orci sit amet sagittis. Curabitur rutrum  tellus nec eros venenatis sodales. Donec bibendum dictum auctor.  Suspendisse a felis sapien, sed pretium elit. Aliquam a erat ante.  Aenean ut mi sed massa vulputate semper.</p>', 'pages', 1, 0, 'Каталог', 'katalog', 1, 1, NULL),
-(983, 1, 1, 2, 26, 0, '<p>test_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeee</p>', '<p>test_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeee</p>', '', 1, 1, 'test_eeeeeeeee', 'test_eeeeeeeee', 1, 1, NULL),
-(993, 973, 2, 513, 1, 1, '', '', 'pages', 1, 0, 'Корзина', 'cart', 1, 1, NULL),
-(1003, 847, 2, 2, 1, 0, '', '', '', 1, 1, 'под-меню', 'pod-menyu', 1, 1, NULL),
-(1013, 1, 1, 523, 26, 1, '', '', '', 1, 0, 'Конструктор', 'dishmake', 1, 1, NULL),
-(1033, 923, 2, 543, 5, 1, '', '', 'pages', 1, 0, 'Редактирование данных', 'editprofile', 0, 1, NULL),
-(1053, 923, 2, 553, 6, 1, '', '', '', 1, 0, 'История заказов', 'ordershistory', 1, 1, NULL),
-(1063, 923, 2, 563, 7, 1, '', '', '', 1, 0, 'Детализация заказа', 'orderdetails', 1, 1, NULL),
-(1075, 1, 1, 565, 2, 1, '', '', 'pages', 1, 0, 'Портфолио', 'portfoliolist', 1, 1, NULL),
-(1076, 1, 1, 564, 6, 1, '', '', 'pages', 1, 0, 'Статьи', 'articleslist', 1, 1, NULL),
-(1077, 1, 1, 566, 8, 1, '', '', 'pages', 1, 0, 'Отзывы', 'otzivyview', 1, 1, NULL),
-(1078, 1, 1, 2, 10, 1, '', '', 'pages', 1, 0, 'Сайт - легкий старт', 'legkij_start', 1, 1, NULL),
-(1079, 1, 1, 2, 17, 1, '', '', 'pages', 1, 0, 'CMS ', 'cms', 1, 1, NULL),
-(1080, 1, 1, 2, 18, 1, '', '', 'pages', 1, 0, 'Поддержка сайта', 'podderzhka_sajta', 1, 1, NULL),
-(1081, 1, 1, 2, 19, 1, '', '', 'pages', 1, 0, 'Продвижение сайта', 'prodvizhenie_sajta', 1, 1, NULL),
-(1082, 1, 1, 2, 20, 1, '', '', 'pages', 1, 0, 'Заказать сайт', 'zakazat_sajt', 1, 1, NULL),
-(1083, 1, 1, 2, 21, 1, '', '<p>dddddddddddddddddddddddddd dddddddddddddddd</p>', 'default', 1, 0, 'Вторая запись в Блоге', 'fufelok_fuflovy', 1, 1, NULL);
+INSERT INTO `site_content` (`id`, `id_parent`, `level`, `id_div_type`, `priority`, `is_active`, `path`, `title`, `intro`, `content`, `module`, `allow_delete`, `deleted`, `show_in_sitemap`, `show_childs`, `img`, `inside_items`) VALUES
+(1, NULL, 0, 0, 0, 0, '', 'Pokushat', '', '', '', 1, 0, 1, 0, NULL, 0),
+(844, 1, 1, 424, 1, 1, '', 'Главная', '<h1>Система управления сайтом (CMS)</h1>\r\n<p>Система позволяет легко и быстро создавать и редактировать страницы вашего сайта за считанные минуты. Многие сайты-визитки организаций порой работают на громоздких системах управления сайтом, которые стоили значительных вложений в их покупку и разработку шаблона сайта. С нашей CMS системой мы можем предложить Вам недорогой и рабочий проект сайта компании, ничуть не уступающий по быстроте работы и управляемости.</p>\r\n\r\n<h2>Основные возможности системы:</h2>\r\n<ul>\r\n  <li>Создание категорий и страниц для материалов сайта.</li>\r\n  <li>Генерация ЧПУ для страниц сайта с возможностю указать вручную имя ссылки на страницу.</li>\r\n  <li>Встроенный визуальный редактор для редактирования страниц.</li>\r\n  <li>Загрузка изображений, файлов на сайт с последующей вставкой в материал.</li>\r\n  <li>Возможность выводить ссылки в список меню.</li>\r\n  <li>Редактрирование HTML-кода шаблона прямо в админке.</li>\r\n  <li>Добавление новых модулей для сайта.</li>\r\n  <li>Страница обратной связи пользователей с вами.</li>\r\n</ul>\r\n<h2>Благодаря нашей системе Вы сможете получить дополнительные\r\nпреимущества работы Вашего сайта, а это:</h2>\r\n<ul>\r\n  <li>Сайт можно разместить даже на бесплатном хостинге с поддержкой только PHP.</li>\r\n  <li>Сайт создает небольшую нагрузку на сервер.</li>\r\n  <li>Сайт продолжает работать на сервере хостера даже если у него дает сбой сервис, обслуживающий базу данных.</li>\r\n  <li>Сайт легко перенести с одного сервера на другой при помощи простого копирования файлов.</li>\r\n  <li>Сайт очень быстро загружается.</li>\r\n</ul>', '<h1>Система управления сайтом (CMS)</h1>\r\n<p>Система позволяет легко и быстро создавать и редактировать страницы вашего сайта за считанные минуты. Многие сайты-визитки организаций порой работают на громоздких системах управления сайтом, которые стоили значительных вложений в их покупку и разработку шаблона сайта. С нашей CMS системой мы можем предложить Вам недорогой и рабочий проект сайта компании, ничуть не уступающий по быстроте работы и управляемости.</p>\r\n\r\n<h2>Основные возможности системы:</h2>\r\n<ul>\r\n  <li>Создание категорий и страниц для материалов сайта.</li>\r\n  <li>Генерация ЧПУ для страниц сайта с возможностю указать вручную имя ссылки на страницу.</li>\r\n  <li>Встроенный визуальный редактор для редактирования страниц.</li>\r\n  <li>Загрузка изображений, файлов на сайт с последующей вставкой в материал.</li>\r\n  <li>Возможность выводить ссылки в список меню.</li>\r\n  <li>Редактрирование HTML-кода шаблона прямо в админке.</li>\r\n  <li>Добавление новых модулей для сайта.</li>\r\n  <li>Страница обратной связи пользователей с вами.</li>\r\n</ul>\r\n<h2>Благодаря нашей системе Вы сможете получить дополнительные\r\nпреимущества работы Вашего сайта, а это:</h2>\r\n<ul>\r\n  <li>Сайт можно разместить даже на бесплатном хостинге с поддержкой только PHP.</li>\r\n  <li>Сайт создает небольшую нагрузку на сервер.</li>\r\n  <li>Сайт продолжает работать на сервере хостера даже если у него дает сбой сервис, обслуживающий базу данных.</li>\r\n  <li>Сайт легко перенести с одного сервера на другой при помощи простого копирования файлов.</li>\r\n  <li>Сайт очень быстро загружается.</li>\r\n</ul>', 'pages', 1, 0, 1, 1, NULL, 0),
+(845, 1, 1, 2, 7, 1, 'about', 'О компании', '', '<p>Компания &quot;Catering Team&quot; - это динамично развивающаяся компания в сфере корпоративного питания Москвы и Московской области. Приоритетными направлениями работы нашей компании являются:</p>\r\n<ul>\r\n    <li>Организация таких видов корпоративного питания, как кафе, буфетов, столовых на предприятиях и последующее обслуживание.</li>\r\n    <li>Кейтеринг: ресторан выездного обслуживания, фуршеты, организация корпоративных мероприятий и частных торжеств, организация банкетов.</li>\r\n    <li>Мы имеем большой опыт организации как крупных мероприятий до нескольких тысяч участников, так и небольших корпоративных мероприятий и праздников!</li>\r\n</ul>\r\n<h3>Как мы работаем</h3>\r\n<p>Организация банкетов, организация фуршета, свадебных торжеств, ресторан выездного обслуживания. Кейтеринг. Наша компания возьмет на себя весь комплекс услуг по выездному обслуживанию: организация фуршета, проведение свадеб, семейных праздников, корпоративных мероприятий. Специалисты высшего класса помогут вам в подготовке праздника, выборе меню и музыки для вашего мероприятия. Сотрудничество с нашей компанией &ndash; прекрасная возможность отпраздновать значительное событие, произошедшее в личной жизни или связанное<img width="133" height="105" class="f_left" style="padding-right: 10px;" src="/img/test_img.jpg" alt="" /> с профессиональной деятельностью. Мы поможем, если вам необходимо, отпраздновать Новый год, Международный женский день, 9 мая или другую дату. У вас наверняка останется в памяти праздник, организованный нашей компанией. Стоимость банкета в ресторане компании Catering Team, цены на банкет в ресторане вам подскажут наши специалисты. У нас работают отличные официанты и повара, обладающие большим опытом ресторанного обслуживания, а так же шоумены, мастера декора и музыканты.</p>\r\n<p><img width="133" height="105" class="f_right" src="/img/test_img.jpg" alt="" /></p>\r\n<p>Будем рады видеть вас в новом ресторане города Москвы &laquo;Драфт&raquo;! Для вас разнообразное меню с конкурентными ценами. Повара высшего класса, внимательный и вежливый персонал. Лучший выбор отдыха в Москве ресторан &laquo;Драфт&raquo;!</p>', 'pages', 1, 0, 1, 1, NULL, 0),
+(846, 1, 1, 567, 5, 1, 'newslist', 'Новости', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(847, 1, 1, 2, 11, 0, 'menu', 'Меню', '', '', '', 1, 1, 1, 1, NULL, 0),
+(848, 1, 1, 2, 15, 0, 'service', 'Услуги', '', '<p>developer@proweb.by</p>', 'pages', 1, 1, 1, 1, NULL, 0),
+(849, 1, 1, 443, 9, 1, 'contacts', 'Контакты', '', '<div class="f_left width_480">\r\n<p>Компания &quot;Pokushat.by&quot; - это динамично развивающаяся компания в сфере корпоративного питания Минска.</p>\r\n<p class="pad_left_50">119270, Минск<br />\r\nпр. Скорины 100<br />\r\nТелефоны: +(37517) 288-66-88, +(37517) 288-66-88<br />\r\n<a href="mailto:sale@pokushat.by">sale@pokushat.by</a></p>\r\n<p>Резюме направляйте по адресу или по факсу:</p>\r\n<p class="pad_left_50"><a href="mailto:sale@figaro.ru ">sale@figaro.ru</a><br />\r\n+7 (495) 788-66-88<br />\r\nПредложения для отдела маркетинга, рекламы и PR направляйте по адресу:<br />\r\nVinogradovaTV@corpusgroup.ru<br />\r\nПожелания нашему ресторану направляйте по адресу:<br />\r\n<a href="mailto:wish@figaro.ru">wish@figaro.ru</a></p>\r\n</div>\r\n<div class="f_right width_310"><img height="240" width="299" src="/img/map.jpg" alt="" /></div>', 'pages', 1, 0, 1, 0, NULL, 0),
+(851, 1, 1, 425, 22, 1, 'sitemap', 'Карта сайта', '', '', 'pages', 1, 0, 0, 1, NULL, 0),
+(853, 1, 1, 433, 23, 1, 'search', 'Поиск', '', '', '', 1, 0, 1, 1, NULL, 0),
+(923, 1, 1, 493, 24, 1, 'profile', 'Кабинет пользователя', '', '', 'pages', 1, 0, 0, 0, NULL, 0),
+(933, 923, 2, 453, 1, 1, 'registration', 'Регистрация', '', '', 'pages', 1, 0, 0, 0, NULL, 0),
+(943, 923, 2, 463, 2, 1, 'login', 'Авторизация пользователя', '', '', 'pages', 1, 0, 0, 1, NULL, 0),
+(953, 923, 2, 473, 3, 1, 'logout', 'Выход из авторизации', '', '', 'pages', 1, 0, 0, 1, NULL, 0),
+(963, 923, 2, 483, 4, 1, 'rememberpassword', 'Восстановление пароля', '', '', 'pages', 1, 0, 0, 1, NULL, 0),
+(973, 1, 1, 503, 25, 1, 'katalog', 'Каталог', '', '<p>Phasellus nulla ante, commodo quis pulvinar consequat, tincidunt vel  tortor. Cras cursus quam quis tortor faucibus posuere. Nunc a nibh et  ipsum congue sodales. Phasellus mattis, odio a mollis varius, urna  turpis aliquam orci, nec volutpat sem dui ut nibh. Nunc eget fringilla  erat. Quisque volutpat auctor orci sit amet sagittis. Curabitur rutrum  tellus nec eros venenatis sodales. Donec bibendum dictum auctor.  Suspendisse a felis sapien, sed pretium elit. Aliquam a erat ante.  Aenean ut mi sed massa vulputate semper.</p>', 'pages', 1, 0, 1, 1, NULL, 0),
+(983, 1, 1, 2, 26, 0, 'test_eeeeeeeee', 'test_eeeeeeeee', '<p>test_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeee</p>', '<p>test_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeeetest_eeeeeeeee</p>', '', 1, 1, 1, 1, NULL, 0),
+(993, 973, 2, 513, 1, 1, 'cart', 'Корзина', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(1003, 847, 2, 2, 1, 0, 'pod-menyu', 'под-меню', '', '', '', 1, 1, 1, 1, NULL, 0),
+(1013, 1, 1, 523, 26, 1, 'dishmake', 'Конструктор', '', '', '', 1, 0, 1, 1, NULL, 0),
+(1033, 923, 2, 543, 5, 1, 'editprofile', 'Редактирование данных', '', '', 'pages', 1, 0, 0, 1, NULL, 0),
+(1053, 923, 2, 553, 6, 1, 'ordershistory', 'История заказов', '', '', '', 1, 0, 1, 1, NULL, 0),
+(1063, 923, 2, 563, 7, 1, 'orderdetails', 'Детализация заказа', '', '', '', 1, 0, 1, 1, NULL, 0),
+(1075, 1, 1, 565, 2, 1, 'portfoliolist', 'Портфолио', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(1076, 1, 1, 564, 6, 1, 'articleslist', 'Статьи', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(1077, 1, 1, 566, 8, 1, 'otzivyview', 'Отзывы', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(1078, 1, 1, 2, 10, 1, 'legkij_start', 'Сайт - легкий старт', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(1079, 1, 1, 2, 17, 1, 'cms', 'CMS ', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(1080, 1, 1, 2, 18, 1, 'podderzhka_sajta', 'Поддержка сайта', '<p>\r\n	Поддержка сайтаПоддержка сайтаПоддержка сайтаПоддержка сайтаПоддержка сайтаПоддержка сайта</p>\r\n', '<p>\r\n	Поддержка сайтаПоддержка сайтаПоддержка сайтаПоддержка сайтаПоддержка сайтаПоддержка сайтаПоддержка сайта</p>\r\n', 'pages', 1, 0, 1, 1, NULL, 0),
+(1081, 1, 1, 2, 19, 1, 'prodvizhenie_sajta', 'Продвижение сайта', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(1082, 1, 1, 2, 20, 1, 'zakazat_sajt', 'Заказать сайт', '', '', 'pages', 1, 0, 1, 1, NULL, 0),
+(1083, 1, 1, 2, 21, 1, 'fufelok_fuflovy', 'Вторая запись в Блоге', '', '<p>dddddddddddddddddddddddddd dddddddddddddddd</p>', 'default', 1, 0, 1, 1, NULL, 0),
+(1084, 1, 1, 2, 1, 1, 'path', 'title', '<p>\r\n	fsdfsdf</p>\r\n', '<p>\r\n	sвафывафывафыа</p>\r\n', 'pages', 1, 0, 1, 1, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -601,7 +606,7 @@ INSERT INTO `site_content` (`id`, `id_parent`, `level`, `id_div_type`, `priority
 
 DROP TABLE IF EXISTS `site_divisions_type`;
 CREATE TABLE IF NOT EXISTS `site_divisions_type` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `system_name` varchar(100) NOT NULL,
   `title` varchar(128) NOT NULL,
   `module` varchar(128) NOT NULL,
@@ -609,11 +614,11 @@ CREATE TABLE IF NOT EXISTS `site_divisions_type` (
   `action_frontend` varchar(128) NOT NULL,
   `controller_backend` varchar(128) NOT NULL,
   `action_backend` varchar(128) NOT NULL,
-  `priority` int(5) NOT NULL default '50',
-  `active` tinyint(1) default '0',
-  `go_to_module` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=568 ;
+  `priority` int(5) NOT NULL DEFAULT '50',
+  `active` tinyint(1) DEFAULT '0',
+  `go_to_module` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=570 ;
 
 --
 -- Дамп данных таблицы `site_divisions_type`
@@ -639,7 +644,8 @@ INSERT INTO `site_divisions_type` (`id`, `system_name`, `title`, `module`, `cont
 (564, 'articleslist', 'Список статей', 'articles', 'articles', 'index', 'admin_articles', 'index', 0, 1, 1),
 (565, 'portfolio', 'Портфолио организации', 'portfolio', 'portfoliolist', 'index', 'admin_portfolio', 'index', 0, 1, 1),
 (566, 'otzivy', 'Отзывы и предложения', 'otzivy', 'otzivy', 'index', 'admin_otzivy', 'index', 0, 1, 1),
-(567, 'newslist', 'Список новостей', 'news', 'news', 'index', 'admin_news', 'index', 0, 1, 1);
+(567, 'newslist', 'Список новостей', 'news', 'news', 'index', 'admin_news', 'index', 0, 1, 1),
+(569, '404', 'Ошибка, страница не найдена', 'pages', 'pages', 'page', '', '', 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -649,13 +655,13 @@ INSERT INTO `site_divisions_type` (`id`, `system_name`, `title`, `module`, `cont
 
 DROP TABLE IF EXISTS `site_faq`;
 CREATE TABLE IF NOT EXISTS `site_faq` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `id_page` int(11) unsigned NOT NULL default '0',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_page` int(11) unsigned NOT NULL DEFAULT '0',
   `question` text,
   `answer` text,
-  `active` int(1) NOT NULL default '0',
-  `number` int(5) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  `active` int(1) NOT NULL DEFAULT '0',
+  `number` int(5) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -674,11 +680,11 @@ INSERT INTO `site_faq` (`id`, `id_page`, `question`, `answer`, `active`, `number
 
 DROP TABLE IF EXISTS `site_feedback`;
 CREATE TABLE IF NOT EXISTS `site_feedback` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) character set cp1251 NOT NULL default '',
-  `title` varchar(255) character set cp1251 NOT NULL default '',
-  `description` tinytext character set cp1251 NOT NULL,
-  PRIMARY KEY  (`id`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET cp1251 NOT NULL DEFAULT '',
+  `title` varchar(255) CHARACTER SET cp1251 NOT NULL DEFAULT '',
+  `description` tinytext CHARACTER SET cp1251 NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
@@ -696,13 +702,13 @@ INSERT INTO `site_feedback` (`id`, `name`, `title`, `description`) VALUES
 
 DROP TABLE IF EXISTS `site_feedback_templates`;
 CREATE TABLE IF NOT EXISTS `site_feedback_templates` (
-  `id` int(11) NOT NULL auto_increment,
-  `system_name` varchar(255) default '',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `system_name` varchar(255) DEFAULT '',
   `name` varchar(255) NOT NULL,
   `content` text NOT NULL,
-  `active` int(11) NOT NULL default '0',
+  `active` int(11) NOT NULL DEFAULT '0',
   `fields` text NOT NULL,
-  PRIMARY KEY  (`id`,`name`),
+  PRIMARY KEY (`id`,`name`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=134 ;
 
@@ -724,12 +730,12 @@ INSERT INTO `site_feedback_templates` (`id`, `system_name`, `name`, `content`, `
 
 DROP TABLE IF EXISTS `site_items2tags`;
 CREATE TABLE IF NOT EXISTS `site_items2tags` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `id_tag` int(10) NOT NULL default '0',
-  `id_object` int(10) NOT NULL default '0',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_tag` int(10) NOT NULL DEFAULT '0',
+  `id_object` int(10) NOT NULL DEFAULT '0',
   `object_type` varchar(100) NOT NULL,
-  `is_main` tinyint(1) default '0',
-  PRIMARY KEY  (`id`)
+  `is_main` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=1910 ;
 
 --
@@ -794,14 +800,14 @@ INSERT INTO `site_items2tags` (`id`, `id_tag`, `id_object`, `object_type`, `is_m
 
 DROP TABLE IF EXISTS `site_mailer_letters`;
 CREATE TABLE IF NOT EXISTS `site_mailer_letters` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `subject` text,
-  `reply_address` varchar(255) default NULL COMMENT 'обратный адрес',
+  `reply_address` varchar(255) DEFAULT NULL COMMENT 'обратный адрес',
   `body` text,
-  `file` varchar(255) default NULL,
-  `is_send` tinyint(1) NOT NULL default '0',
-  `date_send` date default NULL,
-  PRIMARY KEY  (`id`),
+  `file` varchar(255) DEFAULT NULL,
+  `is_send` tinyint(1) NOT NULL DEFAULT '0',
+  `date_send` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -818,10 +824,10 @@ CREATE TABLE IF NOT EXISTS `site_mailer_letters` (
 
 DROP TABLE IF EXISTS `site_mailer_queue`;
 CREATE TABLE IF NOT EXISTS `site_mailer_queue` (
-  `id` int(11) unsigned NOT NULL auto_increment,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `subscribe_id` int(11) NOT NULL,
   `mail_id` int(11) NOT NULL,
-  PRIMARY KEY  (`subscribe_id`,`mail_id`),
+  PRIMARY KEY (`subscribe_id`,`mail_id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=cp1251 AUTO_INCREMENT=1 ;
 
@@ -838,11 +844,11 @@ CREATE TABLE IF NOT EXISTS `site_mailer_queue` (
 
 DROP TABLE IF EXISTS `site_mailer_subscribers`;
 CREATE TABLE IF NOT EXISTS `site_mailer_subscribers` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `is_subscribe` bit(1) NOT NULL default '\0',
-  PRIMARY KEY  (`id`),
+  `is_subscribe` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
@@ -851,7 +857,7 @@ CREATE TABLE IF NOT EXISTS `site_mailer_subscribers` (
 --
 
 INSERT INTO `site_mailer_subscribers` (`id`, `name`, `email`, `is_subscribe`) VALUES
-(3, 'Компания', 'byblik@gmail.com', '\0');
+(3, 'Компания', 'byblik@gmail.com', b'0');
 
 -- --------------------------------------------------------
 
@@ -863,7 +869,7 @@ DROP TABLE IF EXISTS `site_menu`;
 CREATE TABLE IF NOT EXISTS `site_menu` (
   `pageId` int(11) unsigned NOT NULL,
   `typeId` int(11) unsigned NOT NULL,
-  PRIMARY KEY  (`pageId`,`typeId`),
+  PRIMARY KEY (`pageId`,`typeId`),
   KEY `typeId` (`typeId`),
   KEY `pageId` (`pageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -883,11 +889,13 @@ INSERT INTO `site_menu` (`pageId`, `typeId`) VALUES
 (1075, 1),
 (1076, 1),
 (1077, 1),
+(1084, 1),
 (1078, 7),
 (1079, 7),
 (1080, 7),
 (1081, 7),
-(1082, 7);
+(1082, 7),
+(1084, 7);
 
 -- --------------------------------------------------------
 
@@ -897,10 +905,10 @@ INSERT INTO `site_menu` (`pageId`, `typeId`) VALUES
 
 DROP TABLE IF EXISTS `site_menu_types`;
 CREATE TABLE IF NOT EXISTS `site_menu_types` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL default '',
-  `title` varchar(45) NOT NULL default '',
-  PRIMARY KEY  (`id`)
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `title` varchar(45) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
 --
@@ -919,17 +927,17 @@ INSERT INTO `site_menu_types` (`id`, `name`, `title`) VALUES
 
 DROP TABLE IF EXISTS `site_modules`;
 CREATE TABLE IF NOT EXISTS `site_modules` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
-  `module_ver` varchar(20) NOT NULL default '0.0.1a',
+  `module_ver` varchar(20) NOT NULL DEFAULT '0.0.1a',
   `title` varchar(128) NOT NULL,
   `describe` varchar(500) NOT NULL,
   `add_in_sys` date NOT NULL,
-  `instdata` datetime default NULL,
+  `instdata` datetime DEFAULT NULL,
   `priority` int(5) NOT NULL,
-  `active` tinyint(1) NOT NULL default '1',
-  `installed` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `installed` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`(30))
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
@@ -964,31 +972,37 @@ INSERT INTO `site_modules` (`id`, `name`, `module_ver`, `title`, `describe`, `ad
 
 DROP TABLE IF EXISTS `site_news`;
 CREATE TABLE IF NOT EXISTS `site_news` (
-  `id` int(11) unsigned NOT NULL auto_increment,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `link` varchar(255) default NULL,
+  `url` varchar(150) NOT NULL DEFAULT '',
+  `link` varchar(255) DEFAULT NULL,
   `teaser` varchar(1000) NOT NULL,
   `content` text NOT NULL,
   `date_news` datetime NOT NULL,
-  `author` varchar(150) NOT NULL default 'Администратор',
+  `author` varchar(150) NOT NULL DEFAULT 'Администратор',
   `created_at` date NOT NULL,
-  `is_active` tinyint(1) NOT NULL default '0',
-  `is_main` tinyint(1) NOT NULL default '0',
-  `is_hot` tinyint(1) NOT NULL default '0',
-  `lighting` int(1) unsigned NOT NULL default '0',
-  `count_views` int(11) unsigned NOT NULL default '0',
-  `seo_title` varchar(150) NOT NULL default 'Title',
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `is_main` tinyint(1) NOT NULL DEFAULT '0',
+  `is_hot` tinyint(1) NOT NULL DEFAULT '0',
+  `lighting` int(1) unsigned NOT NULL DEFAULT '0',
+  `count_views` int(11) unsigned NOT NULL DEFAULT '0',
+  `seo_title` varchar(150) NOT NULL DEFAULT 'Title',
   `seo_descriptions` varchar(300) NOT NULL,
   `seo_keywords` varchar(500) NOT NULL,
-  `small_img` varchar(255) default NULL,
-  `big_img` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `small_img` varchar(255) DEFAULT NULL,
+  `big_img` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
 
 --
 -- Дамп данных таблицы `site_news`
 --
 
+INSERT INTO `site_news` (`id`, `name`, `url`, `link`, `teaser`, `content`, `date_news`, `author`, `created_at`, `is_active`, `is_main`, `is_hot`, `lighting`, `count_views`, `seo_title`, `seo_descriptions`, `seo_keywords`, `small_img`, `big_img`) VALUES
+(39, 'lorem lipsum1', 'testovayanovost2', 'http://easystart/news/ru/admin_news/add/id_page/', '<p>\r\n	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec nisl sapien. Ut vel tempor purus. Curabitur gravida tellus sed justo varius placerat. Donec vehicula justo nec libero tincidunt tempor. Nulla ultricies nisi vel lacus suscipit vel ornare massa suscipit. Nullam at metus sem, ut porta leo. Quisque et mi felis, eget congue est. Sed quam magna, ullamcorper id iaculis sit amet, vehicula a velit. Duis tempor erat et turpis ornare porta. In arcu risus, imperdiet vel porttitor sit amet, semper ut massa. Pellentesque hendrerit tellus egestas nisl tincidunt vestibulum. Duis turpis sem, elementum nec placerat sed, egestas vitae nibh.</p>', '<p>\r\n	Maecenas tempus scelerisque sem nec accumsan. Sed at elit at dolor volutpat facilisis. Aenean quis massa magna. Mauris ac metus enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu posuere arcu. Nullam eget justo ipsum, ut pellentesque ipsum. Aliquam et ligula velit, sed tincidunt turpis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non magna odio, pretium elementum libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>\r\n<p>\r\n	Sed magna enim, malesuada ut elementum eget, gravida vitae quam. In ac nulla eu augue faucibus lobortis eu quis sem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque faucibus metus et nibh molestie ut sagittis lorem porta. Phasellus dignissim erat nec turpis varius interdum. Aenean et massa quis erat ultricies pellentesque sed a nisl. Donec quam odio, porttitor sit amet porta vitae, dignissim sed ligula. Nunc a nisi a urna facilisis blandit. Fusce semper magna vel erat tempor ut viverra ipsum pretium. Curabitur ultrices, metus vel scelerisque iaculis, augue urna ornare orci, et mattis velit lorem non dui. Suspendisse potenti.</p>', '2010-12-10 00:00:00', 'author', '2010-12-20', 1, 0, 1, 0, 0, 'seotitleseotitleseotitleseotitle', 'seotitleseotitle', 'seotitleseotitleseotitleseotitle', '39_pejo_308.jpg', '39_pejo_308_2.jpg'),
+(41, 'ЧП международного масштаба', 'test_news', '', '<p>\r\n	Maecenas tempus scelerisque sem nec accumsan. Sed at elit at dolor volutpat facilisis. Aenean quis massa magna. Mauris ac metus enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu posuere arcu. Nullam eget justo ipsum, ut pellentesque ipsum. Aliquam et ligula velit, sed tincidunt turpis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non magna odio, pretium elementum libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>', '<p>\r\n	Maecenas tempus scelerisque sem nec accumsan. Sed at elit at dolor volutpat facilisis. Aenean quis massa magna. Mauris ac metus enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu posuere arcu. Nullam eget justo ipsum, ut pellentesque ipsum. Aliquam et ligula velit, sed tincidunt turpis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non magna odio, pretium elementum libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>', '2010-12-14 00:00:00', 'author', '2010-12-14', 1, 0, 1, 0, 0, 'seotitleseotitleseotitleseotitle', 'Описание страницы', 'Ключевые слова страницы', '41_pejo_308.jpg', '41_pejo_308_2.jpg'),
+(45, 'ЧП международного масштаба4', '1test-1', '', '<p>\r\n	Maecenas tempus scelerisque sem nec accumsan. Sed at elit at dolor volutpat facilisis. Aenean quis massa magna. Mauris ac metus enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu posuere arcu. Nullam eget justo ipsum, ut pellentesque ipsum. Aliquam et ligula velit, sed tincidunt turpis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non magna odio, pretium elementum libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>\r\n<p>\r\n	&nbsp;</p>\r\n<div firebugversion="1.5.4" id="_firebugConsole" style="display: none;">\r\n	&nbsp;</div>', '<p>\r\n	Maecenas tempus scelerisque sem nec accumsan. Sed at elit at dolor volutpat facilisis. Aenean quis massa magna. Mauris ac metus enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu posuere arcu. Nullam eget justo ipsum, ut pellentesque ipsum. Aliquam et ligula velit, sed tincidunt turpis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non magna odio, pretium elementum libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas tempus scelerisque sem nec accumsan. Sed at elit at dolor volutpat facilisis. Aenean quis massa magna. Mauris ac metus enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu posuere arcu. Nullam eget justo ipsum, ut pellentesque ipsum. Aliquam et ligula velit, sed tincidunt turpis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non magna odio, pretium elementum libero. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;<img alt="" src="/pics/images/pejo_308_large.jpg" style="width: 180px; height: 135px;" /></p>\r\n<div firebugversion="1.5.4" id="_firebugConsole" style="display: none;">\r\n	&nbsp;</div>', '2010-12-10 00:00:00', 'author', '2010-12-10', 1, 0, 1, 0, 2, 'Заголовок страницы', 'Описание страницы', 'seotitleseotitleseotitleseotitle', '45_pejo_308.jpg', '45_pejo_308_2.jpg'),
+(46, 'тестовая новость1', 'testovayanovost1', '', '<p>\r\n	Suspendisse vulputate enim sed velit vehicula at tincidunt mauris placerat. Proin nec libero vel velit ultrices cursus ut feugiat neque. Vestibulum felis augue, viverra non venenatis varius, convallis vel odio. Duis egestas, ligula at viverra vulputate, quam metus tristique nulla, nec rutrum sem velit vel lectus. Nullam tincidunt mi eget tellus congue sodales. Etiam viverra purus ut nisl fermentum fringilla. Donec consequat, augue ut vulputate mattis, nisi mi adipiscing odio, id dapibus eros erat ac erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus placerat massa neque. Nam id felis magna. Morbi pellentesque aliquam felis quis ultrices. Pellentesque fringilla lacus eget orci bibendum fringilla.</p>\r\n<p>\r\n	&nbsp;</p>', '<p>\r\n	Suspendisse vulputate enim sed velit vehicula at tincidunt mauris placerat. Proin nec libero vel velit ultrices cursus ut feugiat neque. Vestibulum felis augue, viverra non venenatis varius, convallis vel odio. Duis egestas, ligula at viverra vulputate, quam metus tristique nulla, nec rutrum sem velit vel lectus. Nullam tincidunt mi eget tellus congue sodales. Etiam viverra purus ut nisl fermentum fringilla. Donec consequat, augue ut vulputate mattis, nisi mi adipiscing odio, id dapibus eros erat ac erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus placerat massa neque. Nam id felis magna. Morbi pellentesque aliquam felis quis ultrices. Pellentesque fringilla lacus eget orci bibendum fringilla.</p>\r\n<p>\r\n	Quisque tristique, tellus a consectetur rhoncus, lorem diam pharetra dui, eget feugiat est nulla eget quam. Aliquam ac erat massa. Vivamus id tellus et erat porta fringilla. Proin eget turpis nec elit tempus posuere at ut ipsum. Aliquam turpis lorem, auctor vel condimentum sed, posuere sed orci. Donec blandit, dolor in placerat pulvinar, orci velit ornare diam, vitae dapibus turpis erat tincidunt velit. Ut eleifend, leo non accumsan mattis, elit dui auctor sem, sit amet dignissim augue lorem eget lacus. Suspendisse quis augue et metus consectetur auctor. Vestibulum laoreet ligula vitae velit scelerisque facilisis. Sed tellus augue, congue non sodales ac, euismod eu turpis. Sed a dolor quam, non scelerisque tellus. Pellentesque tristique placerat venenatis. Etiam et dui nisi, eget pulvinar mauris. Vestibulum ac sollicitudin leo. Fusce enim erat, tincidunt eu pellentesque id, pellentesque vitae leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras adipiscing nibh non sapien ullamcorper convallis. Nulla mollis massa mi, at ultricies risus. Aliquam ullamcorper, lorem sed placerat varius, nisl ipsum hendrerit elit, in iaculis sapien ante at nulla.</p>', '2010-12-15 00:00:00', 'Авторитетный Автор', '2010-12-15', 1, 1, 0, 0, 1, 'тестовая новость1', 'тестовая новость1', 'тестовая новость1', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -998,15 +1012,15 @@ CREATE TABLE IF NOT EXISTS `site_news` (
 
 DROP TABLE IF EXISTS `site_otzivy`;
 CREATE TABLE IF NOT EXISTS `site_otzivy` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) NOT NULL,
   `email` varchar(255) NOT NULL,
   `added` date NOT NULL,
-  `prizn` tinyint(1) unsigned NOT NULL default '0',
+  `prizn` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `content` varchar(3000) NOT NULL,
-  `is_active` tinyint(1) NOT NULL default '0',
-  `is_main` tinyint(1) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `is_main` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
 
 --
@@ -1014,23 +1028,13 @@ CREATE TABLE IF NOT EXISTS `site_otzivy` (
 --
 
 INSERT INTO `site_otzivy` (`id`, `name`, `email`, `added`, `prizn`, `content`, `is_active`, `is_main`) VALUES
-(1, '', 'avenger999@gmail.com', '2010-11-12', 1, '', 1, 0),
-(2, '', 'avenger999@gmail.com', '2010-11-12', 1, '', 1, 0),
-(3, '', 'avenger999@gmail.com', '2010-11-12', 0, '', 1, 0),
-(4, '', 'avenger999@gmail.com', '2010-11-12', 1, '', 1, 0),
-(5, '', 'avenger999@gmail.com', '2010-11-12', 1, '', 1, 0),
-(6, '', 'avenger999@gmail.com', '2010-11-12', 0, '', 1, 0),
-(7, '', 'avenger999@gmail.com', '2010-11-12', 1, '', 1, 0),
 (8, 'serg', 'avenger999@gmail.com', '2010-11-12', 1, 'asdfasdfasdfasd\r\nvcxbxcvbcvx', 1, 0),
 (9, 'sergio', 'avenger999@gmail.com', '2010-11-12', 1, 'sadfasfasd\r\nsdafasdfsdf', 1, 0),
 (10, 'fufelok', 'avenger999@gmail.com', '2010-11-12', 1, 'dasfasdffs\r\njhhfjgjfggjg', 1, 0),
-(11, 'ddddd', 'ddd', '2010-11-12', 1, 'ddddd', 1, 0),
 (12, 'Sergey', 'avenger999@gmail.com', '2010-11-14', 1, 'dssssssssssssssssgfsdg\r\nfdgsdgfdsdgfdfsgfds', 1, 0),
-(13, 'ghjhhgjlk', 'ghjhg@gmail.com', '2010-11-14', 1, 'hgjkdjghdkgj dkjghgdkjgdh', 1, 0),
 (14, 'ghjhhgjlk', 'ghjhg@gmail.com', '2010-11-14', 1, 'hgjkdjghdkgj dkjghgdkjgdh', 1, 0),
 (15, 'ghjhhgjlk', 'ghjhg@gmail.com', '2010-11-14', 1, 'hgjkdjghdkgj dkjghgdkjgdh', 1, 0),
 (16, 'Sergey', 'avenger999@gmail.com', '2010-11-14', 0, 'aaaaaaaaaaaaaadsdf\r\nsasdasds\r\nsadasdas', 1, 0),
-(17, 'name1212', 'example@example.com', '0000-00-00', 1, 'content', 0, 0),
 (18, 'name1212', 'example@example.com', '2010-12-06', 1, 'content', 0, 0),
 (19, 'name1212', 'example@example.com', '2010-12-06', 1, 'content', 0, 0);
 
@@ -1042,28 +1046,31 @@ INSERT INTO `site_otzivy` (`id`, `name`, `email`, `added`, `prizn`, `content`, `
 
 DROP TABLE IF EXISTS `site_pages_options`;
 CREATE TABLE IF NOT EXISTS `site_pages_options` (
-  `id` int(11) unsigned NOT NULL auto_increment,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `pageId` int(11) unsigned NOT NULL,
-  `item_id` int(10) unsigned NOT NULL default '0',
-  `type` varchar(255) NOT NULL default '',
+  `item_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `type` varchar(255) NOT NULL DEFAULT '',
   `keywords` text,
   `tags` text,
-  `h1` varchar(255) default '',
+  `h1` varchar(255) DEFAULT '',
   `descriptions` text,
-  `title` varchar(255) default '',
-  PRIMARY KEY  (`id`),
+  `title` varchar(255) DEFAULT '',
+  PRIMARY KEY (`id`),
   KEY `pageId` (`pageId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=25 ;
 
 --
 -- Дамп данных таблицы `site_pages_options`
 --
 
 INSERT INTO `site_pages_options` (`id`, `pageId`, `item_id`, `type`, `keywords`, `tags`, `h1`, `descriptions`, `title`) VALUES
-(2, 846, 0, '', '', NULL, '', '', ''),
 (9, 845, 0, '', '', NULL, '', '', ''),
 (10, 1083, 0, '', '', NULL, 'Заказать сайт', '', ''),
-(18, 1077, 0, '', 'Отзывы', NULL, 'Отзывы', 'Отзывы', 'Отзывы');
+(18, 1077, 0, '', 'Отзывы', NULL, 'Отзывы', 'Отзывы', 'Отзывы'),
+(20, 846, 0, '', 'Новости', NULL, '', 'Новости', 'Новости'),
+(21, 1076, 0, '', 'Статьи', NULL, 'Статьи', 'Статьи', 'Статьи'),
+(22, 1080, 0, '', 'Поддержка сайта', NULL, 'Поддержка сайта', 'Поддержка сайта', 'Поддержка сайта'),
+(24, 1084, 0, '', 'keywords', NULL, 'h1', 'descriptions', 'page_title');
 
 -- --------------------------------------------------------
 
@@ -1073,13 +1080,13 @@ INSERT INTO `site_pages_options` (`id`, `pageId`, `item_id`, `type`, `keywords`,
 
 DROP TABLE IF EXISTS `site_poll`;
 CREATE TABLE IF NOT EXISTS `site_poll` (
-  `id` int(11) unsigned NOT NULL auto_increment,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
-  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `votecount` mediumint(9) NOT NULL default '0',
-  `priority` int(5) default '0',
-  `active` tinyint(1) NOT NULL default '1',
-  PRIMARY KEY  (`id`)
+  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `votecount` mediumint(9) NOT NULL DEFAULT '0',
+  `priority` int(5) DEFAULT '0',
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
 
 --
@@ -1099,13 +1106,13 @@ INSERT INTO `site_poll` (`id`, `title`, `timestamp`, `votecount`, `priority`, `a
 
 DROP TABLE IF EXISTS `site_poll_items`;
 CREATE TABLE IF NOT EXISTS `site_poll_items` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `id_poll` int(11) unsigned NOT NULL default '0',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id_poll` int(11) unsigned NOT NULL DEFAULT '0',
   `title` varchar(50) NOT NULL,
-  `votecount` int(11) NOT NULL default '0',
-  `active` varchar(6) default NULL,
-  `priority` int(5) default '0',
-  PRIMARY KEY  (`id`),
+  `votecount` int(11) NOT NULL DEFAULT '0',
+  `active` varchar(6) DEFAULT NULL,
+  `priority` int(5) DEFAULT '0',
+  PRIMARY KEY (`id`),
   KEY `id_poll` (`id_poll`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -1122,23 +1129,23 @@ CREATE TABLE IF NOT EXISTS `site_poll_items` (
 
 DROP TABLE IF EXISTS `site_portfolio`;
 CREATE TABLE IF NOT EXISTS `site_portfolio` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `type` varchar(50) NOT NULL default 'portfolio',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) NOT NULL DEFAULT 'portfolio',
   `title` varchar(255) NOT NULL,
-  `url` varchar(255) default NULL,
+  `url` varchar(255) DEFAULT NULL,
   `teaser` varchar(1000) NOT NULL,
   `content` text,
-  `is_active` tinyint(1) NOT NULL default '0',
-  `main` int(1) NOT NULL default '0',
-  `date_project` date default NULL,
-  `created_at` date default NULL,
-  `pub_date` datetime default NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `main` int(1) NOT NULL DEFAULT '0',
+  `date_project` date DEFAULT NULL,
+  `created_at` date DEFAULT NULL,
+  `pub_date` datetime DEFAULT NULL,
   `seo_title` text,
   `seo_keywords` text,
   `seo_descriptions` text,
-  `small_img` varchar(255) default NULL,
-  `big_img` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
+  `small_img` varchar(255) DEFAULT NULL,
+  `big_img` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
@@ -1158,12 +1165,12 @@ INSERT INTO `site_portfolio` (`id`, `type`, `title`, `url`, `teaser`, `content`,
 DROP TABLE IF EXISTS `site_search_index`;
 CREATE TABLE IF NOT EXISTS `site_search_index` (
   `id_item` int(11) unsigned NOT NULL,
-  `type` varchar(100) NOT NULL default '',
-  `url` varchar(255) NOT NULL default '',
-  `title` varchar(255) NOT NULL default '',
+  `type` varchar(100) NOT NULL DEFAULT '',
+  `url` varchar(255) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
   `content` text,
   `original_content` text,
-  PRIMARY KEY  (`id_item`,`type`),
+  PRIMARY KEY (`id_item`,`type`),
   FULLTEXT KEY `content` (`content`,`original_content`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1229,12 +1236,12 @@ INSERT INTO `site_search_index` (`id_item`, `type`, `url`, `title`, `content`, `
 
 DROP TABLE IF EXISTS `site_tags`;
 CREATE TABLE IF NOT EXISTS `site_tags` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `weight` int(10) default '0',
-  `priority` int(5) default '0',
-  `active` tinyint(1) default '0',
-  PRIMARY KEY  (`id`)
+  `weight` int(10) DEFAULT '0',
+  `priority` int(5) DEFAULT '0',
+  `active` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=7 ;
 
 --
@@ -1256,27 +1263,27 @@ INSERT INTO `site_tags` (`id`, `title`, `weight`, `priority`, `active`) VALUES
 
 DROP TABLE IF EXISTS `site_users`;
 CREATE TABLE IF NOT EXISTS `site_users` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `first_name` varchar(255) NOT NULL default '',
-  `last_name` varchar(255) NOT NULL default '',
-  `login` varchar(255) NOT NULL default '',
-  `password` varchar(255) NOT NULL default '',
-  `email` varchar(255) NOT NULL default '',
-  `street` varchar(255) character set utf8 collate utf8_unicode_ci default NULL,
-  `house` varchar(255) character set utf8 collate utf8_unicode_ci default NULL,
-  `house_block` varchar(255) character set utf8 collate utf8_unicode_ci default NULL,
-  `flat` varchar(255) character set utf8 collate utf8_unicode_ci default NULL,
-  `mobile_phone` varchar(255) default '',
-  `phone` varchar(255) default '',
-  `gender` tinyint(1) default '0' COMMENT 'пол',
-  `birthdate` varchar(20) default NULL COMMENT 'дата рождения',
-  `subscribe` tinyint(1) default '0',
-  `discount` int(10) unsigned default '0',
-  `active` tinyint(1) default '0',
-  `role` varchar(255) default '',
-  `added` datetime default '0000-00-00 00:00:00',
-  `regular_customer` tinyint(1) default '0',
-  PRIMARY KEY  (`id`)
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(255) NOT NULL DEFAULT '',
+  `last_name` varchar(255) NOT NULL DEFAULT '',
+  `login` varchar(255) NOT NULL DEFAULT '',
+  `password` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `street` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `house` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `house_block` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `flat` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `mobile_phone` varchar(255) DEFAULT '',
+  `phone` varchar(255) DEFAULT '',
+  `gender` tinyint(1) DEFAULT '0' COMMENT 'пол',
+  `birthdate` varchar(20) DEFAULT NULL COMMENT 'дата рождения',
+  `subscribe` tinyint(1) DEFAULT '0',
+  `discount` int(10) unsigned DEFAULT '0',
+  `active` tinyint(1) DEFAULT '0',
+  `role` varchar(255) DEFAULT '',
+  `added` datetime DEFAULT '0000-00-00 00:00:00',
+  `regular_customer` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=cp1251 AUTO_INCREMENT=124 ;
 
 --
@@ -1298,17 +1305,17 @@ INSERT INTO `site_users` (`id`, `first_name`, `last_name`, `login`, `password`, 
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `firstName` varchar(45) NOT NULL default '',
-  `lastName` varchar(45) NOT NULL default '',
-  `username` varchar(45) NOT NULL default '',
-  `password` varchar(45) NOT NULL default '',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(45) NOT NULL DEFAULT '',
+  `lastName` varchar(45) NOT NULL DEFAULT '',
+  `username` varchar(45) NOT NULL DEFAULT '',
+  `password` varchar(45) NOT NULL DEFAULT '',
   `email` varchar(255) NOT NULL,
   `activity` int(11) NOT NULL,
-  `deletable` int(11) NOT NULL default '1',
-  `role` varchar(45) NOT NULL default '',
-  `send_message` tinyint(1) default '0',
-  PRIMARY KEY  (`id`)
+  `deletable` int(11) NOT NULL DEFAULT '1',
+  `role` varchar(45) NOT NULL DEFAULT '',
+  `send_message` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=64 ;
 
 --
@@ -1349,3 +1356,7 @@ ALTER TABLE `site_pages_options`
 --
 ALTER TABLE `site_poll_items`
   ADD CONSTRAINT `site_poll_items_fk` FOREIGN KEY (`id_poll`) REFERENCES `site_poll` (`id`) ON DELETE CASCADE;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
