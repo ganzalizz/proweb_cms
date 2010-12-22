@@ -343,3 +343,11 @@ routes:
         controller: templates
         action: templatesitem
         id: 
+    templateslist: 
+      type: Zend_Controller_Router_Route
+      route: templateslist/*
+      defaults: 
+        module: templates
+        controller: templates
+        action: index
+        id: 1085

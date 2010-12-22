@@ -49,9 +49,9 @@ class Articles_ArticlesController extends Zend_Controller_Action {
        
             
        $page = $this->_getParam('page',1);
-       $item_per_page = $ini->per->page;
+       $item_per_page = $ini->onPage;
             
-       $paginator = Articles::getInstance()->getArticlesPaginator($item_per_page,$page);
+       $paginator = Articles::getInstance()->getActiveArticles($item_per_page,$page);
        Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
       
        $paginator->setView($this->view);
@@ -63,10 +63,10 @@ class Articles_ArticlesController extends Zend_Controller_Action {
     }
 
     public function articlesitemAction() {
-        $article_id = $this->_getParam('item', 0);
-        $item = Articles::getInstance()->getArticleById($article_id);
+        $article_url = $this->_getParam('item', '');
+        $item = Articles::getInstance()->getItemByUrl($article_url);
         if (isset($item) && $item) {
-            Articles::getInstance()->addCountViews($article_id);
+            Articles::getInstance()->addCountViews($item->id);
             $this->view->item =$articles_row = $item;
             
             if ($articles_row!=''){

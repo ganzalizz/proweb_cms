@@ -35,7 +35,7 @@ class Templates_TemplatesController extends Zend_Controller_Action
     
     public function indexAction()
     {
-        $this->view->templates = Templates::getInstance()->getIsActiveTemplates();
+        $this->view->templates = Templates::getInstance()->getActiveTemplates();
     }
     
     public function itemAction()

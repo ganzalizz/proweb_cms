@@ -101,15 +101,11 @@
         <div class="content_block">
             <h3><span id="show-" ><img src="/img/admin/ico_show-.gif" alt="" /></span> Контент</h3>
             <p class="form_name">Краткое описание</p>
-            <?php
-            $this->introText->Value = $this->page->intro;
-            $this->introText->Create();
-            ?>
+            <?php echo $this->formCkEditor('intro', $this->page->intro)?>
+            
             <p class="form_name">Полное описание</p>
-            <?php
-            $this->fck->Value = $this->page->content;
-            $this->fck->Create();
-            ?>
+             <?php echo $this->formCkEditor('content', $this->page->content)?>
+            
         </div>
 
         <?php if (isset($this->menu)) {?>

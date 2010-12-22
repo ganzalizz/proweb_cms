@@ -3,7 +3,7 @@
 
 class Templates extends Zend_Db_Table
 {
-     /**
+    /**
      * The default table name.
      *
      * @var string
@@ -31,21 +31,14 @@ class Templates extends Zend_Db_Table
      */
     protected static $_instance = null;
 
-    private $_Paths = null;
-
-    /**
-     * тут хранятся значения главных тэгов для таблицы
-     * @var array
-     */
-    private $_main_tags = null;
-
 
     /**
      * Singleton instance
      *
      * @return Templates
      */
-    public static function getInstance() {
+    public static function getInstance() 
+    {
         if (null === self::$_instance) {
             self::$_instance = new self();
         }
@@ -61,9 +54,9 @@ class Templates extends Zend_Db_Table
         return $this->fetchRow($select);
     }
     
-    public function getIsActiveTemplates()
+    public function getActiveTemplates()
     {
-        return $this->fetchAll($this->select->where('is_active = ?', 1));
+        return $this->fetchAll($this->select()->where('is_active = ?', 1));
     }
     /**
      *

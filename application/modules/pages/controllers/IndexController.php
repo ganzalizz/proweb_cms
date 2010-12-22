@@ -24,9 +24,9 @@ class pages_IndexController extends Zend_Controller_Action {
         $id = $this->_getParam('id');
         $page = Pages::getInstance()->getPage($this->_getParam('id'));
         
-        if(is_null($page) || $page->is_active == '0') {
+        if((is_null($page) || $page->is_active == '0')) {
             $this->_redirect('/404');
-        }        
+        }       
         
         $this->lang = $this->_getParam('lang', 'ru');
         $this->_page = $page;        
@@ -78,6 +78,8 @@ class pages_IndexController extends Zend_Controller_Action {
     	
     	$this->getResponse()->setHeader('HTTP/1.1','404 Not Found');
 		$this->getResponse()->setHeader('Status','404 File not found');
+		
+		echo '404'; exit;
     	
     	$page = Pages::getInstance()->getPageByParam('path', '404');    	
    	 
