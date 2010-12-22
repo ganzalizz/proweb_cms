@@ -1,21 +1,6 @@
 
 
-<script>
-    var delid;
-    var pageid
 
-    function go(id,page){
-
-        delid=id;
-        pageid = page;
-
-        var sure = confirm("Вы действительно хотите удалить страницу?");
-        if (sure) {
-            window.location = "<?=$this->currentModul?>/delete/id/"+delid+"/id_page/"+"<?=$this->id_page?>";
-            alert("Страница удалена");
-        }
-    }
-</script>
 
 
 <div id="company_main_head">    
@@ -28,49 +13,86 @@
                 <table style="margin-top: 0px; width: 750;" border="0" cellspacing="0" cellpadding="0">
                     <tr class="head">
                         <th>
-                            <b>Название</b>
+                        	<b>Название</b>                           
                         </th>
-                        <th style="width:150px;">
+                        <th>
+                        	<b>Дата</b>
+                        </th>
+                        <th style="width: 120px;" >
                             <b>Операции:</b>
                         </th>
                     </tr>
 
                     <? foreach($this->articles as $item) {?>
-                    <tr align="left">
-                            <?$pub='unpub';
-                            $title="заблокировать";
-                            $main='unsetmain' ;
-                            $main_tit="Убрать с главной";
-                            if ($item['pub']==0) {
-                                $pub="pub";
-                                $title="Разблокировать";
-                            }
-                            if ($item['main']==0) {
-                                $main="setmain";
-                                $main_tit="Поместить на главную";
-                            }?>
+                    <tr align="left" id="row_<?php echo $item['id']?>" >                            
 
-                        <td>
-                            <a href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>/id_page/<?=$this->id_page?>" title="редактировать">
+                        <td id="elem_<?php echo $item['id']?>" >
+                            <a  href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>" title="редактировать">
                                 <strong>
                                     <?=$item['name']?>
                                 </strong>
                             </a>
                         </td>
-                        <td>
-                            &nbsp;<a href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>/id_page/<?=$this->id_page?>" title="редактировать"><img src="/img/admin/redact.gif"></a>&nbsp;
-                            <a href="<?=$this->currentModul?>/<?=$pub?>/id/<?=$item['id']?>/id_page/<?=$this->id_page?>" title="<?=$title?>"><img src="/img/admin/active_<?=$item['pub']?>.gif" />&nbsp;
-                                <a href="<?=$this->currentModul?>/<?=$main?>/id/<?=$item['id']?>/id_page/<?=$this->id_page?>" title="<?=$main_tit?>"><img src="/img/admin/main_<?=$item['main']?>.gif" />&nbsp;
-                                    <a href="<?=$this->currentModul?>/copy/id/<?echo ($item['id'] )?>/id_page/<?=$this->id_page?>" title="Копировать"><img src="/img/admin/plus_b.gif"></a>&nbsp;
-                                    <a href="#" onclick="go(<?=$item['id']?>)" title="Удалить"><img src="/img/admin/delete.gif"></a>
-                                    &nbsp;</td>
+                        <td class="options">
+                        	<?php echo $item['date']?>
+                        </td>
+                        <td class="options">
+                        	<!-- edit -->
+                            &nbsp;<a href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>" title="редактировать"><img src="/img/admin/edit.png"></a>&nbsp;
+                            
+                            	<a href="#" id="active_<?php echo $item['id']?>" onclick="return false;" title="Изменить активность"><img src="/img/admin/active_<?=$item['is_active']?>.png" /></a>&nbsp;
+                            	<?php echo $this->ajaxStatusLink(array(
+                            		'target_id'	=>'active_'.$item['id'],
+                            		'link_id'	=>'active_'.$item['id'],
+                            		'target_url'=>$this->currentModul.'/changeactive',
+                            		'url_data'	=>"{id: ".$item['id']."}",
+                            		'loader_img'=>"/img/loader.gif"
+                            		
+                            	));?>
+                            	
+                            	
+                            	
+                            	
+                                <a href="#" onclick="return false;" title="Отображать на главной" id="main_<?php echo $item['id']?>"><img src="/img/admin/main_<?=$item['is_main']?>.gif" /></a>&nbsp;
+                                	<?php echo $this->ajaxStatusLink(array(
+                            		'target_id'	=>'main_'.$item['id'],
+                            		'link_id'	=>'main_'.$item['id'],
+                            		'target_url'=>$this->currentModul.'/changemain',
+                            		'url_data'	=>"{id: ".$item['id']."}",
+                            		'loader_img'=>"/img/loader.gif"
+                            		
+                            	));?>
+                            	
+                                <a href="#" onclick="return false;" title="Горячая новость" id="hot_<?php echo $item['id']?>"><img src="/img/admin/hot_<?=$item['is_hot']?>.png" /></a>&nbsp;
+                                	<?php echo $this->ajaxStatusLink(array(
+                            		'target_id'	=>'hot_'.$item['id'],
+                            		'link_id'	=>'hot_'.$item['id'],
+                            		'target_url'=>$this->currentModul.'/changehot',
+                            		'url_data'	=>"{id: ".$item['id']."}",
+                            		'loader_img'=>"/img/loader.gif"
+                            		
+                            	));?>
+                                
+                                    
+                                    <a href="#" id="del_<?php echo $item['id']?>" title="Удалить"><img src="/img/admin/delete.png"></a>
+                                    	<?php echo $this->ajaxDeleteLink(array(
+		                            		'target_id'	=>'elem_'.$item['id'],
+		                            		'delete_id'	=>'row_'.$item['id'],
+		                            		'link_id'	=>'del_'.$item['id'],
+		                            		'target_url'=>$this->currentModul.'/delete',
+		                            		'url_data'	=>"{id: ".$item['id']."}",
+		                            		'loader_img'=>"/img/loader.gif"
+		                            		
+		                            	));?>
+                                    
+                                    </td>
                                     </tr>
                                         <?}?>
 
                                     </table>
                                     </div>
-                                    <div>Всего <?=$this->total?></div>
-									<?=$this->pagination($this->currentModul.'/index/id_page/'.$this->id_page.'/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
+                                    <div>Всего <?=$this->paginator->getTotalItemCount()?></div>
+									<?php echo $this->paginator?>
                                     
                                     <!-- / Навигация по страницам -->
                                     </div>
@@ -78,8 +100,8 @@
                                         <div class="block_r gray">
                                             <h3><b>Действия</b></h3>
                                             <ul>
-                                                <li class="active">Статьи</li>
-                                                <li><a href="<?=$this->currentModul?>/add/id_page/<?=$this->id_page?>">Добавить</a></li>
+                                                <li class="active">Новости</li>
+                                                <li><a href="<?=$this->currentModul?>/edit">Добавить</a></li>
                                             </ul>
                                         </div>
                                     </div>

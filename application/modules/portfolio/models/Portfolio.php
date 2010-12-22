@@ -99,6 +99,12 @@ class Portfolio extends Zend_Db_Table {
         return $this->getAdapter()->fetchOne($sql);
     }
 
+    public function getAll(){
+    	$select = $this->select();
+    		
+    }
+    
+    
     /*
 	*Возвращает все опбликованные статьи
 	*
@@ -321,7 +327,23 @@ $new->save();
         return $years = $this->getAdapter()->fetchCol($sql);
     }
 
-
+	
+	/**
+     * 
+     * @param Zend_Db_Table_Select $select
+     * @param int $item_per_page
+     * @param int $page
+     * @return Zend_Paginator
+     */
+    private function getPaginator($select, $item_per_page, $page){
+    	$adapter = new Zend_Paginator_Adapter_DbTableSelect($select);
+        $paginator = new Zend_Paginator($adapter);
+        $paginator->setCurrentPageNumber($page);
+        return $paginator->setItemCountPerPage($item_per_page);
+        
+    }
+    
+    
 
 
 }

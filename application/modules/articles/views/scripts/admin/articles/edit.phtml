@@ -1,133 +1,19 @@
-<script type="text/javascript" src="/js/jquery/ui.core.js"></script>
-<script type="text/javascript" src="/js/jquery/ui.datepicker.js"></script>
-<script type="text/javascript" charset="utf-8">
-    $(function()
-    {
-        $("#datepicker").datepicker({ dateFormat: 'dd.mm.yy' });
-    });
-</script>
+
 
 <script type="text/javascript" src="/js/translit.js"></script>
 
-<div class="description_page">
-    <h2>Редактировать</h2>
-</div>
+
 
 <div class="content">
     <div id="left_block" class="form_page">
-        <?php if ($this->error) { ?>
-        <span style="color:red; margin-left: 16px"><strong><?=$this->error?></strong></span>
-            <?php } ?>
-        <form class="user_form" id="editform" method="post" action="" enctype="multipart/form-data">
-            <?if ($this->ok==1) {?>
-            <p align="center"><font color="green"><b>Данные сохранены</b></font></p>
-                <?} ?>
-            <?if ($this->err==1) {?>
-            <p align="center"><font color="red"><b>Заполните поля помеченные звездочкой</b></font></p>
-                <?} ?>
-            <?$item = $this->new; ?>
-            <div class="content_block">
-                <p class="form_name">Название</p>
-                <p>
-                    <?=$this->formText('new[name]', $item->name, array('class'=>'text')) ?>
-                </p>
-
-                <p class="form_name">Дата</p>
-                <div class="demo">
-                    <p>
-                        <?=$this->formText('new[created_at]', $item->created_at, array('class'=>'text', 'id' => 'datepicker')) ?>
-                    </p>
-                </div>
-
-
-            </div>
-
-            <div class="content_block">
-                <h3><a href="#" title="Показать/Скрыть блок" class="show_hide" onclick="show_hide_block('seo_block', 'seo_block_img'); return false;"><span id="show-" ><img src="/img/admin/ico_show-.png" alt="" id="seo_block_img" /></span> Seo</a></h3>
-                <div id="seo_block" style="display: none;">
-                    <p class="form_name">Title<span class="ser_text size11">(seo)</span></p>
-                    <?=$this->formText('new[seo_title]', $this->escape($item->seo_title)) ?>
-
-                    <p class="form_name">Keywords<span class="ser_text size11">(seo)</span></p>
-                    <?=$this->formText('new[seo_keywords]', $this->escape($item->seo_keywords)) ?>
-
-                    <p class="form_name">Description <span class="ser_text size11">(seo)</span></p>
-                    <?=$this->formText('new[seo_descriptions]', $this->escape($item->seo_descriptions)) ?>
-                </div>
-            </div>
-
-            <div class="content_block">
-
-                <p class="form_name">Активна</p>
-                <p>
-                    <?=$this->formCheckbox('new[pub]', null, array('checked'=>$item->pub), array(1,0)) ?>
-                </p>
-
-                <p class="form_name">Отображать на главной</p>
-                <p>
-                    <?=$this->formCheckbox('new[main]', null, array('checked'=>$item->main), array(1,0)) ?>
-                </p>
-                
-                <p class="form_name">Выбор цвета для светофора:</p>
-                <p>
-                    <select name="new[prizn]" >
-                        <option value=""></option>
-                        <?php foreach ($this->trafficLighs as $key => $value) { ?>
-                        <option value="<?php echo $key ?>" <?php echo $chk = $this->new->prizn == $key? 'selected':''; ?>><?php echo $value ?></option> 
-                        <?php } ?>
-                    </select>
-                   
-                </p>
-
-                <p class="form_name">Анонс</p>
-                <p>
-                    <?$this->fck_intro->Value = $this->new->intro?>
-                    <?php $this->fck_intro->Create();	?>
-                </p>
-
-                <p class="form_name">Тело</p>
-                <p>
-                    <?$this->fck_content->Value = $this->new->content?>
-                    <?php $this->fck_content->Create();	?>
-                </p>
-
-                <p class="form_name">Иконка</p>
-                <p>
-                    <?if ($item->small_img!= null && $item->small_img!= '') { ?>
-                <p align="center">
-                    <img src="/pics/articles/<?=$item->small_img ?>">
-                    <input type="checkbox" name="delete_img_small" value="1">удалить изображение
-                </p>
-                <br>
-                    <?} ?>
-                <?=$this->formFile('image_small') ?>
-                </p>
-                <p class="form_name">Картинка</p>
-                <p>
-                    <?if ($item->big_img!= null && $item->big_img!= '') { ?>
-                <p align="center">
-                    <img src="/pics/news/<?=$item->big_img ?>">
-                    <input type="checkbox" name="delete_img_big" value="1">удалить изображение
-                </p>
-                <br>
-                    <?} ?>
-                <?=$this->formFile('image_big') ?>
-                </p>
-            </div>
-
-            <input style="display: none;" name="edit[id_page]" value="<?=$this->id_page ?>">
-            <div class="right">
-                <button onclick="location.href='<?=$this->currentModule ?>'; return false;" class="orange"><span><em>Отменить</em></span></button>
-                <button onclick="getElementById('editform').submit()"><span><em>Сохранить</em></span></button>
-            </div>
-        </form>
+       <?php echo $this->form?>
     </div>
     <div id="right_block">
         <div class="block_r gray">
             <h3><b>Действия</b></h3>
             <ul>
-                <li><a href="<?=$this->currentModul?>/index/id_page/<?=$this->id_page?>">Список элементов</a></li>               
-                <li><a href="<?=$this->currentModul?>/add/id_page/<?=$this->id_page?>">Добавить</a></li>
+                <li><a href="<?=$this->currentModul?>/index">Список элементов</a></li>               
+                <li><a href="<?=$this->currentModul?>/edit">Добавить</a></li>
             </ul>
         </div>
     </div>

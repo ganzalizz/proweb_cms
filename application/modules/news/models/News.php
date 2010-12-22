@@ -39,14 +39,6 @@ class News extends Zend_Db_Table {
     protected static $_instance = null;
 
     
-
-    /**
-     * тут хранятся значения главных тэгов для таблицы
-     * @var array
-     */
-    private $_main_tags = null;
-
-
     /**
      * Singleton instance
      *

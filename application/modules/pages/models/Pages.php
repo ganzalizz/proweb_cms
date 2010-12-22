@@ -119,7 +119,7 @@ class Pages extends Zend_Db_Table {
 	public function getPage($id, $order = null) {
 		$select = $this->select()
 			->where('is_active = ?', 1)
-			->where('id = ?', $id);
+			->where('id = ?', (int)$id);
 			if ($order!=null){
 				$select->order($order);
 			}
@@ -506,7 +506,7 @@ class Pages extends Zend_Db_Table {
 	public function search($search){
 		 $dbAdapter = Zend_Registry::get('db');
 		 $sql = $dbAdapter->quoteInto("SELECT title, id, 'pages' as TYPE, path FROM site_content WHERE (site_content.title LIKE '%".$search."%' OR
-		 	 site_content.introText LIKE '%".$search."%'
+		 	 site_content.intro LIKE '%".$search."%'
 		 	OR site_content.content LIKE '%".$search."%' ) AND (site_content.deleted=0 AND site_content.is_active =1)  ; ",null);
 				
 		 $result = $dbAdapter->query($sql);
@@ -750,7 +750,7 @@ class Pages extends Zend_Db_Table {
 			'sitemap' => isset ( $data ['sitemap'] ) ? '1' : '0',
 			'show_childs' => isset ( $data ['show_childs'] ) ? '1' : '0',
 			'unpubDate' => date ( "Y-m-d H:i:s" ),
-			'introText' => isset($data['introText']) ? $data['introText'] : '',
+			'intro' => isset($data['intro']) ? $data['intro'] : '',
 			'content' => isset ( $data ['content'] ) ? $data ['content'] : '',
 			'template' => isset ( $data ['template'] ) ? $data ['template'] : 'default',
 			'module' => $module, 'createdBy' => $user->id,
@@ -789,7 +789,7 @@ class Pages extends Zend_Db_Table {
 			'sitemap' => isset ( $data ['sitemap'] ) ? (int)$data ['sitemap'] : '0',
 			'id_div_type' => isset ( $data ['id_div_type'] ) ? $data ['id_div_type'] : '0',
 			'show_childs' => isset ( $data ['show_childs'] ) ? (int)$data ['show_childs'] : '0',
-			'introText' => isset($data['introText']) ? $data['introText'] : '',
+			'intro' => isset($data['intro']) ? $data['intro'] : '',
 			'content' => isset ( $data ['content'] ) ? $data ['content'] : '',
 			'template' => isset ( $data ['template'] ) ? $data ['template'] : 'default',
 			'editedBy' => $user->id,
