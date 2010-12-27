@@ -1,0 +1,25 @@
+<div class="cont_inner news">
+    <div class="item">
+        <h1><?php print $this->item->title ?></h1>
+        <p>
+            Стоимость: <?php print $this->item->price ?>
+            <a href="/contacts/template/<?php print $this->item->id ?>" title="Заказать">Заказать</a>
+        </p>
+        <?php print $this->item->describe_template ?><br/>
+        <p style="text-align: center;">
+            <img src="/pics/templates/template_image/<?php print $this->item->template_image ?>" alt="<?php print $this->item->title ?>" />
+        </p>
+    </div>
+    <div class="overflow">
+        <?php if(!is_null($this->prev_item)): ?>
+            <span class="f_left">
+                <a href="/templatesitem/item/<?php print $this->prev_item->url ?>" title="предыдущая">предыдущая</a>
+            </span>
+        <?php endif; ?>
+        <?php if(!is_null($this->next_item)): ?>
+            <span class="f_right">
+                <a href="/templatesitem/item/<?php print $this->next_item->url ?>" title="следующая">следующая</a>
+            </span>
+        <?php endif; ?>
+    </div>
+</div>

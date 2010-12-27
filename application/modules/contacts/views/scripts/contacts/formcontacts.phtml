@@ -4,7 +4,8 @@
 	<form action="<?= $this->escape( $this->element->getAction() ); ?>" 
 		method="<?= $this->escape( $this->element->getMethod() ); ?>" >
 		
-		<div class="bg">
+		<div class="f_left">
+                    <div class="bg">
 			<div class="item">
 				<label for="<?php echo $this->element->name->getId()?>">
 					<?php echo $this->element->name->getLabel(); ?>
@@ -38,22 +39,28 @@
 				<?php echo $this->element->message; ?>
 			
 			</div>
+                    </div>
+
+                    <div class="capcha">
+                        <label for="<?php echo $this->element->captcha->getId()?>">
+                                <?php echo $this->element->captcha->getLabel(); ?>
+                        </label>
+                        <div class="overflow">
+                                <?php echo $this->element->captcha; ?>
+                                <?php echo $this->element->submit; ?>
+                                <div class="clear"></div>
+                        </div>
+                    </div>
+                    
 		</div>
-		<div class="capcha">
-			<label for="<?php echo $this->element->captcha->getId()?>">
-				<?php echo $this->element->captcha->getLabel(); ?>
-			</label>
-			<div class="overflow">
-				<?php echo $this->element->captcha; ?>			 			
-				<?php echo $this->element->submit; ?>
-				<div class="clear"></div>
-			</div>
-		</div>
-		
-		
-		
-		
-		
+
+                <?php if (!is_null($this->layout()->template)): ?>
+                    <div class="f_left shabl">
+                        <div><img alt="<?php print $this->layout()->template->title ?>" src="/pics/templates/thumbs/<?php print $this->layout()->template->template_image ?>"></div>
+                        <a href="/templateslist">Выбрать другой шаблон</a>
+                    </div>
+                <?php endif; ?>
+
 	
 	</form>
 </div>	

@@ -1,3 +1,5 @@
+
+
 <script>
     var delid;
     var pageid
@@ -26,17 +28,20 @@
                 <table style="margin-top: 0px; width: 750;" border="0" cellspacing="0" cellpadding="0">
                     <tr class="head">
                         <th>
-                            <b>Название</b>
+                        	<b>Название</b>
                         </th>
                         <th>
-                            <b>Дата</b>
+                        	<b>Стоимость</b>
+                        </th>
+                        <th>
+                        	<b>Просмотров</b>
                         </th>
                         <th style="width: 120px;" >
                             <b>Операции:</b>
                         </th>
                     </tr>
 
-                    <? foreach($this->portfolio as $item) {?>
+                    <? foreach($this->templates as $item) {?>
                     <tr align="left" id="row_<?php echo $item['id']?>" >
 
                         <td id="elem_<?php echo $item['id']?>" >
@@ -47,7 +52,10 @@
                             </a>
                         </td>
                         <td class="options">
-                            <?=date('d.m.Y',  strtotime($item['date_project'])) ?>
+                        	<?php echo $item['price']?>
+                        </td>
+                        <td class="options">
+                        	<?php echo $item['count_views']?>
                         </td>
                         <td class="options">
                         	<!-- edit -->
@@ -63,15 +71,7 @@
 
                             	));?>
 
-                                <a href="#" onclick="return false;" title="Отображать на главной" id="main_<?php echo $item['id']?>"><img src="/img/admin/main_<?=$item['is_main']?>.gif" /></a>&nbsp;
-                                	<?php echo $this->ajaxStatusLink(array(
-                            		'target_id'	=>'main_'.$item['id'],
-                            		'link_id'	=>'main_'.$item['id'],
-                            		'target_url'=>$this->currentModul.'/changemain',
-                            		'url_data'	=>"{id: ".$item['id']."}",
-                            		'loader_img'=>"/img/loader.gif"
 
-                            	));?>
 
                                 <a href="#" id="del_<?php echo $item['id']?>" title="Удалить"><img src="/img/admin/delete.png"></a>
                                     <?php echo $this->ajaxDeleteLink(array(
@@ -82,7 +82,7 @@
                                                     'url_data'	=>"{id: ".$item['id']."}",
                                                     'loader_img'=>"/img/loader.gif"
 
-                                ));?>
+                                            ));?>
 
                         </td>
                     </tr>
@@ -99,7 +99,7 @@
                 <div class="block_r gray">
                     <h3><b>Действия</b></h3>
                     <ul>
-                        <li class="active">Портфолио список</li>
+                        <li class="active">Шаблоны страниц</li>
                         <li><a href="<?=$this->currentModul?>/edit">Добавить</a></li>
                     </ul>
                 </div>

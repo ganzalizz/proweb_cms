@@ -1,6 +1,7 @@
 <?php
 
 class Portfolio_Admin_PortfolioController extends MainAdminController {
+
     /**
      *
      * @var int
@@ -11,370 +12,260 @@ class Portfolio_Admin_PortfolioController extends MainAdminController {
      * @var object
      */
     private $_owner = null;
+    private $_curModule = null;
+    private $_basePicsPath = null;
+    private $_onPage = null;
 
     public function init() {
-        $this->view->addHelperPath(Zend_Registry::get('helpersPaths') , 'View_Helper') ;
-        $this->_id_page = $this->_getParam('id_page');
-        $this->view->id_page = $this->_id_page;
-        if ($this->_id_page!=null) {
-            $this->_owner = Pages::getInstance()->find($this->_id_page)->current();
-            if ($this->_owner!=null) {
-                $this->view->layout()->title = $this->_owner->name;
-            }
-        }
-        $this->view->lang = $lang = $this->_getParam('lang','ru');
-        $this->view->currentModul = SP.'portfolio'.SP.$lang.SP.$this->getRequest()->getControllerName();
+        $this->view->addHelperPath(Zend_Registry::get('helpersPaths'), 'View_Helper');
+        $this->view->addScriptPath(DIR_LIBRARY . 'Ext/View/Scripts/');
+        $ini = new Ext_Common_Config('portfolio', 'backend');
+        $this->_basePicsPath = $ini->basePicsPath;
+        $this->_onPage = $ini->countOnPage;
+
+        $this->checkDirs();
+
+        $this->view->layout()->title = "Портфолио";
+        $this->view->lang = $lang = $this->_getParam('lang', 'ru');
+        $this->view->currentModul = $this->_curModule = SP . 'portfolio' . SP . $lang . SP . $this->getRequest()->getControllerName();
     }
 
     public function indexAction() {
         $this->view->layout()->action_title = "Список элементов";
         $page = $this->view->current_page = $this->_getParam('page', 1);
-        $onPage = $this->view->onpage = 50;
-        $this->view->counter=($page-1)*$onPage;
-        $this->view->portfolio = Portfolio::getInstance()->fetchAll();
-        $this->view->total = Portfolio::getInstance()->getCount("id_page='".$this->_id_page."'");
 
+        $paginator = Portfolio::getInstance()->getAll($this->_onPage, $page);
+        Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
+
+        $this->view->portfolio = $paginator->getCurrentItems();
+        $this->view->paginator = $paginator;
     }
-
-
 
     public function addAction() {
         $this->view->layout()->action_title = "Создать элемент";
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $this->view->currentModul = $curModul = SP.'portfolio'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        $this->view->lang = $lang;
-        //  $this->view->peoples = Peoples::getInstance()->fetchAll(null, 'priority DESC');
-        $page_id = $this->_getParam('pageid');
-        $this->view->modul_page = $page = Pages::getInstance()->getPage($page_id);
-        $this->view->page = $page;
+
+        $form = new Form_FormPortfolio( );
+
         if ($this->_request->isPost()) {
 
-            $data = $this->getRequest()->getParams();
-            $new = $data['new'];
-            if ($new['created_at']!='') {
-                $adate = preg_match('/([\d]{2}).+([\d]{2}).+([\d]{4})/is', $new['created_at'], $matches);
-                $new['created_at'] = $matches[3].'-'.$matches[2].'-'.$matches[1];
-            } else {
-                $new['created_at'] = date('Y-m-d H:i:s');
-
-            }
-            $new['name']=trim($new['name']);
-            if (isset($new['pub']) && $new['pub']=='on') {
-                $new['pub'] = 1;
-            }
-            else {
-                $new['pub'] = 0;
-            }
-            (isset($new['main']) && $new['main']=='on' ?$new['main'] = 1 :$new['main'] = 0);
-            if (isset($page)) {
-                $new['page_id']=$page->id;
-                $new['type']=$page->template;
-            }
-
-            $post_data['title'] = $new['name'];
-            $post_data['text'] = $new['content'];
-
-            $id = Portfolio::getInstance()->addPortfolio($new);
-            $item = Portfolio::getInstance()->find($id)->current();
-            // иконка
-            $img_name = $_FILES['image_small']['name'];
-            $img_source = $_FILES['image_small']['tmp_name'];
-
-            if ($img_name!='' && $img_source!='' ) {
-                $ext = @end(explode('.', $img_name));
-                $small_img = DIR_PUBLIC.'pics/portfolio/'.$id.'_small.'.$ext;
-                if(copy($img_source, $small_img)) {
-                    $item->small_img = $id.'_small.'.$ext;
-                    $item->save();
-                }
-            }
-            // картинка
-            $img_name = $_FILES['image_big']['name'];
-            $img_source = $_FILES['image_big']['tmp_name'];
-            $delete_img = $this->_getParam('delete_img_big');
-            if ($img_name!='' && $img_source!='' && !$delete_img) {
-                $ext = @end(explode('.', $img_name));
-
-                $big_img = DIR_PUBLIC.'pics/portfolio/'.$id.'_big.'.$ext;
-                if(copy($img_source, $big_img)) {
-                    $item->big_img = $id.'_big.'.$ext;
-                    $item->save();
-                }
-            }
         }
-        $fck1 = $this->getFck('new[intro]', '100%', '200');
-        $this->view->fck_intro = $fck1;
-        $fck2 = $this->getFck('new[content]', '100%', '300');
-        $this->view->fck_content = $fck2;
+
+        $this->processForm($form, $this->getRequest());
+
+        $this->view->form = $form;
     }
 
     public function editAction() {
-        $this->view->layout()->action_title = "Редактировать элемент";
-        $id = (int)$this->getRequest()->getParam('id');
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $this->view->currentModul = $curModul = SP.'portfolio'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        $this->view->lang = $lang;
-        $novost = Portfolio::getInstance()->getPortfolioById($id);
-        // $this->view->peoples = Peoples::getInstance()->fetchAll(null, 'priority DESC');
-        //print_r($novost->toArray());
-        $page_id = $this->_getParam('pageid');
-        $this->view->modul_page =$page = Pages::getInstance()->getPage($page_id);
 
-        if ($this->_request->isPost()) {
-            $id = (int)$this->getRequest()->getParam('id');
-            $data = $this->getRequest()->getParams();
-            
-            if ($data['new']['name']!='' ) {
-                $new = $data['new'];
-                if ($new['created_at']!='') {
-                    $adate = preg_match('/([\d]{2}).+([\d]{2}).+([\d]{4})/is', $new['created_at'], $matches);
-                    $new['created_at'] = $matches[3].'-'.$matches[2].'-'.$matches[1];
-                } else {
-                    $new['created_at'] = date('Y-m-d H:i:s');
-                }
-                $new['name']=trim($new['name']);
-                if (isset($new['pub']) && $new['pub']=='1') {
-                    $new['pub'] = 1;
-                }
-                else {
-                    $new['pub'] = 0;
-                }
-                (isset($new['main']) && $new['main']=='1' ?	$new['main'] = 1 :$new['main'] = 0);
-                Portfolio::getInstance()->editPortfolio($new,$id);
-                // иконка
-                $img_name = $_FILES['image_small']['name'];
-                $img_source = $_FILES['image_small']['tmp_name'];
-                $delete_img = $this->_getParam('delete_img_small');
-                if ($img_name!='' && $img_source!='' && !$delete_img) {
-                    $item = Portfolio::getInstance()->getPortfolioById($id);
-                    $ext = @end(explode('.', $img_name));
-                    $small_img = DIR_PUBLIC.'pics/portfolio/'.$id.'_small.'.$ext;
-                    $big_img = DIR_PUBLIC.'pics/portfolio/'.$id.'_big.'.$ext;
-                    if(copy($img_source, $small_img)) {
-                        $item->small_img = $id.'_small.'.$ext;
-                        $item->save();
-                    }
-                } else if ($delete_img) {
-                    $item = Portfolio::getInstance()->getPortfolioById($id);
-                    @unlink(DIR_PUBLIC.'pics/portfolio/'.$item->small_img);
-                    $item->small_img='';
-                    $item->save();
-                }
-                // картинка
-                $img_name = $_FILES['image_big']['name'];
-                $img_source = $_FILES['image_big']['tmp_name'];
-                $delete_img = $this->_getParam('delete_img_big');
-                if ($img_name!='' && $img_source!='' && !$delete_img) {
-                    $item = Portfolio::getInstance()->getPortfolioById($id);
-                    $ext = @end(explode('.', $img_name));
-
-                    $big_img = DIR_PUBLIC.'pics/portfolio/'.$id.'_big.'.$ext;
-                    if(copy($img_source, $big_img)) {
-                        $item->big_img = $id.'_big.'.$ext;
-                        $item->save();
-                    }
-                } else if ($delete_img) {
-                    $item = Portfolio::getInstance()->getPortfolioById($id);
-                    @unlink(DIR_PUBLIC.'pics/portfolio/'.$item->big_img);
-                    $item->big_img='';
-                    $item->save();
-                }
-
-                $this->editMeta('portfolio', $id);
-                $sortSession = new Zend_Session_Namespace('sortSearch');
-                $pageSession = new Zend_Session_Namespace('pageSearch');
-
-                if (isset($pageSession->page)) {
-                    $page_link="/page/".$pageSession->page;
-                } else $page_link="";
-
-                if (isset($sortSession->sort)) {
-                    $sort_link="/sort/".strtolower($sortSession->sort);
-                } else $sort_link="";
-
-                $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-            } else $this->view->err=1;
+        $id = $this->_getParam('id');
+        if ($id) {
+            Form_FormPortfolio::setRecordId($id);
+            $this->view->layout()->action_title = "Редактировать элемент";
+            $row = Portfolio::getInstance()->find((int) $this->_getParam('id'))->current();
+        } else {
+            $this->view->layout()->action_title = "Создать элемент";
+            $row = Portfolio::getInstance()->fetchNew();
         }
 
-        $fck1 = $this->getFck('new[intro]', '100%', '200');
-        $this->view->fck_intro = $fck1;
-        $fck2 = $this->getFck('new[content]', '100%', '300');
-        $this->view->fck_content = $fck2;
-        $this->view->options = $this->getMeta('portfolio', $id);
-        $novost->created_at = $this->dateFromDb($novost->created_at);
-        $this->view->new = $novost;
+        $form = new Form_FormPortfolio();
+
+
+
+        if (!is_null($row)) {
+
+            if ($this->_request->isPost()){
+                $data = $this->processForm( $form, $row );
+                $form->populate($data);
+            } else {
+                $form->populate($row->toArray());
+            }
+            if ($row->image) {
+                $form->getElement('image')->setAttrib('image', '/pics/portfolio/thumbs/' . $row->image);
+            }
+            if (!$id) {
+                // по умолчанию создаем активный элемент
+                $form->getElement('is_active')->setChecked(true);
+            }
+            if ($row->date_project != '') {
+                $form->getElement('date_project')->setValue(date('d.m.Y', strtotime($row->date_project)));
+            }
+        }
+
+        $this->view->form = $form;
+
+        // $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
     }
-
-    public function pubAction() {
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $curModul = SP.'portfolio'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        if(!$this->_hasParam('id')) {
-            $this->_redirect($curModul);
-        }
-        else {
-            $id = (int)$this->getRequest()->getParam('id');
-            Portfolio::getInstance()->pubPortfolio($id);
-
-            $sortSession = new Zend_Session_Namespace('sortSearch');
-            $pageSession = new Zend_Session_Namespace('pageSearch');
-
-            if (isset($pageSession->page)) {
-                $page_link="/page/".$pageSession->page;
-            } else $page_link="";
-
-            if (isset($sortSession->sort)) {
-                $sort_link="/sort/".strtolower($sortSession->sort);
-            } else $sort_link="";
-
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-        }
-    }
-
-    public function unpubAction() {
-
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $curModul = SP.'portfolio'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        if(!$this->_hasParam('id')) {
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-        }
-        else {
-            $id = (int)$this->getRequest()->getParam('id');
-            Portfolio::getInstance()->unpubPortfolio($id);
-            $sortSession = new Zend_Session_Namespace('sortSearch');
-            $pageSession = new Zend_Session_Namespace('pageSearch');
-
-            if (isset($pageSession->page)) {
-                $page_link="/page/".$pageSession->page;
-            } else $page_link="";
-
-            if (isset($sortSession->sort)) {
-                $sort_link="/sort/".strtolower($sortSession->sort);
-            } else $sort_link="";
-
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-        }
-    }
-
 
     public function checkurlAction() {
         $url = $this->_getParam('url', '');
         $id = $this->_getParam('id', '');
         if ($url) {
             $item = Portfolio::getInstance()->fetchRow("url='$url' AND id!='$id'");
-            if ($item!=null) {
+            if ($item != null) {
                 echo 'err';
-            } else echo 'ok';
+            } else
+                echo 'ok';
+        }
+        exit();
+    }
 
+    /**
+     * удаление элемента
+     */
+    public function deleteAction() {
+        if ($this->_request->isXmlHttpRequest()) {
+            $id = $this->_getParam('id');
+            $row = Portfolio::getInstance()->find($id)->current();
+            if ($row != null) {
+                if ($row->image != '') {
+                    @unlink($this->_basePicsPath . 'image/' . $row->image);
+                }
+                $row->delete();
+                echo 'ok';
+            } else {
+                echo 'error';
+            }
         }
         exit;
     }
 
-    public function deleteAction() {
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $curModul = SP.'portfolio'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        if(!$this->_hasParam('id')) {
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
+    /**
+     * изменение активности
+     */
+    public function changeactiveAction() {
+        // проверка пришел ли запрос аяксом
+        if ($this->_request->isXmlHttpRequest()) {
+            $id = $this->_getParam('id');
+            $row = Portfolio::getInstance()->find($id)->current();
+            if ($row != null) {
+                $row->is_active = abs($row->is_active - 1);
+                $row->save();
+                echo '<img src="/img/admin/active_' . $row->is_active . '.png" />';
+            } else {
+                echo 'error';
+            }
         }
-        else {
-            $id = (int)$this->getRequest()->getParam('id');
-
-            $novost = Portfolio::getInstance()->getPortfolioById($id);
-
-            Portfolio::getInstance()->deletePortfolio($id);
-            $sortSession = new Zend_Session_Namespace('sortSearch');
-            $pageSession = new Zend_Session_Namespace('pageSearch');
-
-            if (isset($pageSession->page)) {
-                $page_link="/page/".$pageSession->page;
-            } else $page_link="";
-
-            if (isset($sortSession->sort)) {
-                $sort_link="/sort/".strtolower($sortSession->sort);
-            } else $sort_link="";
-
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
-        }
-
+        exit;
     }
 
-    public function setmainAction() {
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $curModul = SP.'portfolio'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        if(!$this->_hasParam('id')) {
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
+    /**
+     * изменение отображение на главной
+     */
+    public function changemainAction() {
+        // проверка пришел ли запрос аяксом
+        if ($this->_request->isXmlHttpRequest()) {
+            $id = $this->_getParam('id');
+            $row = Portfolio::getInstance()->find($id)->current();
+            if ($row != null) {
+                $row->is_main = abs($row->is_main - 1);
+                $row->save();
+                echo '<img src="/img/admin/main_' . $row->is_main . '.gif" />';
+            } else {
+                echo 'error';
+            }
         }
-        else {
-            $id = (int)$this->getRequest()->getParam('id');
-            Portfolio::getInstance()->setMainPortfolio($id);
-            $sortSession = new Zend_Session_Namespace('sortSearch');
-            $pageSession = new Zend_Session_Namespace('pageSearch');
+        exit;
+    }
 
-            if (isset($pageSession->page)) {
-                $page_link="/page/".$pageSession->page;
-            } else $page_link="";
+    /**
+     *
+     * @param Ext_Form $form
+     * @param Zend_Controller_Request_Http $request
+     */
+    private function processForm($form, $row) {
 
-            if (isset($sortSession->sort)) {
-                $sort_link="/sort/".strtolower($sortSession->sort);
-            } else $sort_link="";
 
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
+
+        if ($this->_request->isPost()) {
+            $flag_save = false;
+            // добавление записи в базу
+            if ($form->isValid($this->_getAllParams()) && $row->id == '') {
+                $row = Portfolio::getInstance()->addPortfolio($row, $form->getValidValues($form->getValues()));
+                $flag_save = true;
+                // редактирование записи
+            } elseif ($form->isValid($this->_getAllParams()) && $row->id > 0) {
+                $row = Portfolio::getInstance()->editPortfolio($row, $form->getValidValues($this->_getAllParams()));
+                $flag_save = true;
+            }
+
+
+
+
+            if (!is_null($row) && $flag_save){ // запись в базе создана загружаем картинки
+                $aploaded_images = $this->reciveFiles($row->id);
+                if (isset($aploaded_images['image']) && !$this->_getParam('image_delete')) {
+
+                    $thumb = Ext_Common_PhpThumbFactory::create($aploaded_images['image']);
+                    $thumb->setOptions(array('jpegQuality' => 100));
+                    $thumb->resize(100);
+                    $thumb->save($this->_basePicsPath . 'thumbs/' . basename($aploaded_images['image']));
+
+                    if ($row->image != '' && $row->image != basename($aploaded_images['image'])) {
+                        @unlink($this->_basePicsPath . 'image/' . $row->image);
+                        @unlink($this->_basePicsPath . 'thumbs/' . $row->image);
+                    }
+
+                    $row->image = basename($aploaded_images['image']);
+                } elseif ($this->_getParam('small_img_delete')) {
+                    @unlink($this->_basePicsPath . 'image/' . $row->image);
+                    @unlink($this->_basePicsPath . 'thumbs/' . $row->image);
+                    $row->image = '';
+                }
+
+                $row->save();
+                $this->view->ok = 1;
+                
+            }
+            return $form->getValues();
         }
     }
 
+    /**
+     *
+     * @param unknown_type $destination
+     */
+    private function reciveFiles($id) {
+        $upload = new Zend_File_Transfer_Adapter_Http( );
 
-    public function unsetmainAction() {
-        $lang = $this->getRequest()->getParam('lang','ru');
-        $curModul = SP.'portfolio'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        if(!$this->_hasParam('id')) {
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
+        $uploaded_images = array();
+
+        if (!$id) {
+            return $uploaded_images;
         }
-        else {
-            $id = (int)$this->getRequest()->getParam('id');
-            Portfolio::getInstance()->unsetMainPortfolio($id);
-            $sortSession = new Zend_Session_Namespace('sortSearch');
-            $pageSession = new Zend_Session_Namespace('pageSearch');
 
-            if (isset($pageSession->page)) {
-                $page_link="/page/".$pageSession->page;
-            } else $page_link="";
-
-            if (isset($sortSession->sort)) {
-                $sort_link="/sort/".strtolower($sortSession->sort);
-            } else $sort_link="";
-
-            $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
+        // загрузка изображения
+        if ($upload->getFileInfo('image')) {
+            $image_name = $this->_basePicsPath . 'image/' . $id . '_' .
+                    basename($upload->getFileName('image'));
+            $upload->addFilter(
+                    'Rename',
+                    array(
+                        'target' => $image_name,
+                        'overwrite' => true
+                    ),
+                    'image'
+            );
+            if ($upload->receive('image')) {
+                $uploaded_images['image'] = $image_name;
+            }
         }
+
+        return $uploaded_images;
     }
 
-    public function activateAction() {
-        if($this->_hasParam('id')) {
-            $id = (int)$this->getRequest()->getParam('id');
-            Pages::getInstance()->pubPage($id);
+    /**
+     * Проверка существования директорий для картинок
+     * и создание их если нет
+     * @param string $this->_basePicsPath
+     */
+    private function checkDirs() {
+        //TODO: вынести директории в массив
+        if (!is_dir($this->_basePicsPath . '/image')) {
+            mkdir($this->_basePicsPath . '/image', 0777, true);
         }
-        $this->view->lang = $this->_getParam('lang');
-        $lang = $this->_hasParam('lang') ? $this->getParam('lang') : 'ru';
-        $this->_redirect("/portfolio/$lang/admin_portfolio/");
-    }
-
-    public function unactivateAction() {
-        if($this->_hasParam('id')) {
-            $id = (int)$this->getRequest()->getParam('id');
-            Pages::getInstance()->unpubPage($id);
+        if (!is_dir($this->_basePicsPath . '/thumbs')) {
+            mkdir($this->_basePicsPath . '/thumbs', 0777, true);
         }
-        $lang = $this->_getParam('lang');
-        $this->view->lang = $lang;
-        $this->_redirect("/portfolio/$lang/admin_portfolio/");
     }
-
-
-
-    private function editRoute($data) {
-        Loader::loadCommon('Router');
-
-        if(!Router::getInstance()->replaceRoute($data, 'index', 'index', 'portfolio')) {
-            return "Такой URL уже существует!";
-        }
-
-        return '';
-    }
+        
 }
