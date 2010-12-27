@@ -1,4 +1,6 @@
 <div class="cont_inner news">
+
+    <h1><?=$this->layout()->page->title?></h1>
 	
 	<?php echo $this->page->content?>
 
@@ -9,7 +11,7 @@
        <b class="date"><i><?php echo $item->date?></i></b>
         <h3><a href="/articlesitem/item/<?=$item->url?>" class="head_articles"><?=$item->name?></a></h3>
         <? if($item->small_img!=''){?>
-            <div class="photo">
+            <div class="photo_teaser_news">
             	<a href="/articlesitem/item/<?php echo $item->url?>">
             		<img src="/pics/articles/thumbs/<?php echo $item->small_img?>" alt="<?php echo $item->name?>" />
             	</a>
