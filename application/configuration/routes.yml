@@ -271,14 +271,6 @@ routes:
         controller: articles
         action: index
         id: 1076
-    articlesitem: 
-      type: Zend_Controller_Router_Route
-      route: articlesitemt/*
-      defaults: 
-        module: articles
-        controller: articles
-        action: articlesitem
-        id: 1076
     portfolio: 
       type: Zend_Controller_Router_Route
       route: portfoliolist/*
@@ -286,14 +278,6 @@ routes:
         module: portfolio
         controller: portfolio
         action: index
-        id: 1075
-    portfolioitem: 
-      type: Zend_Controller_Router_Route
-      route: portfolioitem/*
-      defaults: 
-        module: portfolio
-        controller: portfolio
-        action: portfolioitem
         id: 1075
     newslist: 
       type: Zend_Controller_Router_Route
@@ -303,14 +287,6 @@ routes:
         controller: news
         action: index
         id: 846
-    newsitem: 
-      type: Zend_Controller_Router_Route
-      route: newsitem/*
-      defaults: 
-        module: news
-        controller: news
-        action: newsitem
-        id: 
     about: 
       type: Zend_Controller_Router_Route
       route: about
@@ -335,14 +311,6 @@ routes:
         controller: contacts
         action: index
         id: 849
-    templatesitem: 
-      type: Zend_Controller_Router_Route
-      route: templatesitem
-      defaults: 
-        module: templates
-        controller: templates
-        action: templatesitem
-        id: 
     templateslist: 
       type: Zend_Controller_Router_Route
       route: templateslist/*
@@ -351,3 +319,27 @@ routes:
         controller: templates
         action: index
         id: 1085
+    newsitem: 
+      type: Zend_Controller_Router_Route
+      route: newsitem/:item
+      defaults: 
+        module: news
+        controller: news
+        action: newsitem
+        id: 
+    portfolioitem: 
+      type: Zend_Controller_Router_Route
+      route: portfolioitem/:item
+      defaults: 
+        module: portfolio
+        controller: portfolio
+        action: portfolioitem
+        id: 
+    templatesitem: 
+      type: Zend_Controller_Router_Route
+      route: templatesitem/:item
+      defaults: 
+        module: templates
+        controller: templates
+        action: templatesitem
+        id: 

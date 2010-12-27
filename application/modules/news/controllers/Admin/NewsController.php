@@ -99,7 +99,7 @@ class News_Admin_NewsController extends MainAdminController {
 		
 		$this->view->form = $form;
 		
-	// $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
+	
 	
 
 	}
@@ -333,16 +333,71 @@ class News_Admin_NewsController extends MainAdminController {
 		}
 	}
 	
-	public function installAction() {
-		//        $view = Zend_Layout::getMvcInstance()->getView();
-		//        $view->jQuery->addJavascriptFile('/js/jquery-1.4.2.min')
-		//                     ->addJavascriptFile('/js/jquery-ui-1.8.6.custom.min.js');
-		require_once 'NewsInstall.php';
-		echo 'Begin';
-		$install = new News_Admin_NewsInstall( 'news' );
-		// $install->Uninstall();
-		$install->Install();
+	        
+       public function inunAction()
+       {
+        $installed = $this->_getParam('installed');
+        
+        require_once 'NewsInstall.php';
+        $install = new NewsInstall('news');
+        
+        if (($this->_request->isXmlHttpRequest()) && ($this->_getParam('installed')))
+        {
+            $install->Uninstall();
+            $module = Modules::getInstance()->getModuleByName('news');
+           
+          echo  '													
+		      <td class="main" >
+			<strong>'.$module['name'].'</strong>
+                      </td>
+		      <td class="main" style="color:red;">'.
+			$module['title'].' 
+		      </td>											
+		      <td class="main" >'.
+			$module['describe'].'
+		      </td>										
+		      <td class="options">
+			  <a id="'.$module['name'].'" href="#" onclick="return false;" title="Включить модуль"><img src="/img/admin/module_'.$module['installed'].'.png" alt="/img/admin/module_'.$module['installed'].'.png"></a>    
+                      </td>'.
+                     $this->view->ajaxStatusLink(array(
+                                                  'target_id'	=>'row_'.$module['id'],
+                                                  'link_id'	=>$module['name'],
+                                                  'target_url'=>'/../../'.$module['name'].'/ru/admin_'.$module['name'].'/inun',
+                                                  'url_data'	=>"{installed: ".$module['installed']."}",
+                                                  'loader_img'=>"/img/horizontal_loader.gif"
+                                                  ));
+            
+        }
+        else
+        {
+            $install->Install();
+            $module = Modules::getInstance()->getModuleByName('news');
+           
+          echo  '														
+		      <td class="main" >
+			<strong>'.$module['name'].'</strong>
+                      </td>
+		      <td class="main" " style="color:green;">'.
+			$module['title'].' 
+		      </td>											
+		      <td class="main" >'.
+			$module['describe'].'
+		      </td>										
+		      <td class="options">
+			  <a id="'.$module['name'].'" href="#" onclick="return false;" title="Выключить модуль"><img src="/img/admin/module_'.$module['installed'].'.png" alt="/img/admin/module_'.$module['installed'].'.png"></a>    
+                      </td>
+		      '.$this->view->ajaxStatusLink(array(
+                                                  'target_id'	=>'row_'.$module['id'],
+                                                  'link_id'	=>$module['name'],
+                                                  'target_url'=>'/../../'.$module['name'].'/ru/admin_'.$module['name'].'/inun',
+                                                  'url_data'	=>"{installed: ".$module['installed']."}",
+                                                  'loader_img'=>"/img/horizontal_loader.gif"
+                                                  ));;
+           
+	} 
 	
-	}
+	exit;
+		
+    }
 
 }

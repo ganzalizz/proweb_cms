@@ -1,8 +1,8 @@
 <?php
 
-require_once APPLICATION_PATH.'/library/Ext/Common/InstallModuleAbstract.php';
+require_once APPLICATION_PATH.'/../library/Ext/Common/InstallModuleAbstract.php';
 
-class Articles_Admin_ArticlesInstall extends Ext_Common_InstallModuleAbstract
+class ArticlesInstall extends Ext_Common_InstallModuleAbstract
 {
     
      
@@ -20,7 +20,7 @@ class Articles_Admin_ArticlesInstall extends Ext_Common_InstallModuleAbstract
     public function Uninstall()
     {
         $this->UnregisteredModule();
-        $this->ClearRoute();
+        $this->DeleteRoute();
     }
     
     
@@ -28,10 +28,7 @@ class Articles_Admin_ArticlesInstall extends Ext_Common_InstallModuleAbstract
     private function RegisterModule()
     {
         
-        
-       
-       
-        $sql = "CREATE TABLE CREATE TABLE IF NOT EXISTS ".$this->_module_tableName." (
+        $sql = "CREATE TABLE IF NOT EXISTS ".$this->_module_tableName."(
                     id int(11) unsigned NOT NULL AUTO_INCREMENT,
                     name varchar(255) NOT NULL,
                     link varchar(255) DEFAULT NULL,
@@ -67,7 +64,7 @@ class Articles_Admin_ArticlesInstall extends Ext_Common_InstallModuleAbstract
                                           priority,
                                           active,
                                           go_to_module)
-                    VALUES('newslist',
+                    VALUES('articleslist',
                            'Список статей',
                            'articles',
                            'articles',
@@ -95,51 +92,9 @@ class Articles_Admin_ArticlesInstall extends Ext_Common_InstallModuleAbstract
         
         $delete_table = "DROP TABLE IF EXISTS ".$this->_module_tableName;
         $this->_db->getConnection()->exec($delete_table);
-        $where = $this->_db->quoteInto('name = ?', 'news');
+        $where = $this->_db->quoteInto('name = ?', 'articles');
         $this->_db->update('site_modules', array('installed' => 0), $where);
         $this->_db->commit();
     }
     
-    private function DoRoute()
-    {
-      
-     $route_config = new Zend_Config_Yaml($this->_module_config->main->config->path.'routes.yml',null,
-                              array('skipExtends'        => true,
-                                    'allowModifications' => true));
-                $route_name = $this->_module_sys_Name.'item';
-     		$route_config->routes->routes->$route_name = array();
-                $route_config->routes->routes->$route_name->__set('type', "Zend_Controller_Router_Route" );
-                $route_config->routes->routes->$route_name->__set('route', $route_name.'/:item');
-                $route_config->routes->routes->$route_name->defaults = array();
-                $route_config->routes->routes->$route_name->defaults->__set('module', $this->_module_sys_Name);                
-                $route_config->routes->routes->$route_name->defaults->__set('controller', $this->_module_sys_Name);
-                $route_config->routes->routes->$route_name->defaults->__set('action',$this->_module_sys_Name.'item');
-               // $route_config->routes->routes->$route_name->defaults->__set('id', $data['id']); 
-                
-                
-                $writer = new Zend_Config_Writer_Yaml();
-                $writer->setFilename($this->_module_config->main->config->path.'routes.yml');
-                $writer->setConfig($route_config);
-                $writer->write();
-        
-    }
-    
-    protected function ClearRoute()
-    {
-        $route_config = new Zend_Config_Yaml($this->_module_config->main->config->path.'routes.yml',null,
-                              array('skipExtends'        => true,
-                                    'allowModifications' => true));
-       $route_config->routes->routes->__unset($this->_module_sys_Name.'item');
-       
-       $writer = new Zend_Config_Writer_Yaml();
-                $writer->setFilename($this->_module_config->main->config->path.'routes.yml');
-                $writer->setConfig($route_config);
-                $writer->write();
-        
-        
-    }
-    
-  
-    
-   
 }

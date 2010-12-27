@@ -323,3 +323,19 @@ span.complete {
 	font-weight:bold;
 	padding-bottom:10px;	
 }
+
+.admin_panel_block {
+    float:left;
+    height:80px;
+    text-align: center;
+    padding: 3px 10px;
+}
+.admin_panel_block a {
+    text-decoration: none;
+}
+.admin_panel_block a span{
+    text-decoration: underline;
+}
+.admin_panel_block a:hover span{
+    text-decoration: none;
+}

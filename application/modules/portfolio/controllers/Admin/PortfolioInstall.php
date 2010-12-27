@@ -1,14 +1,8 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 require_once APPLICATION_PATH.'/../library/Ext/Common/InstallModuleAbstract.php';
 
-class TemplatesInstall extends Ext_Common_InstallModuleAbstract
+class PortfolioInstall extends Ext_Common_InstallModuleAbstract
 {
      public function Install()
     {
@@ -32,13 +26,16 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
     {
         $create_table = "CREATE TABLE IF NOT EXISTS ".$this->_module_tableName."(
                                           id int(11) unsigned NOT NULL AUTO_INCREMENT,
+                                          type varchar(50) NOT NULL DEFAULT 'portfolio',
                                           title varchar(255) NOT NULL,
                                           url varchar(255) NOT NULL,
-                                          describe_template text NOT NULL,
-                                          price int(11) unsigned NOT NULL DEFAULT '100',
-                                          template_image varchar(255) NOT NULL,
-                                          is_active tinyint(1) NOT NULL DEFAULT '1',
-                                          count_views int(11) unsigned NOT NULL DEFAULT '0',
+                                          teaser varchar(1000) NOT NULL,
+                                          content text,
+                                          is_active tinyint(1) NOT NULL DEFAULT '0',
+                                          main int(1) NOT NULL DEFAULT '0',
+                                          date_project date DEFAULT NULL,
+                                          created_at date DEFAULT NULL,
+                                          pub_date datetime DEFAULT NULL,
                                           seo_title varchar(150) NOT NULL,
                                           seo_descriptions varchar(300) NOT NULL,
                                           seo_keywords varchar(500) NOT NULL,
@@ -58,12 +55,12 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
                                           priority,
                                           active,
                                           go_to_module)
-                    VALUES('templates',
-                           'Шаблоны сайтов',
-                           'templates',
-                           'templates',
+                    VALUES('portfolio',
+                           'portfolio',
+                           'portfolio',
+                           'portfolio',
                            'index',
-                           'admin_tempates',
+                           'admin_portfolio',
                            'index',
                            0,1,1);";
                
@@ -74,7 +71,7 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
         if (!$this->IsModuleRegistered())
                 $this->_db->getConnection()->exec($register_module_sql);
         
-                $where = $this->_db-> quoteInto('name = ?', 'templates');
+                $where = $this->_db-> quoteInto('name = ?', 'portfolio');
                 $this->_db->update('site_modules', array('installed' => 1), $where);
         $this->_db->commit();
     }
@@ -86,9 +83,9 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
         
         $this->_db->exec($delete_table);
         
-        $where = $this->_db->quoteInto('module = ?', 'templates');
+        $where = $this->_db->quoteInto('module = ?', 'portfolio');
         $this->_db->delete('site_divisions_type', $where);
-        $where = $this->_db->quoteInto('name = ?', 'templates');
+        $where = $this->_db->quoteInto('name = ?', 'portfolio');
         $this->_db->update('site_modules', array('installed' => 0), $where);
         
         $this->_db->commit();
