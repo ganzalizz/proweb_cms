@@ -6,7 +6,7 @@
  */
 
 
-require_once APPLICATION_PATH.'/library/Ext/Common/InstallModuleAbstract.php';
+require_once APPLICATION_PATH.'/../library/Ext/Common/InstallModuleAbstract.php';
 
 class TemplatesInstall extends Ext_Common_InstallModuleAbstract
 {
@@ -33,7 +33,8 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
         $create_table = "CREATE TABLE IF NOT EXISTS ".$this->_module_tableName."(
                                           id int(11) unsigned NOT NULL AUTO_INCREMENT,
                                           title varchar(255) NOT NULL,
-                                          describe text NOT NULL,
+                                          url varchar(255) NOT NULL,
+                                          describe_template text NOT NULL,
                                           price int(11) unsigned NOT NULL DEFAULT '100',
                                           template_image varchar(255) NOT NULL,
                                           is_active tinyint(1) NOT NULL DEFAULT '1',
@@ -45,7 +46,7 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
                                           ENGINE=InnoDB
                                           DEFAULT CHARSET=utf8
                                           COLLATE = utf8_general_ci;";
-            
+          //TODO: Сделать вычитывание в таблицу site_divisions_type  данных из конфига модуля  
           $register_module_sql = "
           INSERT INTO site_divisions_type(system_name,
                                           title,
@@ -93,42 +94,5 @@ class TemplatesInstall extends Ext_Common_InstallModuleAbstract
         $this->_db->commit();
     }
     
-    private function DoRoute()
-    {
-      
-      $route_config = new Zend_Config_Yaml($this->_module_config->main->config->path.'routes.yml',null,
-                              array('skipExtends'        => true,
-                                    'allowModifications' => true));
-                $route_name = $this->_module_sys_Name.'item';
-     		$route_config->routes->routes->$route_name = array();
-                $route_config->routes->routes->$route_name->__set('type', "Zend_Controller_Router_Route" );
-                $route_config->routes->routes->$route_name->__set('route', $route_name);
-                $route_config->routes->routes->$route_name->defaults = array();
-                $route_config->routes->routes->$route_name->defaults->__set('module', $this->_module_sys_Name);                
-                $route_config->routes->routes->$route_name->defaults->__set('controller', $this->_module_sys_Name);
-                $route_config->routes->routes->$route_name->defaults->__set('action',$this->_module_sys_Name.'item');
-                $route_config->routes->routes->$route_name->defaults->__set('id', $data['id']); 
-                
-                
-                $writer = new Zend_Config_Writer_Yaml();
-                $writer->setFilename($this->_module_config->main->config->path.'routes.yml');
-                $writer->setConfig($route_config);
-                $writer->write();
-		
-     }
-     
-     private function DeleteRoute()
-     {
-       $route_config = new Zend_Config_Yaml($this->_module_config->main->config->path.'routes.yml',null,
-                              array('skipExtends'        => true,
-                                    'allowModifications' => true));
-       $route_config->__unset($this->_module_sys_Name.'item');
-       
-       $writer = new Zend_Config_Writer_Yaml();
-                $writer->setFilename($this->_module_config->main->config->path.'routes.yml');
-                $writer->setConfig($route_config);
-                $writer->write();
-       
-       
-     }
+  
 }

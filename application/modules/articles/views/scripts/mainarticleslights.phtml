@@ -1,15 +1,35 @@
 <div class="srs_bl">
-   
-<?php for ($i=0; $i < count($this->mainarticleslights); $i++) { ?>    
-<div class="item stop"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['lighting'] == 1? '<a href="/articlesitem/item/'.$this->mainarticleslights[$i]['id'].'">'.
-$this->mainarticleslights[$i]['name'].'</a>': '' ?></div>
 
-<div class="item read"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['lighting'] == 2? '<a href="/articlesitem/item/'.$this->mainarticleslights[$i]['id'].'">'.
-$this->mainarticleslights[$i]['name'].'</a>': '' ?></div>
+    <?php
+        $red = 0; $yellow = 0; $green = 0;
+    ?>
+    <?php foreach ($this->mainarticleslights as $item) {
+        if ($item['lighting'] == 1) {$red = $item;}
+        if ($item['lighting'] == 2) {$yellow = $item;}
+        if ($item['lighting'] == 3) {$green = $item;}
+    } ?>
 
-<div class="item start"><i>&gt;&gt;&gt;</i><?php echo $article = $this->mainarticleslights[$i]['lighting'] == 3? '<a href="/articlesitem/item/'.$this->mainarticleslights[$i]['id'].'">'.
-$this->mainarticleslights[$i]['name'].'</a>': '' ?></div>
-<?php } ?>
+
+
+<?php //for ($i=0; $i < count($this->mainarticleslights); $i++) { ?>
+<div class="item stop"><i>&gt;&gt;&gt;</i>
+    <?php if ($red): ?>
+        <?php echo '<a href="/articlesitem/item/'.$red['url'].'">'.$red['name'].'</a>' ?>
+    <?php endif; ?>
+</div>
+
+<div class="item read"><i>&gt;&gt;&gt;</i>
+    <?php if ($yellow): ?>
+        <?php echo '<a href="/articlesitem/item/'.$yellow['url'].'">'.$yellow['name'].'</a>' ?>
+    <?php endif; ?>
+</div>
+
+<div class="item start"><i>&gt;&gt;&gt;</i>
+    <?php if ($green): ?>
+        <?php echo '<a href="/articlesitem/item/'.$green['url'].'">'.$green['name'].'</a>' ?>
+    <?php endif; ?>
+</div>
+<?php //} ?>
 </div>
 
 

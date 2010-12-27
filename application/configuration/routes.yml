@@ -1,6 +1,13 @@
 routes: 
   routes: 
-    Default: 
+    new: 
+      type: Zend_Controller_Router_Route
+      route: 404
+      default: 
+        module: pages
+        controller: pages
+        action: error
+    admin: 
       type: Zend_Controller_Router_Route
       route: :module/:lang/:controller/:action/*
       defaults: 
@@ -8,13 +15,6 @@ routes:
         lang: ru
         controller: index
         action: index
-    error: 
-      type: Zend_Controller_Router_Route
-      route: 404
-      defaults: 
-        module: pages
-        controller: index
-        action: page
     login: 
       type: Zend_Controller_Router_Route
       route: admin/login/*
@@ -247,14 +247,6 @@ routes:
         controller: index
         action: page
         id: 1078
-    849: 
-      type: Zend_Controller_Router_Route
-      route: contacts
-      defaults: 
-        module: forms
-        controller: forms
-        action: feedback
-        id: 849
     844: 
       type: Zend_Controller_Router_Route
       route: 
@@ -297,7 +289,7 @@ routes:
         id: 1075
     newslist: 
       type: Zend_Controller_Router_Route
-      route: newslist/*
+      route: newslist
       defaults: 
         module: news
         controller: news
@@ -310,10 +302,10 @@ routes:
         module: news
         controller: news
         action: newsitem
-        id: 
+        id: 846
     about: 
       type: Zend_Controller_Router_Route
-      route: about
+      route: about/*
       defaults: 
         module: pages
         controller: index
@@ -329,89 +321,33 @@ routes:
         id: 1077
     contacts: 
       type: Zend_Controller_Router_Route
-      route: contacts
+      route: contacts/*
       defaults: 
         module: contacts
         controller: contacts
         action: index
         id: 849
-    articleslist: 
+    templatesitem: 
       type: Zend_Controller_Router_Route
-      route: articleslist
+      route: templatesitem/*
       defaults: 
-        module: articles
-        controller: articles
+        module: templates
+        controller: templates
+        action: templatesitem
+        id: 1085
+    templateslist: 
+      type: Zend_Controller_Router_Route
+      route: templateslist/*
+      defaults: 
+        module: templates
+        controller: templates
         action: index
-        id: 1076
-    podderzhka_sajta: 
+        id: 1085
+    portfoliolist: 
       type: Zend_Controller_Router_Route
-      route: podderzhka_sajta
+      route: portfoliolist/*
       defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 1080
-    path: 
-      type: Zend_Controller_Router_Route
-      route: path
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 1084
-    path1111: 
-      type: Zend_Controller_Router_Route
-      route: path1111
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 1084
-    path2222: 
-      type: Zend_Controller_Router_Route
-      route: path2222
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 
-    path333333: 
-      type: Zend_Controller_Router_Route
-      route: path333333
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 
-    test_page_3_1: 
-      type: Zend_Controller_Router_Route
-      route: test_page_3_1
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 1089
-    path4444: 
-      type: Zend_Controller_Router_Route
-      route: path4444
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 
-    pathasdasdasd: 
-      type: Zend_Controller_Router_Route
-      route: pathasdasdasd
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 
-    patheeeee: 
-      type: Zend_Controller_Router_Route
-      route: patheeeee
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 1092
+        module: portfolio
+        controller: portfolio
+        action: index
+        id: 1075

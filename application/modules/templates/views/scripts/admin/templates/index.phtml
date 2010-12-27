@@ -1,0 +1,109 @@
+
+
+<script>
+    var delid;
+    var pageid
+
+    function go(id,page){
+
+        delid=id;
+        pageid = page;
+
+        var sure = confirm("Вы действительно хотите удалить страницу?");
+        if (sure) {
+            window.location = "<?=$this->currentModul?>/delete/id/"+delid+"/id_page/"+"<?=$this->id_page?>";
+            alert("Страница удалена");
+        }
+    }
+</script>
+
+
+<div id="company_main_head">
+    <div class="clear"><!-- --></div>
+    <div id="content">
+
+        <div class="clear"><!-- --></div>
+        <div id="left_block">
+            <div class="prava_dostupa">
+                <table style="margin-top: 0px; width: 750;" border="0" cellspacing="0" cellpadding="0">
+                    <tr class="head">
+                        <th>
+                        	<b>Название</b>
+                        </th>
+                        <th>
+                        	<b>Стоимость</b>
+                        </th>
+                        <th>
+                        	<b>Просмотров</b>
+                        </th>
+                        <th style="width: 120px;" >
+                            <b>Операции:</b>
+                        </th>
+                    </tr>
+
+                    <? foreach($this->templates as $item) {?>
+                    <tr align="left" id="row_<?php echo $item['id']?>" >
+
+                        <td id="elem_<?php echo $item['id']?>" >
+                            <a  href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>" title="редактировать">
+                                <strong>
+                                    <?=$item['title']?>
+                                </strong>
+                            </a>
+                        </td>
+                        <td class="options">
+                        	<?php echo $item['price']?>
+                        </td>
+                        <td class="options">
+                        	<?php echo $item['count_views']?>
+                        </td>
+                        <td class="options">
+                        	<!-- edit -->
+                            &nbsp;<a href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>" title="редактировать"><img src="/img/admin/edit.png"></a>&nbsp;
+
+                            	<a href="#" id="active_<?php echo $item['id']?>" onclick="return false;" title="Изменить активность"><img src="/img/admin/active_<?=$item['is_active']?>.png" /></a>&nbsp;
+                            	<?php echo $this->ajaxStatusLink(array(
+                            		'target_id'	=>'active_'.$item['id'],
+                            		'link_id'	=>'active_'.$item['id'],
+                            		'target_url'=>$this->currentModul.'/changeactive',
+                            		'url_data'	=>"{id: ".$item['id']."}",
+                            		'loader_img'=>"/img/loader.gif"
+
+                            	));?>
+
+
+
+                                <a href="#" id="del_<?php echo $item['id']?>" title="Удалить"><img src="/img/admin/delete.png"></a>
+                                    <?php echo $this->ajaxDeleteLink(array(
+                                                    'target_id'	=>'elem_'.$item['id'],
+                                                    'delete_id'	=>'row_'.$item['id'],
+                                                    'link_id'	=>'del_'.$item['id'],
+                                                    'target_url'=>$this->currentModul.'/delete',
+                                                    'url_data'	=>"{id: ".$item['id']."}",
+                                                    'loader_img'=>"/img/loader.gif"
+
+                                            ));?>
+
+                        </td>
+                    </tr>
+                    <?}?>
+
+                </table>
+            </div>
+            <div>Всего <?php print $this->paginator->getTotalItemCount() ?></div>
+            <?php print $this->paginator; ?>
+
+            <!-- / Навигация по страницам -->
+            </div>
+            <div id="right_block">
+                <div class="block_r gray">
+                    <h3><b>Действия</b></h3>
+                    <ul>
+                        <li class="active">Шаблоны страниц</li>
+                        <li><a href="<?=$this->currentModul?>/edit">Добавить</a></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+
+            </div>

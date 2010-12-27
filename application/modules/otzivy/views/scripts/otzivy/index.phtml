@@ -21,12 +21,11 @@
   <?}?>
  
 <?}?>
-<?php echo $this->paginationControl($this->paginator, null, null, array('url_params'=>$this->url_params))?>
+<?php if ($this->paginator->count() > 1) { ?>
+    <?php echo $this->paginationControl($this->paginator, null, null, array('url_params'=>$this->url_params))?>
+<?php } ?>
 
-
-
-	<?=$this->form->render() ?> 
-	
+<?=$this->form->render() ?> 	
 
 </div>
 

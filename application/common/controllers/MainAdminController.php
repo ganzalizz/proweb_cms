@@ -106,7 +106,7 @@ abstract class MainAdminController extends Zend_Controller_Action {
      * @return object
      */
     protected function getFck($name = 'fckeditor', $width = '70%', $height = '400', $type='Default') {
-        require_once(DIR_PUBLIC. "fckeditor" . DS . "fckeditor.php");
+        require_once(ROOT_DIR. "fckeditor" . DS . "fckeditor.php");
         $oFCKeditor = new FCKeditor($name) ;
         $oFCKeditor->BasePath = '/fckeditor/';
         $oFCKeditor->Width  = $width ;

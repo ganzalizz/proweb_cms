@@ -72,10 +72,14 @@ ul.errors li {
 	padding-top: 4px;
 }
 .photo {
-	width: auto;
-	float: left;
-	padding-left: 10px;
-	padding-right: 10px;
+    width: auto;
+    float: left;
+}
+
+.photo_teaser_news {
+    width: auto;
+    float: left;
+    margin: 0 11px 4px;
 }
 
 .cont_inner p {
@@ -83,3 +87,4 @@ ul.errors li {
     padding-left: 10px;	
 	
 }	
+

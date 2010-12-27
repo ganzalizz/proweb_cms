@@ -20,7 +20,7 @@ class Contacts_ContactsController extends Zend_Controller_Action
                        
 
             $this->view->addScriptPath(DIR_LAYOUTS) ;
-            $this->view->addScriptPath(DIR_LIBRARY.'Ext/View/Scripts/'); 
+            $this->view->addScriptPath(DIR_LIBRARY.'Ext/View/Scripts/');
             $this->view->addHelperPath(Zend_Registry::get('helpersPaths'), 'View_Helper') ;
 
             $this->view->options = $options = PagesOptions::getInstance()->getPageOptions($id);
@@ -36,19 +36,27 @@ class Contacts_ContactsController extends Zend_Controller_Action
     public function indexAction()
     {
         $form = new Form_FormContacts();
+
+        if ($this->_hasParam('template')) {
+            $id = $this->_getParam('template');
+            $template = Templates::getInstance()->getTemplateById($id);
+            $this->layout->template = $template;
+            $form->subject->setValue('Заказ шаблона: '.$template->title.' (Стоимость: '.$template->price.')');
+            $form->subject->setAttrib('disabled', 'disabled');
+        }
         
-      //  if ($this->_request->isPost())
-       // {
-           // if ($form->isValid($form->getValues()))
-           // {         
-            $mail = new Ext_Common_Mail();
-            $mail->setMailBodyType('text');
-            $mail->SendMail('yura@ladoni.by',
+        if ($this->_request->isPost())
+        {
+          if ($form->isValid($form->getValues()))
+            {         
+             $mail = new Ext_Common_Mail();
+             $mail->setMailBodyType('text');
+             $mail->SendMail('yura@ladoni.by',
                             $form->getValue('message'),
                             $form->getValue('subject'), 
                             $form->getValue('name'));
-           // }
-       // }
+            }
+        }
         
         $this->view->form = $form;
     }

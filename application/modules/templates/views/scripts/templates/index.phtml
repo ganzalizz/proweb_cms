@@ -1,8 +1,25 @@
-<?php foreach ($this->templates as $template) { ?>
+<div class="cont_inner">
+    <h1><?=$this->layout()->page->title?></h1>
+    <div class="work_list overflow">
+        <?php foreach ($this->templates as $template): ?>
+            <div class="item" style="text-align: center">
+                <div style="height: 150px;">
+                    <a href="/templatesitem/item/<?php print $template->url ?>" title="<?php print $template->title ?>">
+                        <img src="/pics/templates/thumbs/<?php print $template->template_image ?>" alt="<?php print $template->title ?>"/>
+                    </a>
+                </div>
+                <p align="center">
+                    <a href="/templatesitem/item/<?php print $template->url ?>" title="<?php print $template->title ?>">
+                        <?php echo $template->title ?>
+                    </a><br/>
+                    Стоимость: <?php echo $template->price ?><br/>
+                    <a href="/contacts/template/<?php print $template->id ?>" title="Заказать">Заказать</a>
+                </p>
+           </div>
+        <?php endforeach; ?>
+    </div>
 
-<?php echo $template->title ?>
-<?php echo $template->template_image ?>
-<?php echo $template->price ?>
-<a href="" title="">Заказать</a> 
-
-<?php } ?>
+    <?php if ($this->paginator->count() > 1): ?>
+        <?php echo $this->paginator ?>
+    <?php endif; ?>
+</div>

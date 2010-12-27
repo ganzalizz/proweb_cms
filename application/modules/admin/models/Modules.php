@@ -129,8 +129,8 @@ class Modules extends Zend_Db_Table
          */
         private function AddModule($module_name)
         {
-            require_once APPLICATION_PATH.'/library/Ext/Common/InstallModuleAbstract.php';
-            echo "$module_name<br/>";
+            require_once APPLICATION_PATH.'/../library/Ext/Common/InstallModuleAbstract.php';
+           
             $config_module = new Ext_Common_Config($module_name, 'config');
             $data = array(
             'name'  => $config_module->module->sys->name,
@@ -168,15 +168,29 @@ class Modules extends Zend_Db_Table
             $modulesNameSys = $modulesNameSys == NULL ? array() : $modulesNameSys;
             
             $new_modules = array_diff($modulesApp, $modulesNameSys);
-            print_r($new_modules);
+           
             echo var_dump($modulesNameSys);
             foreach ($new_modules as $new_module) $this->AddModule ($new_module);
             
             $old_modules = array_diff($modulesNameSys, $modulesApp);
-            print_r($old_modules);
+            
             foreach ($old_modules as $old_module) $this->DeleteModule ($old_module);
             
             return $this->GetModulesInSystem();
+        }
+        
+        public function getModuleByName($name)
+        {
+           return  $this->fetchRow($this->select()->where('name = ?',$name));
+        }
+        
+        public function GetModulesByGroupPriority()
+        {
+            $select = $this->select()
+                           ->where('installed = ?', 1)
+                           ->where('visible = ?', 1)
+                           ->order('groupe_priority ASC');
+            return $this->fetchAll($select);
         }
 	
 	
