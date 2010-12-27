@@ -65,13 +65,13 @@ class PagesOptions extends Zend_Db_Table {
 	 * Изменение данных при редактированиии страницы
 	 *
 	 * @param array $data
+	 * @return int|null
 	 */
 	public function editOptionsPage($data){
-		$data = $this->getOptionsPage($data);
-		
+		$data = $this->getOptionsPage($data);		
 		$where = $this->getAdapter()->quoteInto("pageId = ?", $data['pageId']);
 		$this->delete($where);
-		$this->insert($data);
+		return $this->insert($data);
 		
 		
 	}
@@ -90,11 +90,14 @@ class PagesOptions extends Zend_Db_Table {
 	 *
 	 * @param unknown_type $pageId
 	 * @param unknown_type $order
-	 * @return unknown
+	 * @return Zend_Db_Table_Row
 	 */
 	public function getPageOptions($pageId, $order = null){
-		$where = $this->getAdapter()->quoteInto('pageId = ?', (int)$pageId);
-		$options = $this->fetchRow($where, $order);
+		$select = $this->select()
+			->from($this->_name, array('title', 'keywords', 'descriptions', 'h1'))
+			->where('pageId = ?', (int)$pageId);		
+		
+		$options = $this->fetchRow($select);
 		if (is_null($options)){
 			$options = $this->createRow();
 		}
@@ -102,38 +105,8 @@ class PagesOptions extends Zend_Db_Table {
 		return $options;
 	}
 	
-	/**
-	 * Получение данных новой копии страницы
-	 *
-	 * @param int $pageId
-	 * @param int $newPageId
-	 */
-	public function addOptionsCopyPage($pageId, $newPageId){
-		$where = $this->getAdapter()->quoteInto('pageId = ?', $pageId);
-		$options = $this->fetchRow($where);
-		$options = $options->toArray();
-		unset($options['id']);
-		$options['pageId'] = $newPageId;
-		//print_r($options); exit;
-		$this->insert($options);
-	}
 	
-	/**
-	 * Добавление новой языковой версии
-	 *
-	 * @param int $oldId
-	 * @param int $newId
-	 */
-	public function addVersion($oldId, $newId){
-		$options = PagesOptions::getInstance()->getPageOptions($oldId);
-		
-		if($options){
-			$options = $options->toArray();
-			$options['pageId'] = (int)$newId;
-			unset($options['id']);
-			$this->insert($options);
-		}
-	}
+	
 	
 
 	/**

@@ -58,7 +58,7 @@ class News_Admin_NewsController extends MainAdminController {
 		$this->view->form = $form;
 	}
 	
-	public function editAction() {
+	public function editAction() {	
 		
 		$id = $this->_getParam('id');
 		if ($id){
@@ -78,9 +78,12 @@ class News_Admin_NewsController extends MainAdminController {
 		if (!is_null($row)){
 			
 			if ($this->_request->isPost()){
-			  	$row = $this->processForm( $form, $row );
+			  	$data = $this->processForm( $form, $row );
+			  	$form->populate($data);
+			} else {
+				$form->populate($row->toArray());
 			}
-			$form->populate($row->toArray());
+			
 			if ($row->small_img){
 				$form->getElement('small_img')->setAttrib('small_img', '/pics/news/thumbs/'.$row->small_img);
 			}
@@ -213,19 +216,23 @@ class News_Admin_NewsController extends MainAdminController {
 		
 		
 		if ($this->_request->isPost()) {
+			
+			$flag = false;			
 			// добавление записи в базу
 			if ($form->isValid( $this->_getAllParams() ) && $row->id=='') {
 				$row = News::getInstance()->addNews($row,  $form->getValidValues($form->getValues()) );
+				$flag = true;
 				
 			   // редактирование записи
 			} elseif ($form->isValid( $this->_getAllParams() ) && $row->id > 0) {							
-				$row = News::getInstance()->editNews($row, $form->getValidValues($this->_getAllParams()));				
+				$row = News::getInstance()->editNews($row, $form->getValidValues($this->_getAllParams()));
+				$flag = true;				
 			}
 			
 			
 			
 			
-			if (!is_null($row)){ // запись в базе создана загружаем картинки					
+			if (!is_null($row) && $flag ){ // запись в базе создана загружаем картинки					
 				$aploaded_images = $this->reciveFiles( $row->id );
 				if (isset($aploaded_images['small_img']) && !$this->_getParam('small_img_delete')){
 					
@@ -260,8 +267,9 @@ class News_Admin_NewsController extends MainAdminController {
 				
 				$row->save();
 				$this->view->ok = 1;
-				return $row;
+				
 			}
+			return $form->getValues();
 		}
 	}
 	/**

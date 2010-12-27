@@ -8,16 +8,53 @@ class Form_PagesForm extends Ext_Form
 {
 	
 	private static $_idRecord = null;
-    
-    
-    /**
+	
+	private static $_div_type_value = null;
+	private static $_div_typeOptions = array();
+	
+	private static $_menu_values = array();
+	private static $_menuOptions = array();
+	
+	/**
      * установка id записи в базе 
-     * для проверки уникальность поля path
+     * для проверки уникальность поля url
      * @param $id
      */
     public static function setRecordId($id){
     	return self::$_idRecord = $id;
     }
+    
+	/**
+     * 
+     * @param int $options
+     */
+    public static function setdiv_typeValue($value){
+    	return self::$_div_type_value = $value;
+    }
+    
+	/**
+     * 
+     * @param array $options
+     */
+    public static function setdiv_typeOptions($options){
+    	return self::$_div_typeOptions = $options;
+    }
+	/**
+     * 
+     * @param array $values
+     */
+    public static function setMenuValues($values){
+    	return self::$_menu_values = $values;
+    }
+    
+	/**
+     * 
+     * @param array $options
+     */
+    public static function setMenuOptions($options){
+    	return self::$_menuOptions = $options;
+    }
+	
 	
     public function init()
     {
@@ -26,7 +63,7 @@ class Form_PagesForm extends Ext_Form
         //$this->setName('news');
         $this->setAction('');
         
-        $this->setDecorators( array( array( 'ViewScript', array( 'viewScript' => 'admin/news/form.phtml' ) ) ) );
+        $this->setDecorators( array( array( 'ViewScript', array( 'viewScript' => 'admin/pages/form.phtml' ) ) ) );
         
         // Указываем метод формы
         $this->setMethod('post');
@@ -40,22 +77,38 @@ class Form_PagesForm extends Ext_Form
         
         
         $id = new Zend_Form_Element_Hidden('id');
-        
         $this->addElement($id);
+        
+        $id_parent = new Zend_Form_Element_Hidden('id_parent');
+        $id_parent->addFilter('Int');
+        $this->addElement($id_parent);
+        
         
         $title = new Zend_Form_Element_Text('title', array(
 			'required'		=> true,
 			'label'			=> 'Название',
-			'description'	=> 'от 5 до 150 символов',
+			'description'	=> 'Используется в меню, от 5 до 150 символов',
             'maxlength'		=> '150',
-            'validators'	=> array(
-                array('Alnum', true, array(true)),
+            'validators'	=> array(               
                 array('StringLength', true, array(5, 150))
              ),             
             'filters'     => array('StringTrim')
         ));
         
         $this->addElement($title);
+        
+        $h1 = new Zend_Form_Element_Text('h1', array(
+			'required'		=> true,
+			'label'			=> 'Заголовок страницы',
+			'description'	=> 'от 5 до 150 символов',
+            'maxlength'		=> '150',
+            'validators'	=> array(               
+                array('StringLength', true, array(5, 150))
+             ),             
+            'filters'     => array('StringTrim')
+        ));
+        
+        $this->addElement($h1);
         
         $path = new Zend_Form_Element_Text('path', array(
 			'required'		=> true,
@@ -95,124 +148,73 @@ class Form_PagesForm extends Ext_Form
         $this->addElement($intro);
         
         $content = new Ext_Form_Element_CkEditor('content', array(
-                    'label' => 'Текст новости',
+                    'label' => 'Текст',
                     'required' => true,
                     'filters' => array('StringTrim')
                 ));
         
         $this->addElement($content);
         
-        $link = new Zend_Form_Element_Text('link', array(
-            'label' => 'Сылка на первоисточник',
-            'maxlength'   => '255',
-            'validators'  => array(
-                //array('Alnum', true, array(true)),
-                array('StringLength', true, array(11, 255))
-             ),
-            'filters'     => array('StringTrim')
-        ));
-        
-        $link->addValidator(new Ext_Form_Validate_UrlValidator());
-        
-        $this->addElement($link);
-        
-        $date_news = new ZendX_JQuery_Form_Element_DatePicker('date_news', array(
-           'label' => 'Дата новости',           
-        ));
-       $date_news->removeDecorator('label');
-       $date_news->removeDecorator('htmlTag');
        
        
-       $date_news->setJQueryParam('dateFormat', 'dd.mm.yy');
+        $small_img = new Ext_Form_Element_Image('img');
        
-       $this->addElement($date_news);
-        
-        $author = new Zend_Form_Element_Text('author', array(
-            'required' => true,
-            'label' => 'Автор новости',
-            'maxlength'   => '150',
-            'validators'  => array(
-                //array('Alnum', true, array(true)),
-                array('StringLength', true, array(5, 150))
-             ),
-            'filters'     => array('StringTrim')
-        ));
-        
-       $this->addElement($author);
-       
-       $created_at = new ZendX_JQuery_Form_Element_DatePicker('created_at', array(
-           'label' => 'Дата публикации',
-           
-       ));
-       $created_at->removeDecorator('label');
-       $created_at->removeDecorator('htmlTag');
-       
-       $created_at->setJQueryParam('dateFormat', 'dd.mm.yy');
-       
-       $this->addElement($created_at);
-       
-       
-        $small_img = new Ext_Form_Element_Image('small_img');
-       
-        $small_img->addValidator('Count', false, 2);
+        $small_img->addValidator('Count', false, 1);
         $small_img->addValidator('Extension', false, 'jpg,png,gif');
-        $small_img->setLabel('Маленькая фотография');
+        $small_img->setLabel('Фотография');
         //$fields[] = $small_img;
-        $this->addElement($small_img,'small_img');
+        $this->addElement($small_img,'img');
+       
+       
         
-        $big_img = new Ext_Form_Element_Image('big_img');
-       
-        $big_img->addValidator('Count', false, 2);
-        $big_img->addValidator('Extension', false, 'jpg,png,gif');
-        $big_img->setLabel('Большая фотография');
-        $big_img->setAttrib('is_big', true);
-       // $fields[] = $big_img;
-        $this->addElement($big_img,'big_img');
-
-       
-       
-      
-       
-       //TODO: Date element
+        $id_div_type = new Zend_Form_Element_Select('id_div_type', array('label' => 'Тип раздела'));
+        $id_div_type->setMultiOptions(self::$_div_typeOptions);
+        $id_div_type->setValue(self::$_div_type_value);
+        $id_div_type->addFilter('Int');
+        
+        $this->addElement($id_div_type);
+        
        
 		$is_active = new Zend_Form_Element_Checkbox('is_active', array(
-			'label'		=> 'Новость активна',       				
+			'label'		=> 'Страница активна',       				
 			'filters'	=> array('Int')
        ));     
        
        $this->addElement($is_active);
        
-       $is_main = new Zend_Form_Element_Checkbox('is_main', array(
-            'label'       => 'Новость на главную',
-            'filters'     => array('Int')
-       ));
+	   $show_childs = new Zend_Form_Element_Checkbox('show_childs', array(
+			'label'		=> 'Отображать вложенные',       				
+			'filters'	=> array('Int')
+       ));     
        
-       $this->addElement($is_main);
+       $this->addElement($show_childs);
        
-       $is_hot = new Zend_Form_Element_Checkbox('is_hot', array(
-            'label'       => 'Горячая новость',
-            'filters'     => array('Int')
-       ));
+       $show_in_sitemap = new Zend_Form_Element_Checkbox('show_in_sitemap', array(
+			'label'		=> 'Отображать в карте сайта',       				
+			'filters'	=> array('Int')
+       ));     
        
-       $this->addElement($is_hot);
+       $this->addElement($show_in_sitemap);
        
-       $seo_title = $author = new Zend_Form_Element_Text('seo_title', array(
+       
+       
+       $page_title = $author = new Zend_Form_Element_Text('page_title', array(
             'required' => true,
             'label' => 'Заголовок страницы',
             'maxlength'   => '150',
-            'validators'  => array(
-                //array('Alnum', true, array(true)),
+            'validators'  => array(                
                 array('StringLength', true, array(5, 150))
              ),
             'filters'     => array('StringTrim')
         ));
        
-       $this->addElement($seo_title);
+       $this->addElement($page_title);
        
-       $seo_descriptions = new Zend_Form_Element_Text('seo_descriptions', array(
+       $descriptions = new Zend_Form_Element_Text('descriptions', array(
             'required' => true,
             'label' => 'Описание страницы',
             'maxlength'   => '300',
+       		'description' => 'от 5  до 300 символов',
             'validators'  => array(
               //  array('Alnum', true, array(true)),
                 array('StringLength', true, array(5, 300))
@@ -220,11 +222,12 @@ class Form_PagesForm extends Ext_Form
             'filters'     => array('StringTrim')
         ));
        
-       $this->addElement($seo_descriptions);
+       $this->addElement($descriptions);
        
-       $seo_keywords = $author = new Zend_Form_Element_Text('seo_keywords', array(
+       $keywords =  new Zend_Form_Element_Text('keywords', array(
             'required' => true,
             'label' => 'Ключевые слова страницы',
+       		'description' => 'от 5  до 500 символов',
             'maxlength'   => '500',
             'validators'  => array(
                // array('Alnum', true, array(true)),
@@ -233,24 +236,37 @@ class Form_PagesForm extends Ext_Form
             'filters'     => array('StringTrim')
         ));
        
-       $this->addElement($seo_keywords);
+       $this->addElement($keywords);
+       
+       $menu = new Zend_Form_Element_MultiCheckbox('menu', array('label' => 'Принадлежность к меню'));
+       $menu->addMultiOptions(self::$_menuOptions);
+       $menu->setValue(self::$_menu_values);
+       
+       $this->addElement($menu);
        
        $this->addDisplayGroup(
-             array('id', 'title', 'path', 'intro', 'content','link','date_news','author','created_at','small_img', 'big_img'), 'newsDataGroup',
-             array(
-                     'legend' => 'Новость'
-                    ));
+             array('id', 'id_parent', 'title', 'h1', 'path', 'intro', 'content','img'), 
+             'pageDataGroup',
+             array('legend' => 'Страница')
+       );
+                    
        $this->addDisplayGroup(
-             array('is_active', 'is_main', 'is_hot'), 'publicDataGroup',
-             array(
-                     'legend' => 'Правила публикации'
-                    ));
+             array('id_div_type','is_active', 'show_childs', 'show_in_sitemap'), 
+             'publicDataGroup',
+             array('legend' => 'Правила публикации')
+       );
+                    
+        $this->addDisplayGroup(
+             array('menu'), 
+             'manuDataGroup',
+             array('legend' => 'Меню')
+        );             
        
-       $this->addDisplayGroup(
-             array('seo_title', 'seo_descriptions', 'seo_keywords'), 'seocDataGroup',
-             array(
-                     'legend' => 'SEO'
-                    ));
+		$this->addDisplayGroup(
+             array('page_title', 'descriptions', 'keywords'), 
+             'seocDataGroup',
+             array('legend' => 'SEO')
+        );
        
         
        
@@ -259,8 +275,7 @@ class Form_PagesForm extends Ext_Form
         
         $submit = new Zend_Form_Element_Button('submit','<span><em>Сохранить</em></span>');
         $submit->setAttrib('escape', false);
-        $submit->setAttrib('type', 'submit');
-        //$submit->setAttrib('content', '<span><em>Сохранить</em></span>');
+        $submit->setAttrib('type', 'submit');        
         $this->addElement($submit);
 
              

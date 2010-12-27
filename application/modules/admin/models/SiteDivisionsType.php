@@ -127,6 +127,35 @@ class SiteDivisionsType extends Zend_Db_Table {
 		return $this->getAdapter()->fetchOne($sql);
 
 	}
+	/**
+	 * 
+	 * Получение списка Активных разделов
+	 * @return array
+	 */
+	public function getAllActive(){
+		$return  = array();
+		$select = $this->select()
+			->where('active = ?', 1)
+			->order('priority desc');
+		$rowSet = $this->fetchAll($select);
+		if ($rowSet->count()){
+			foreach ($rowSet as $item){
+				$return[$item->id] = $item->title;
+			}
+		}
+		return $return;	
+			
+	}
+	/**
+	 * 
+	 * получение раздела по id
+	 * @param int $id
+	 * @return array
+	 */
+	public function getOne($id){
+		$row = $this->find($id)->current();
+		return array($row->id=>$row->title);
+	}
 
 
 }

@@ -2,11 +2,9 @@ AddDefaultCharset utf-8
 SetEnv APPLICATION_ENV development
 
 RewriteEngine on
+RewriteBase /
 
 RewriteRule !\.(js|ico|gif|jpg|jpeg|png|css|json|swf|xls|doc|rar|zip|pdf|txt|xml|php)$ index.php [L]
 
 php_flag magic_quotes_gpc off
 php_flag register_globals off
-
-php_flag display_errors on 
-php_value error_reporting 7
