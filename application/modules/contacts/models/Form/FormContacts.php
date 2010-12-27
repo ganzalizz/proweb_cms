@@ -45,9 +45,13 @@ class Form_FormContacts extends Ext_Form
             'decorators' => array(
 				array( 'ViewHelper' ), 
 				array( 'Errors' )),
-            'filters'     => array('StringTrim')
+            'filters'     => array('StringTrim'),
+            //'value' => 'Заказ шаблона: название шаблона (Стоимость: 100)'
         ));
         $subject->setAttrib('class', 'input');
+
+        //$subject->setAttrib('disabled', 'disabled');
+
         $this->addElement($subject);
         
         $message = new Zend_Form_Element_Textarea('message', array(
@@ -59,7 +63,8 @@ class Form_FormContacts extends Ext_Form
             'decorators' => array(
 				array( 'ViewHelper' ), 
 				array( 'Errors' )),
-            'filters'     => array('StringTrim')
+            'filters'     => array('StringTrim'),
+            'rows'        => 10
         ));
         $message->setAttrib('class', 'input');
         $this->addElement($message);

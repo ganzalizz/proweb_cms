@@ -247,14 +247,6 @@ routes:
         controller: index
         action: page
         id: 1078
-    849: 
-      type: Zend_Controller_Router_Route
-      route: contacts
-      defaults: 
-        module: forms
-        controller: forms
-        action: feedback
-        id: 849
     844: 
       type: Zend_Controller_Router_Route
       route: 
@@ -271,6 +263,14 @@ routes:
         controller: articles
         action: index
         id: 1076
+    articlesitem: 
+      type: Zend_Controller_Router_Route
+      route: articlesitem/*
+      defaults: 
+        module: articles
+        controller: articles
+        action: articlesitem
+        id: 1076
     portfolio: 
       type: Zend_Controller_Router_Route
       route: portfoliolist/*
@@ -278,6 +278,14 @@ routes:
         module: portfolio
         controller: portfolio
         action: index
+        id: 1075
+    portfolioitem: 
+      type: Zend_Controller_Router_Route
+      route: portfolioitem/*
+      defaults: 
+        module: portfolio
+        controller: portfolio
+        action: portfolioitem
         id: 1075
     newslist: 
       type: Zend_Controller_Router_Route
@@ -287,9 +295,17 @@ routes:
         controller: news
         action: index
         id: 846
+    newsitem: 
+      type: Zend_Controller_Router_Route
+      route: newsitem/*
+      defaults: 
+        module: news
+        controller: news
+        action: newsitem
+        id: 846
     about: 
       type: Zend_Controller_Router_Route
-      route: about
+      route: about/*
       defaults: 
         module: pages
         controller: index
@@ -305,12 +321,20 @@ routes:
         id: 1077
     contacts: 
       type: Zend_Controller_Router_Route
-      route: contacts
+      route: contacts/*
       defaults: 
         module: contacts
         controller: contacts
         action: index
         id: 849
+    templatesitem: 
+      type: Zend_Controller_Router_Route
+      route: templatesitem/*
+      defaults: 
+        module: templates
+        controller: templates
+        action: templatesitem
+        id: 1085
     templateslist: 
       type: Zend_Controller_Router_Route
       route: templateslist/*
@@ -319,27 +343,11 @@ routes:
         controller: templates
         action: index
         id: 1085
-    newsitem: 
+    portfoliolist: 
       type: Zend_Controller_Router_Route
-      route: newsitem/:item
-      defaults: 
-        module: news
-        controller: news
-        action: newsitem
-        id: 
-    portfolioitem: 
-      type: Zend_Controller_Router_Route
-      route: portfolioitem/:item
+      route: portfoliolist/*
       defaults: 
         module: portfolio
         controller: portfolio
-        action: portfolioitem
-        id: 
-    templatesitem: 
-      type: Zend_Controller_Router_Route
-      route: templatesitem/:item
-      defaults: 
-        module: templates
-        controller: templates
-        action: templatesitem
-        id: 
+        action: index
+        id: 1075

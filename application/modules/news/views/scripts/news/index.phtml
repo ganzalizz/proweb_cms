@@ -1,33 +1,28 @@
 <div class="cont_inner news">
-	
-	<?php echo $this->page->content?>
+    <h1><?=$this->layout()->page->title?></h1>
 
-<?if(count($this->news)) {?>
+    <?php echo $this->page->content?>
 
+    <?if(count($this->news)) {?>
         <?foreach($this->news as $new) {?>
-   <div class="item overflow">
-       <b class="date"><i><?php echo $new->date?></i></b>
-        <h3><a href="/newsitem/item/<?=$new->url?>" class="head_news"><?=$new->name?></a></h3>
-        <? if($new->small_img!=''){?>
-            <div class="photo">
-            	<a href="/newslist/item/<?php echo $new->url?>">
-            		<img src="/pics/news/thumbs/<?php echo $new->small_img?>" alt="<?php echo $new->name?>" />
-            	</a>
-            </div> 
-        <?}?> 
-                
-       <?=$new->teaser?>            
-           
-    </div>
-   
-  <?}?>
- 
-
+            <div class="item overflow">
+                <b class="date"><i><?php echo $new->date?></i></b>
+                <h3><a href="/newsitem/item/<?=$new->url?>" class="head_news"><?=$new->name?></a></h3>
+                <? if($new->small_img!=''){?>
+                    <div class="photo">
+                        <a href="/newslist/item/<?php echo $new->url?>">
+                            <img src="/pics/news/thumbs/<?php echo $new->small_img?>" alt="<?php echo $new->name?>" />
+                    	</a>
+                    </div>
+                <?}?> 
+                <?=$new->teaser?>
+            </div>
+        <?}?>
+    <?php } ?>
 </div>
-<?php } ?>
 <?php if ($this->paginator->count() > 1) { ?>
-	<?php echo $this->paginator ?>
- <?}?>
+    <?php echo $this->paginator ?>
+<?}?>
 
 
 

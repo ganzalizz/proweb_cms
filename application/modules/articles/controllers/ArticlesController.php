@@ -45,11 +45,10 @@ class Articles_ArticlesController extends Zend_Controller_Action {
 //        $this->view->page = $page;
 //        $this->_setParam('id',$page->id);
         
-        $ini = new Ext_Common_Config('articles','frontend');
+       $ini = new Ext_Common_Config('articles','frontend');
        
-            
        $page = $this->_getParam('page',1);
-       $item_per_page = $ini->onPage;
+       $item_per_page = $ini->countOnPage;
             
        $paginator = Articles::getInstance()->getActiveArticles($item_per_page,$page);
        Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');

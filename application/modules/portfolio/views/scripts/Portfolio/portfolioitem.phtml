@@ -1,14 +1,32 @@
-<?if(count($this->item)) {?>
-<div class="cont_inner news">
-    <div class="item">
-        <b class="date"><i><?=$this->dateFromDb($this->item['created_at']);?></i></b>
-        <?if($this->item['big_img']){?>
-            <div class="photo"><img src="/thumb.php?img=/pics/news/<?//=$this->item['big_img']?>&w=130&h=115" alt="" /></div>
-        <?}?>
-            <a href="<?=$this->item['url'] ?>" title="<?=$this->item['title'] ?>" target="_blank"><?=$this->item['url'] ?></a>
-            <?=$this->item['content']?>
-        
-    </div>
+<? if (count($this->item)) { ?>
+    <div class="cont_inner_text">
+        <h1><?= $this->item['title']; ?></h1>
 
-</div>
-<?}?>
+        <? if ($this->item['link']) {?>
+            Ссылка на проект: <a href="<?= $this->item['link'] ?>" title="<?= $this->item['title'] ?>" target="_blank"><?= $this->item['url'] ?></a>
+        <? } ?>
+
+        <?= $this->item['content'] ?>
+
+        <? if ($this->item['image']) {?>
+            <div class="align_center pad_b_30">
+                <a href="<?= $this->item['link'] ?>" title="<?= $this->item['title'] ?>" target="_blank">
+                    <img alt="<?= $this->item['title'] ?>" src="/pics/portfolio/image/<?= $this->item['image'] ?>">
+                </a>
+            </div>
+        <? } ?>
+            
+        <div class="overflow">
+            <?php if(!is_null($this->prev_item)): ?>
+                <span class="f_left">
+                    <a href="/portfolioitem/item/<?php print $this->prev_item->url ?>" title="предыдущая">предыдущая</a>
+                </span>
+            <?php endif; ?>
+            <?php if(!is_null($this->next_item)): ?>
+                <span class="f_right">
+                    <a href="/portfolioitem/item/<?php print $this->next_item->url ?>" title="следующая">следующая</a>
+                </span>
+            <?php endif; ?>
+        </div>
+    </div>
+<? } ?>
