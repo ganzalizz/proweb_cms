@@ -90,6 +90,22 @@ class Otzivy_Admin_OtzivyController extends MainAdminController {
 		exit;
 		
 	}
+        
+         public function installAction() 
+        {
+            require_once 'OtzivyInstall.php';
+            $install = new OtzivyInstall('otzivy');
+            $install->Install();
+            $this->_redirect("/admin/ru/modules");
+        }
+        
+        public function uninstallAction()
+        {
+            require_once 'OtzivyInstall.php';
+	    $install = new OtzivyInstall('otzivy');
+	    $install->Uninstall();
+            $this->_redirect("/admin/ru/modules");
+        }
 
 
 

@@ -3,7 +3,7 @@
 	<table id="news_table" cellspacing="0" cellpadding="0" border="0">
 								<tr class="head">
 									<th>Модуль</th>
-									<th>Заголовок</th>
+									<th>Системное имя</th>
 									<th>Описание</th>	
 									<th>Операции</th>
 																	
@@ -11,26 +11,39 @@
 								<?php
 									foreach ($this->items as $key => $data){
 									 	$stl = $data->installed ? "style=\"color:green;\"" : "style=\"color:red;\"";
-                                                                                $instlnk =  $data->installed ? "<a id=\"".$data['name']."_uninstall\" href=\"/../../".$data['name']."/ru/admin_".$data['name']."/uninstall\">Удалить</a>"
-                                                                                                             : "<a id=\"".$data['name']."_install\" href=\"/../../".$data['name']."/ru/admin_".$data['name']."/install\">Установить</a>"										?>
-											<tr>														
-												<td class="main" >
-													<a  href ="<?=$this->currentModule?>/edit/name/<?php echo $data['name']?>/" title="редактировать"><strong><?=$data['name']?></strong></a>
-                                                                                                      
-												</td>
+                                                                                $instlnk =  $data->installed ? "<a id=\"".$data['name']."\" href=\"#\" onclick=\"return false;\" title=\"Выключить модуль\"><img src=\"/img/admin/module_1.png\"></a>"
+                                                                                                             : "<a id=\"".$data['name']."\" href=\"#\" onclick=\"return false;\" title=\"Включить модуль\"><img src=\"/img/admin/module_0.png\"></a>"										?>
+											<tr id="row_<?php echo $data['id'] ?>">														
+												
 												<td class="main" <?php echo $stl ?>>
 													<?=$data['title'] ?>
-												</td>											
+												</td>
+                                                                        <td class="main" >
+                                                                            <strong>
+													<?php echo $data['name']?>
+                                                                            </strong>                          
+												</td>
 												<td class="main" >
 													<?=$data['describe'] ?>
 												</td>										
 												<td class="options">
-													<a href = '<?=$this->currentModule?>/edit/name/<?=$data['name']?>'><img src="/img/admin/redact.gif" /></a>
-													<a href = '<?=$this->currentModule?>/delete/name/<?=$data['name']?>'><img src="/img/admin/delete.gif"></a>
-                                                                                                        <?php echo $instlnk ?>
+													
+                                                                                                <?php echo $instlnk ?>       
+                                                                                                
+                                                                                                
+                                                                                                
                                                                                                         
 												</td>
+                                                                                                <?php echo $this->ajaxStatusLink(array(
+                                                                                                                                        'target_id'	=>'row_'.$data['id'],
+                                                                                                                                        'link_id'	=>$data['name'],
+                                                                                                                                        'target_url'=> $this->url(array()).'/install',
+                                                                                                                                        'url_data'	=>"{installed: ".$data['installed'].",module_name: '".$data['name']."'}",
+                                                                                                                                        'loader_img'=>"/img/horizontal_loader.gif"
+
+                                                                                                                                ));?> 
 											</tr>
+                                                                                        
 										<?php
 									}
 								?>

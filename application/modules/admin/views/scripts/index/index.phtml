@@ -1,8 +1,34 @@
+<?php $groupe = ''; ?>
+<?php foreach ($this->modules as $module){ ?>
+
+    <?php if ($groupe != $module->groupe_name){ ?>
+     
+        <?php $groupe = $module->groupe_name; ?>   
+        <div class="clear"><!--x--></div>
+        <h3><b><?php echo $groupe ?></b></h3>   
+        
+        <?php //echo $module->groupe_name; ?>
+        <div class="admin_panel_block">
+            <a href="<?php echo '/'.$module->name.'/ru/admin_'.$module->name ?>" title="<?php echo $module->title ?>">      
+                <img src="<?php echo '/img/admin/modules/'.$module->name.'.png' ?>" alt=""/><br/>
+                <span><?php echo $module->title; ?></span>
+            </a>
+        </div>
+    <?php } else {?>
+         <div class="admin_panel_block">
+            <a href="<?php echo '/'.$module->name.'/ru/admin_'.$module->name ?>" title="<?php echo $module->title ?>">    
+                <img src="<?php echo '/img/admin/modules/'.$module->name.'.png' ?>" alt=""/><br/>
+                <span><?php echo $module->title; ?></span>
+            </a>
+         </div>
+    <?php }?>
+     
+<?php } ?>
 <div id="left_block">
     <div class="block_r ser content_blocks">
         <h3><b>Управление сайтом</b></h3>  
         <ul>
-            <li><a href="/pages/<?=$this->layout()->lang ?>/admin_pages/">Структура</a></li>
+            <li><a href="/pages/<?=$this->layout()->lang ?>/admin_pages/">Структура-1</a></li>
             <li><a href="/news/<?=$this->layout()->lang ?>/admin_news/">Новости</a></li>
             <li><a href="/articles/<?=$this->layout()->lang ?>/admin_articles/">Статьи</a></li>
             <li><a href="/otzivy/<?=$this->layout()->lang ?>/admin_otzivy/">Отзывы и Предложения</a></li>

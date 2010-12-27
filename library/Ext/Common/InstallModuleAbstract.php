@@ -74,7 +74,7 @@ abstract class Ext_Common_InstallModuleAbstract
                             ->from('site_divisions_type')
                             ->where('system_name = ?', $this->_module_sys_Name);
                            
-        print_r($select);
+       
         return ($this->_db->fetchRow($select))? true: false;
         
     }
@@ -86,6 +86,49 @@ abstract class Ext_Common_InstallModuleAbstract
    
     
     abstract public function Uninstall();
+    /**
+     * 
+     */
+    protected function DoRoute()
+    {
+      
+      $route_config = new Zend_Config_Yaml($this->_module_config->main->config->path.'routes.yml',null,
+                              array('skipExtends'        => true,
+                                    'allowModifications' => true));
+                $route_name = $this->_module_sys_Name.'item';
+     		$route_config->routes->routes->$route_name = array();
+                $route_config->routes->routes->$route_name->__set('type', "Zend_Controller_Router_Route" );
+                $route_config->routes->routes->$route_name->__set('route', $route_name."/:item");
+                $route_config->routes->routes->$route_name->defaults = array();
+                $route_config->routes->routes->$route_name->defaults->__set('module', $this->_module_sys_Name);                
+                $route_config->routes->routes->$route_name->defaults->__set('controller', $this->_module_sys_Name);
+                $route_config->routes->routes->$route_name->defaults->__set('action',$this->_module_sys_Name.'item');
+                $route_config->routes->routes->$route_name->defaults->__set('id', $data['id']); 
+                
+                
+                $writer = new Zend_Config_Writer_Yaml();
+                $writer->setFilename($this->_module_config->main->config->path.'routes.yml');
+                $writer->setConfig($route_config);
+                $writer->write();
+		
+     }
+     /**
+      * 
+      */
+     protected function DeleteRoute()
+     {
+       $route_config = new Zend_Config_Yaml($this->_module_config->main->config->path.'routes.yml',null,
+                              array('skipExtends'        => true,
+                                    'allowModifications' => true));
+       $route_config->routes->routes->__unset($this->_module_sys_Name.'item');
+       
+       $writer = new Zend_Config_Writer_Yaml();
+                $writer->setFilename($this->_module_config->main->config->path.'routes.yml');
+                $writer->setConfig($route_config);
+                $writer->write();
+       
+       
+     }
     
    
     

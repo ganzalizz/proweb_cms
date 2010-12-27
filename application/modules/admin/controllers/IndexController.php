@@ -42,5 +42,7 @@ class Admin_IndexController extends MainAdminController {
 
     public function indexAction() {
         $this->view->layout()->lang = $this->_getParam('lang', 'ru');
+        $this->view->modules = Modules::getInstance()->GetModulesByGroupPriority();
+       // echo var_dump(Modules::getInstance()->GetModulesByGroupPriority());
     }
 }

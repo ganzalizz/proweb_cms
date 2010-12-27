@@ -55,32 +55,86 @@ class Admin_ModulesController extends MainAdminController  {
 	}
 
 	
+	/**
+       * Инсталер модулей Ajax
+       * В каждом модуле должен быть файл <Имя модуля>Install.php наследуемый от Ext_Common_InstallModuleAbstract
+       * и  конфиг <имя модуля>.ini в котором прописываются базовые настройки модуля
+       */
+	public function installAction() {
+          
+         $installed = $this->_getParam('installed');
+         $module_name = $this->_getParam('module_name');
+        
+        require_once APPLICATION_PATH.'/modules/'.$module_name.'/controllers/admin/'.ucfirst($module_name).'Install.php';
+        $r = new ReflectionClass(ucfirst($module_name).'Install');
+        $install = $r->newInstanceArgs((array)$module_name);
+                
+        if (($this->_request->isXmlHttpRequest()) && ($this->_getParam('installed')))
+        {
+            $install->Uninstall();
+            $module = Modules::getInstance()->getModuleByName($module_name);
+           
+          echo  '	<td class="main" style="color:red;">'.
+			$module['title'].' 
+		      </td>
+                  <td class="main" >
+			<strong>'.$module['name'].'</strong>
+                  </td>
+		      <td class="main" >'.
+			$module['describe'].'
+		      </td>										
+		      <td class="options">
+			  <a id="'.$module['name'].'" href="#" onclick="return false;" title="Включить модуль"><img src="/img/admin/module_'.$module['installed'].'.png" alt="/img/admin/module_'.$module['installed'].'.png"></a>    
+                      </td>'.
+                     $this->view->ajaxStatusLink(array(
+                                                  'target_id'	=>'row_'.$module['id'],
+                                                  'link_id'	=>$module['name'],
+                                                  'target_url'=>'modules/install',
+                                                  'url_data'	=>"{installed: ".$module['installed'].",module_name: '".$module['name']."'}",
+                                                  'loader_img'=>"/img/horizontal_loader.gif"
+                                                  ));
+            
+        }
+        else
+        {
+            $install->Install();
+            $module = Modules::getInstance()->getModuleByName($module_name);
+           
+          echo  ' <td class="main" " style="color:green;">'.
+			$module['title'].' 
+		      </td>
+                  <td class="main" >
+			<strong>'.$module['name'].'</strong>
+                  </td>
+		      <td class="main" >'.
+			$module['describe'].'
+		      </td>										
+		      <td class="options">
+			  <a id="'.$module['name'].'" href="#" onclick="return false;" title="Выключить модуль"><img src="/img/admin/module_'.$module['installed'].'.png" alt="/img/admin/module_'.$module['installed'].'.png"></a>    
+                      </td>
+		      '.$this->view->ajaxStatusLink(array(
+                                                  'target_id'	=>'row_'.$module['id'],
+                                                  'link_id'	=>$module['name'],
+                                                  'target_url'=>'modules/install',
+                                                  'url_data'	=>"{installed: ".$module['installed'].",module_name: '".$module['name']."'}",
+                                                  'loader_img'=>"/img/horizontal_loader.gif"
+                                                  ));;
+           
+	} 
 	
-	public function installAction(){
-		$name = $this->_getParam('name', '');
-		if ($name){
-			$path = DIR_MODULES.$name.DS.'comments.xml';		
-			$comments = Modules::getInstance()->getComments($name);
-			$comments['name'] = $name;
-			$handle = fopen(DIR_MODULES.$name.DS.'install.txt', 'w+');
-			fwrite($handle, date('Y-m-d H:i:s'));
-			fclose($handle);
-			$row = Modules::getInstance()->createRow($comments);
-			$row->save();	
-		}
-		$this->_redirect($this->_curModule);
-	}
+	exit;  
+    }
 	
-	public function addAction(){
-		$this->layout->action_title = "Установить модуль";	
-		$modules = Modules::getInstance()->getAllModules();
-		foreach ($modules as $key=> $module){
-				if (file_exists(DIR_MODULES.$module['name'].DS.'install.txt')){
-					unset($modules[$key]);
-				}
-		}
-		$this->view->items = $modules;
-	}
+    public function addAction() {
+        $this->layout->action_title = "Установить модуль";
+        $modules = Modules::getInstance()->getAllModules();
+        foreach ($modules as $key => $module) {
+            if (file_exists(DIR_MODULES . $module['name'] . DS . 'install.txt')) {
+                unset($modules[$key]);
+            }
+        }
+        $this->view->items = $modules;
+    }
 	
 	public function editAction(){
 		$name = $this->_getParam('name', '');
