@@ -127,7 +127,7 @@ class Pages_Admin_PagesController extends MainAdminController {
 		} else {
 			$form->populate($page->toArray());
 			
-			$options = PagesOptions::getInstance()->getPageOptions($id)->toArray();			
+		  $options = PagesOptions::getInstance()->getPageOptions($id)->toArray();			
 	        $options['page_title'] = $options['title'];
 	        unset($options['title']);
 	        $form->populate($options);
@@ -186,7 +186,7 @@ class Pages_Admin_PagesController extends MainAdminController {
      * @param array $data
      * @return bool
      */
-    private function editRoute($data) {
+    private function editRoute($data, $old_route) {
         //Loader::loadCommon('Router');
         if ($data['id_div_type']) {
             $division_type = SiteDivisionsType::getInstance()->find($data['id_div_type'])->current();
@@ -194,6 +194,7 @@ class Pages_Admin_PagesController extends MainAdminController {
                 $module = $division_type->module;
                 $controller = $division_type->controller_frontend;
                 $action = $division_type->action_frontend;
+                $data['old_route'] = $old_route;
                 Router::getInstance()->replaceRoute($data, $action, $controller, $module);
                 return true;
             }
@@ -242,8 +243,9 @@ class Pages_Admin_PagesController extends MainAdminController {
 				} else {
 					// редактирование записи
 					$data = $form->getValidValues($form->getValues());
+                              $old_row = $row->path;
 					$row = Pages::getInstance()->editPage($data, $row);
-					$this->editRoute($form->getValues());		
+					$this->editRoute($form->getValues(), $old_row );		
 				}
 
 				if (!is_null($row) && $row->id){ // запись в базе создана загружаем картинки					
