@@ -12,7 +12,8 @@
 									foreach ($this->items as $key => $data){
 									 	$stl = $data->installed ? "style=\"color:green;\"" : "style=\"color:red;\"";
                                                                                 $instlnk =  $data->installed ? "<a id=\"".$data['name']."\" href=\"#\" onclick=\"return false;\" title=\"Выключить модуль\"><img src=\"/img/admin/module_1.png\"></a>"
-                                                                                                             : "<a id=\"".$data['name']."\" href=\"#\" onclick=\"return false;\" title=\"Включить модуль\"><img src=\"/img/admin/module_0.png\"></a>"										?>
+                                                                                                             : "<a id=\"".$data['name']."\" href=\"#\" onclick=\"return false;\" title=\"Включить модуль\"><img src=\"/img/admin/module_0.png\"></a>"	?>
+                                                                                <?php $visible = $data['visible'] ? 'Не показывать в админке' : 'Показывать в админке'?>
 											<tr id="row_<?php echo $data['id'] ?>">														
 												
 												<td class="main" <?php echo $stl ?>>
@@ -30,8 +31,15 @@
 													
                                                                                                 <?php echo $instlnk ?>       
                                                                                                 
-                                                                                                
-                                                                                                
+                                                                                                    <a href="#" id="visible_<?php echo $data['id']?>" onclick="return false;" title="Отображать в админке"><img src="/img/admin/visible_<?php echo $data['visible']?>.png" alt="<?php echo $visible?>"></a>
+                                                                                                         <?php echo $this->ajaxStatusLink(array(
+                                                                                                                                        'target_id'	=>'visible_'.$data['id'],
+                                                                                                                                        'link_id'	=>'visible_'.$data['id'],
+                                                                                                                                        'target_url'=>  $this->url(array()).'/visibility',
+                                                                                                                                        'url_data'	=>"{id: ".$data['id'].",visible: '".$data['visible']."'}",
+                                                                                                                                        'loader_img'=>"/img/loader.gif"
+
+                                                                                                                                ));?>
                                                                                                         
 												</td>
                                                                                                 <?php echo $this->ajaxStatusLink(array(
@@ -52,14 +60,7 @@
 							
 </div>
 
-  <div id="right_block">
-      <div class="block_r gray">
-        <h3><b>Действия</b></h3>
-        <ul>
-          <li><a href="<?=$this->currentModule?>/add/">Установить модуль</a></li>
-        </ul>        
-      </div>      
-  </div>
+ 
 
 
 				

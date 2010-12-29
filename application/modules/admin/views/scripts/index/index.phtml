@@ -9,14 +9,23 @@
         
         <?php //echo $module->groupe_name; ?>
         <div class="admin_panel_block">
-            <a href="<?php echo '/'.$module->name.'/ru/admin_'.$module->name ?>" title="<?php echo $module->title ?>">      
+            <?php if ($module->module_link == null) { ?>
+            <a href="<?php echo '/'.$module->name.'/ru/admin_'.$module->name ?>" title="<?php echo $module->title ?>">
+            <?php } else { ?>
+            <a href="<?php echo $module->module_link ?>" title="<?php echo $module->title ?>">
+            <?php } ?>
                 <img src="<?php echo '/img/admin/modules/'.$module->name.'.png' ?>" alt=""/><br/>
                 <span><?php echo $module->title; ?></span>
             </a>
         </div>
     <?php } else {?>
+        <?php //TODO: сделать формирование ссылок тернарным оператором ?>
          <div class="admin_panel_block">
-            <a href="<?php echo '/'.$module->name.'/ru/admin_'.$module->name ?>" title="<?php echo $module->title ?>">    
+            <?php if ($module->module_link == null) { ?>
+            <a href="<?php echo '/'.$module->name.'/ru/admin_'.$module->name ?>" title="<?php echo $module->title ?>">
+            <?php } else { ?>
+            <a href="<?php echo $module->module_link ?>" title="<?php echo $module->title ?>">
+            <?php } ?>
                 <img src="<?php echo '/img/admin/modules/'.$module->name.'.png' ?>" alt=""/><br/>
                 <span><?php echo $module->title; ?></span>
             </a>

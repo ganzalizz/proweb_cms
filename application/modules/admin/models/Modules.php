@@ -169,7 +169,7 @@ class Modules extends Zend_Db_Table
             
             $new_modules = array_diff($modulesApp, $modulesNameSys);
            
-            echo var_dump($modulesNameSys);
+           
             foreach ($new_modules as $new_module) $this->AddModule ($new_module);
             
             $old_modules = array_diff($modulesNameSys, $modulesApp);
@@ -192,6 +192,8 @@ class Modules extends Zend_Db_Table
                            ->order('groupe_priority ASC');
             return $this->fetchAll($select);
         }
+
+        
 	
 	
 }
