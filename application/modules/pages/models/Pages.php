@@ -203,6 +203,7 @@ class Pages extends Zend_Db_Table {
 			$select->where('ISNULL(id_parent)', null);
 		} else {
 			$select->where('id_parent = ?', (string)$id_parent);	
+			$select->where('deleted = ?', 0);	
 		}	
 		$select->order('priority');
 		
@@ -237,31 +238,28 @@ class Pages extends Zend_Db_Table {
 	 * @param int $level
 	 * @return array
 	 */
-	public function getSitemap($version, $id_parent = 1, $level = 1) {
-		$return = array ( );
-		$nodes = array ( );
-		$where = array (
-			//$this->getAdapter ()->quoteInto ( 'version = ?', $version ), 
-			$this->getAdapter ()->quoteInto ( 'level = ?', $level ), 
-			$this->getAdapter ()->quoteInto ( 'id_parent = ?', $id_parent ), 
-			$this->getAdapter ()->quoteInto ( 'deleted = ?', 0 ),
-			$this->getAdapter ()->quoteInto ( 'sitemap = ?', 1 )
-		 );
-		$nodes = $this->fetchAll ( $where, 'priority' );
+	public function getSitemap($version, $id_parent = 1, $level = 1) {		
+		$select = $this->select()
+			->reset()
+			->where('level = ?', $level)
+			->where('id_parent = ?', $id_parent)
+			->where('deleted = ?', 0)
+			->where('show_in_sitemap = ?', 1)
+			->where('is_active = ?', 1)
+			->order('priority');
+		
+		$nodes = $this->fetchAll ( $select );
 		$html = '';
 		if ($nodes->count()){
 			$html = '<ul>';
 			foreach ( $nodes as $data ) {
 				
-				if ($this->getCountOfChildren ( $data->id ) > 0) {
+				if ($this->hasChild( $data->id )) {
 					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->title</a>";
-					//$html.=$this->getSitemap ( $version, $data->id, $data->level + 1 );
-					$html.="</li>";
-					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'cls' => 'master-task', 'iconCls' => 'task-folder', 'children' => $this->getTree ( $version, $data->id, $data->level + 1 ) );
-				} else {
-					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'leaf' => 'true', 'iconCls' => 'task' );
-					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->title</a>";
-					
+					$html.=$this->getSitemap ( $version, $data->id, $data->level + 1 );
+					$html.="</li>";					
+				} else {					
+					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->title</a>";					
 					$html.="</li>";
 				}
 			}	
@@ -402,49 +400,44 @@ class Pages extends Zend_Db_Table {
 	 * Добавление новой страницы
 	 *
 	 * @param array $data
-	 * @param string $module
-	 * @return int
+	 * @param Zend_Db_Table_Row $row
+	 * @return Zend_Db_Table_Row
 	 */
-	public function addPage($data, $module = 'default') {		
+	public function addPage($data, $row) {	
+
 		
-		$id=null;
-		if (is_array ( $data )) {
-			$new_data = $this->getDataPage ( $data, $module );
-			$id=$this->createRow()->setFromArray($new_data)->save(); 
-			//$this->insert ( $new_data );
-			$data ['id'] = $id;
-			PagesOptions::getInstance ()->addOptionsPage ( $data );
-		} else {
-			$original_id = $data->id;
-			$new_data = $this->getCopyDataPage ( $data );
-			$id = $this->insert ( $new_data );
-			PagesOptions::getInstance ()->addOptionsCopyPage ( $original_id, $id );
-			Menu::getInstance ()->addVersion ( $original_id, $id );			
-			Router::getInstance ()->addRoute ( $this->getPage($id)->toArray() );
+		unset($data['id']);
 		
+		if ($data['id_parent']){
+			$parent = $this->find($data['id_parent'])->current();
+			$data['level'] = $parent->level + 1;
 		}
 		
-		if (is_array ( $data ) && isset ( $data ['menu'] )) {			
+		$row->setFromArray(array_intersect_key($data, $row->toArray()));
+		$id = $row->save();
+		$data['id'] = $id;
+		PagesOptions::getInstance ()->addOptionsPage ( $data );
+		if (count($data['menu'])){
 			Menu::getInstance ()->addMenu ( $id, $data ['menu'] );
 		}
-		
-		return $id;
+				
+		return $row;
 	}
 	
 	/**
-	 * Enter description here...
+	 * Редактирование страницы
 	 *
-	 * @param unknown_type $data
+	 * @param array $data
+	 * @param Zend_Db_Table_Row $row
+	 * @return Zend_Db_Table_Row
 	 */
-	public function editPage($data) {		
-		$new_data = $this->getUpdateDataPage ( $data );		
-		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $data ['id'] );
-		$page = $this->find($data ['id'])->current();
-		$page->setFromArray(array_intersect_key($data, $page->toArray()));
-		$page->save();
-		//$this->update ( $new_data, $where );
+	public function editPage($data, $row) {	
+
+		$row->setFromArray(array_intersect_key($data, $row->toArray()));			
+		$row->save();		
 		PagesOptions::getInstance ()->editOptionsPage ( $data );		
 		Menu::getInstance ()->editMenu ( $data );
+		return $row;
 	}
 	
 	public function deletePage($ids) {
@@ -517,46 +510,11 @@ class Pages extends Zend_Db_Table {
 	public function remove($id){
 		
 		$where = $this->getAdapter()->quoteInto('id = ?', (int)$id);
-		return $this->delete($where);
-		
-		/*$page= $this->find($id)->current();
-		if ($this->getCountOfChildren($id)){
-			$childs = $this->fetchAll('id_parent='.(int)$id);
-			foreach ($childs as $child){
-				$this->remove($child->id);
-			}
-		}
-		if (!is_null($page)){
-			@unlink(DIR_PUBLIC.'pics/default/'.$page->img);			
-			$page->delete();	
-		}	*/
-	}
-	
-	
-	public function reindex(){
-		
-		$index = New Ext_Search_Lucene(Ext_Search_Lucene::PAGES, true);		
-		$index->setMergeFactor(10000);
-		$rowset = $this->fetchAll( 'is_active=1' );
-			while( $rowset->valid() ) {				
-				$row = $rowset->current() ;
-				//
-				// Prepare document
-				//
-				$doc = new Ext_Search_Lucene_Document();
-				$doc->setUrl($row->path);
-				$doc->setTitle($row->title);
-				$doc->setId($row->id);
-                $doc->setContent(strip_tags($row->content));
-                				
-		        $index->addDocument( $doc ) ;
-
-				$rowset->next() ;
-			}
-		return $index->numDocs();
+		return $this->delete($where);	
 		
 	}
-       
+	
+	       
 	
 	/**
 	 * проверка уникальности адреса
@@ -722,104 +680,6 @@ class Pages extends Zend_Db_Table {
 	
 	
 	
-	/**
-	 * Вбивание данных при добавлении новой страницы
-	 *
-	 * @param array
-	 * @return array
-	 */
-	private function getDataPage($data, $module) {
-		$user = Security::getInstance ()->getUser ();
-		
-		$parent = $this->getPage ( ( int ) $data ['parent_id'] );
-		$countOfChildren = $this->getCountOfChildren ( $parent->id );
-		//$maxId = $this->getMaxId ();
-		$url = isset ( $data ['path'] ) ? $data ['path'] : '';
-		if (isset ( $data['id_div_type'] ) && $data['id_div_type']!=0){
-			$type = SiteDivisionsType::getInstance()->find($data['id_div_type'])->current();
-			if ($type!=null){
-				$data['inside_items'] = $type->go_to_module;
-			}
-		}
-		$result = array (
-			//'id' => $maxId + 1,
-			'type' => 'page',
-			//'version' => isset ( $data ['lang'] ) ? $data ['lang'] : $parent->version,
-			'is_active' => isset ( $data ['is_active'] ) ? '1' : '0',
-			'pubDate' => date ( "Y-m-d H:i:s" ),
-			'sitemap' => isset ( $data ['sitemap'] ) ? '1' : '0',
-			'show_childs' => isset ( $data ['show_childs'] ) ? '1' : '0',
-			'unpubDate' => date ( "Y-m-d H:i:s" ),
-			'intro' => isset($data['intro']) ? $data['intro'] : '',
-			'content' => isset ( $data ['content'] ) ? $data ['content'] : '',
-			'template' => isset ( $data ['template'] ) ? $data ['template'] : 'default',
-			'module' => $module, 'createdBy' => $user->id,
-			'editedBy' => $user->id,
-			'allow_delete'=>1,
-			'deleted' => '0',
-			'deletedBy' => $user->id,
-			'is_activeBy' => $user->id,
-			'id_parent' => isset ( $data ['parent_id'] ) ? $data ['parent_id'] : '1',
-			'level' => $parent->level + 1,
-			'priority' => $countOfChildren + 1,
-			'title' => isset ( $data ['title'] ) ? $data ['title'] : '',
-			'inside_items' => isset ( $data ['inside_items'] ) ? $data ['inside_items'] : '0',
-			'id_div_type' => isset ( $data ['id_div_type'] ) ? $data ['id_div_type'] : '0',			
-			'path' => $data ['path'] );
-		
-		return $result;
-	}
-	
-	/**
-	 * Получение данных только что измененной страницы
-	 *
-	 * @param array $data
-	 * @return array
-	 */
-	private function getUpdateDataPage($data) {
-		$user = Security::getInstance ()->getUser ();
-		if (isset ( $data['id_div_type'] ) && $data['id_div_type']!=0){
-			$type = SiteDivisionsType::getInstance()->find($data['id_div_type'])->current();
-			if ($type!=null){
-				$data['inside_items'] = $type->go_to_module;
-			}
-		}		
-		$result = array (
-			'is_active' => isset ( $data ['is_active'] ) ? (int)$data ['is_active'] : '0',
-			'sitemap' => isset ( $data ['sitemap'] ) ? (int)$data ['sitemap'] : '0',
-			'id_div_type' => isset ( $data ['id_div_type'] ) ? $data ['id_div_type'] : '0',
-			'show_childs' => isset ( $data ['show_childs'] ) ? (int)$data ['show_childs'] : '0',
-			'intro' => isset($data['intro']) ? $data['intro'] : '',
-			'content' => isset ( $data ['content'] ) ? $data ['content'] : '',
-			'template' => isset ( $data ['template'] ) ? $data ['template'] : 'default',
-			'editedBy' => $user->id,
-			'title' => isset ( $data ['title'] ) ? $data ['title'] : '',
-			'inside_items' => isset ( $data ['inside_items'] ) ? $data ['inside_items'] : '0',
-			'path' => $data ['path'] );
-		
-		return $result;
-	}
-	
-	
-	
-	/**
-	 * Получение количества копий страницы
-	 * для определения префикса новой копии
-	 *
-	 * @param string $title
-	 * @return int
-	 */
-	private function getCountOfCopies($title) {
-		$db = $this->getAdapter ();
-		$sql = $db->quoteInto ( "SELECT count(*) as c FROM $this->_name WHERE title regexp ?", $title . '_[[:digit:]]' );
-		
-		$result = $db->query ( $sql );
-		$count = $result->fetchAll ();
-		
-		return $count [0] ['c'];
-	}
-	
-	
 	
 	/**
 	 * Получение текста для вставки иконок управления 
@@ -848,10 +708,10 @@ class Pages extends Zend_Db_Table {
 			return 	$go_to_module.
 					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" active=\"".$data->is_active."\" ><img src='/img/admin/active_" . $data->is_active . ".gif' /></a>" . 
 					"<a href ='#' title='Редактировать' ><img src='/img/admin/redact.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id/$data->id/\" '/></a>" .
-					"<a href ='#' title='Добавить' ><img src='/img/admin/plus_krug.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" .$delete;
+					"<a href ='#' title='Добавить' ><img src='/img/admin/plus_krug.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id_parent/$data->id/\" '/></a>" .$delete;
 					;
 		} else{
-			return "<a href ='#' title='Добавить' ><img src='/img/admin/plus_krug.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" ;
+			return "<a href ='#' title='Добавить' ><img src='/img/admin/plus_krug.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id_parent/$data->id/\" '/></a>" ;
 		}		
 	
 	}

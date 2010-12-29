@@ -289,7 +289,7 @@ routes:
         id: 1075
     newslist: 
       type: Zend_Controller_Router_Route
-      route: newslist
+      route: newslist/*
       defaults: 
         module: news
         controller: news

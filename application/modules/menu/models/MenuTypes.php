@@ -41,4 +41,18 @@ class MenuTypes extends Zend_Db_Table {
 	public function getAll(){
 		return $this->fetchAll();
 	}
+	/**
+	 * получение типов меню
+	 * @return array
+	 */
+	public function getAllAsArray(){
+		$return = array();
+		$result = $this->fetchAll();
+		if ($result->count()){
+			foreach ($result as $item){
+				$return[$item->id] = $item->title;
+			}
+		}
+		return $return;
+	}
 }

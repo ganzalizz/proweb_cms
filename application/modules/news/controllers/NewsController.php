@@ -37,14 +37,14 @@ class News_NewsController extends Zend_Controller_Action {
        
             
        $page = $this->_getParam('page',1);
-       $item_per_page = $ini->countOnPage;
+       $item_per_page = $ini->countOnPage;       
             
        $paginator = News::getInstance()->getNewsPaginator($item_per_page,$page);
        Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
       
        $paginator->setView($this->view);
        $this->view->news =  $paginator->getCurrentItems();
-       $this->view->paginator = $paginator;
+       $this->view->paginator = $paginator;       
       
     }
 

@@ -111,23 +111,16 @@ class Menu extends Zend_Db_Table {
 	}
 	
 	/**
-	 * Получение страницы, зарегеной в меню
+	 * Получение типов меню в которые добавлена страница
 	 *
 	 * @param int $pageId
-	 * @return object
+	 * @return array
 	 */
 	public function getMenuPage($pageId) {
-		$result = array ( );
-		$where = $this->getAdapter ()->quoteInto ( 'pageId = ?', $pageId );
-		
-		$result = $this->fetchAll ( $where );
-		$return = array ( );
-		
-		foreach ( $result as $key => $data ) {
-			$return [$data->typeId] = $data;
-		}
-		
-		return $return;
+		$select = $this->select()
+			->from($this->_name, array('typeId'))
+			->where('pageId = ?', $pageId);
+		return $this->getAdapter()->fetchCol($select);			
 	}
 	
 	/**
@@ -158,8 +151,7 @@ class Menu extends Zend_Db_Table {
 		$where = $this->getAdapter ()->quoteInto ( "pageId = ?", $id );
 		$this->delete ( $where );
 		
-		if (isset ( $data ['menu'] )) {
-				
+		if (isset ( $data ['menu'] )) {				
 			$this->addMenu ( $id, $data ['menu'] );
 		}
 		

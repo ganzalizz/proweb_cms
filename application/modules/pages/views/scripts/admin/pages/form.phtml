@@ -1,0 +1,39 @@
+ <?php $form_args = '';?>
+ <?php foreach ($this->element->getAttribs() as $key=>$value){?>
+ 		<?php $form_args.= $key.'="'.$this->escape($value).'" '; ?>
+ <?php }?>
+ 
+ 
+ 
+ <form <?php echo  $form_args?> >
+		<?if ($this->ok==1) {?>
+			<p align="center"><font color="green"><b>Данные сохранены</b></font></p>
+		<?} ?>	
+		
+		<?php foreach ($this->element->getDisplayGroups() as $group){?>
+			 <div class="content_block">
+			 	<h3 class="block_name"><?php echo $group->getLegend()?></h3>
+			 	<?php foreach ($group->getElements() as $form_element){?>
+			 		<p class="form_name">
+		            	<?php echo $form_element->getLabel(); ?>
+		            	<?php echo $form_element->isRequired() ? '<span class="required">*</span> ' : ''?>
+		            	<?php if ($form_element->getDescription()){?>
+		            		<span class="ser_text size11">(<?php echo $form_element->getDescription()?>)</span>
+		            	<?php }?>
+		            </p>
+		            <?php echo $form_element?>
+			 	<?php }?>
+			 </div>
+		
+		<?php }?>
+		
+		
+		
+		
+		
+	<div class="right">	       
+        <?php echo $this->element->submit?>
+	</div>
+		
+		
+    </form>
