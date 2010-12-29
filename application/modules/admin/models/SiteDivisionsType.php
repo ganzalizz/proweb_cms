@@ -36,19 +36,11 @@ class SiteDivisionsType extends Zend_Db_Table {
 
 		return self::$_instance;
 	}
-	/**
-	 * 
-	 * получение типов раздела к модулю
-	 * @param string $module
-	 * @return Zend_Db_Table_Rowset
-	 */
+
 	public function getDivisions($module)
         {
-        	$select = $this->select()
-        		->where('module = ?', $module)
-        		->order('priority DESC');
-            return $this->fetchAll($select);
-            
+            $rows = $this->fetchAll("`module` = '$module'",'priority DESC');
+            return $rows;
         }
 	/**
 	 * Поднять приоритет
@@ -134,35 +126,6 @@ class SiteDivisionsType extends Zend_Db_Table {
 				LIMIT 1";
 		return $this->getAdapter()->fetchOne($sql);
 
-	}
-	/**
-	 * 
-	 * Получение списка Активных разделов
-	 * @return array
-	 */
-	public function getAllActive(){
-		$return  = array();
-		$select = $this->select()
-			->where('active = ?', 1)
-			->order('priority desc');
-		$rowSet = $this->fetchAll($select);
-		if ($rowSet->count()){
-			foreach ($rowSet as $item){
-				$return[$item->id] = $item->title;
-			}
-		}
-		return $return;	
-			
-	}
-	/**
-	 * 
-	 * получение раздела по id
-	 * @param int $id
-	 * @return array
-	 */
-	public function getOne($id){
-		$row = $this->find($id)->current();
-		return array($row->id=>$row->title);
 	}
 
 

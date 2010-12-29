@@ -65,7 +65,7 @@ class Admin_ModulesController extends MainAdminController  {
          $installed = $this->_getParam('installed');
          $module_name = $this->_getParam('module_name');
         
-        require_once APPLICATION_PATH.'/modules/'.$module_name.'/controllers/admin/'.ucfirst($module_name).'Install.php';
+        require_once APPLICATION_PATH.'/modules/'.$module_name.'/controllers/Admin/'.ucfirst($module_name).'Install.php';
         $r = new ReflectionClass(ucfirst($module_name).'Install');
         $install = $r->newInstanceArgs((array)$module_name);
                 
@@ -125,18 +125,25 @@ class Admin_ModulesController extends MainAdminController  {
 	exit;  
     }
 	
-    public function addAction() {
-        $this->layout->action_title = "Установить модуль";
-        $modules = Modules::getInstance()->getAllModules();
-        foreach ($modules as $key => $module) {
-            if (file_exists(DIR_MODULES . $module['name'] . DS . 'install.txt')) {
-                unset($modules[$key]);
+   public function visibilityAction()
+   {
+       if ($this->_request->isXmlHttpRequest()) {
+            $id = $this->_getParam('id');
+            $row = Modules::getInstance()->find($id)->current();
+            if ($row != null) {
+                $row->visible = abs($row->visible - 1);
+                $row->save();
+                echo '<img src="/img/admin/visible_' . $row->visible . '.png" />';
+            } else {
+                echo 'error';
             }
         }
-        $this->view->items = $modules;
-    }
-	
-	public function editAction(){
+        exit;
+
+   }
+
+
+   public function editAction(){
 		$name = $this->_getParam('name', '');
 		if ($name){
 			$module = Modules::getInstance()->fetchRow("name='$name'");
