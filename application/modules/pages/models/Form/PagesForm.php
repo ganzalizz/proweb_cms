@@ -140,8 +140,7 @@ class Form_PagesForm extends Ext_Form
        
          $intro = new Ext_Form_Element_CkEditor('intro', array(
                     'label' => 'Анонс',
-         			'description' => 'не более 1000 символов',
-                    'required' => true,         			
+         			'description' => 'не более 1000 символов',                             			
                     'filters' => array('StringTrim')
                 ));
         
@@ -149,7 +148,7 @@ class Form_PagesForm extends Ext_Form
         
         $content = new Ext_Form_Element_CkEditor('content', array(
                     'label' => 'Текст',
-                    'required' => true,
+                   // 'required' => true,
                     'filters' => array('StringTrim')
                 ));
         

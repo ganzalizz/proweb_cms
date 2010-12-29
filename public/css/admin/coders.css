@@ -339,3 +339,17 @@ span.complete {
 .admin_panel_block a:hover span{
     text-decoration: none;
 }
+
+.prava_dostupa td.align_right {
+	text-align: right;
+	width: 100px;
+}
+.prava_dostupa table.divisions_list {
+	margin: 0px;
+	width: 100%;
+	
+}
+.prava_dostupa td.division {
+	border: none;
+	border-bottom: 1px solid #E2E6E7;
+}

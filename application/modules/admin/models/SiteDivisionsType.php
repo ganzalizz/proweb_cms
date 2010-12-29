@@ -36,11 +36,19 @@ class SiteDivisionsType extends Zend_Db_Table {
 
 		return self::$_instance;
 	}
-
+	/**
+	 * 
+	 * получение типов раздела к модулю
+	 * @param string $module
+	 * @return Zend_Db_Table_Rowset
+	 */
 	public function getDivisions($module)
         {
-            $rows = $this->fetchAll("`module` = '$module'",'priority DESC');
-            return $rows;
+        	$select = $this->select()
+        		->where('module = ?', $module)
+        		->order('priority DESC');
+            return $this->fetchAll($select);
+            
         }
 	/**
 	 * Поднять приоритет

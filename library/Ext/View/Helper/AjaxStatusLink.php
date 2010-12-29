@@ -29,6 +29,7 @@ class Ext_View_Helper_AjaxStatusLink extends Zend_View_Helper_Abstract
                                                    
 
                                 ajaxStatusLinkSend(link_id, target_url, url_data, target_id, loader_img);
+                                return false;
                             });
 
                                             function ajaxStatusLinkSend(link_id, target_url, url_data, target_id, loader_img)

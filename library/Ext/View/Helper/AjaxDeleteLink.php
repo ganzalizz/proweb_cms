@@ -30,6 +30,7 @@ class Ext_View_Helper_AjaxDeleteLink extends Zend_View_Helper_Abstract
                                var sure = confirm("Вы уверены?");	                       
 								if(sure){
                                 	ajaxDeleteLinkSend(link_id, target_url, url_data, target_id, delete_id, loader_img);
+                                	return false;
                                 }
                             });
 

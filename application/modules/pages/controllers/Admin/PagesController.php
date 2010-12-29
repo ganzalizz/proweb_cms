@@ -129,7 +129,7 @@ class Pages_Admin_PagesController extends MainAdminController {
 			
 			$options = PagesOptions::getInstance()->getPageOptions($id)->toArray();			
 	        $options['page_title'] = $options['title'];
-	        unset($options['title']);	        
+	        unset($options['title']);
 	        $form->populate($options);
 		}
 		
