@@ -4,8 +4,9 @@
 	<form action="<?= $this->escape( $this->element->getAction() ); ?>" 
 		method="<?= $this->escape( $this->element->getMethod() ); ?>" >
 		
-		<div class="f_left">
+		
                     <div class="bg">
+                        
 			<div class="item">
 				<label for="<?php echo $this->element->name->getId()?>">
 					<?php echo $this->element->name->getLabel(); ?>
@@ -52,7 +53,7 @@
                         </div>
                     </div>
                     
-		</div>
+		
 
                 <?php if (!is_null($this->layout()->template)): ?>
                     <div class="f_left shabl">
