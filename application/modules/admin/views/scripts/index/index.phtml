@@ -1,74 +1,57 @@
-<?php $groupe = ''; ?>
+<div id="left_block">
+<?php $groupe = ''; ?>  
 <?php foreach ($this->modules as $module){ ?>
 
     <?php if ($groupe != $module->groupe_name){ ?>
+    
+    	<?php if ($groupe!=''){?>
+    		</div>
+    		<div class="block_r orange content_blocks"> 
+    	<?php } else {?>
+    		<div class="block_r orange content_blocks"> 
+    	<?php }?>
+    	
+    	<?php if ($module->module_link == null) { ?>
+            	<?php $link = '/'.$module->name.'/ru/admin_'.$module->name; ?>            
+            <?php } else { ?>
+            	<?php $link = $module->module_link; ?>           
+            <?php } ?>
      
-        <?php $groupe = $module->groupe_name; ?>   
+        <?php $groupe = $module->groupe_name; ?> 
+        
         <div class="clear"><!--x--></div>
         <h3><b><?php echo $groupe ?></b></h3>   
         
         <?php //echo $module->groupe_name; ?>
         <div class="admin_panel_block">
-            <?php if ($module->module_link == null) { ?>
-            <a href="<?php echo '/'.$module->name.'/ru/admin_'.$module->name ?>" title="<?php echo $module->title ?>">
-            <?php } else { ?>
-            <a href="<?php echo $module->module_link ?>" title="<?php echo $module->title ?>">
-            <?php } ?>
-                <img src="<?php echo '/img/admin/modules/'.$module->name.'.png' ?>" alt=""/><br/>
-                <span><?php echo $module->title; ?></span>
-            </a>
+            
+            	 <a href="<?php echo $link ?>" title="<?php echo $module->title ?>">
+                	<img src="<?php echo '/img/admin/modules/'.$module->name.'.png' ?>" alt=""/>
+                </a><br/>
+                <a href="<?php echo $link ?>" title="<?php echo $module->title ?>"><?php echo $module->title; ?></a>
+            
         </div>
     <?php } else {?>
         <?php //TODO: сделать формирование ссылок тернарным оператором ?>
          <div class="admin_panel_block">
-            <?php if ($module->module_link == null) { ?>
-            <a href="<?php echo '/'.$module->name.'/ru/admin_'.$module->name ?>" title="<?php echo $module->title ?>">
-            <?php } else { ?>
-            <a href="<?php echo $module->module_link ?>" title="<?php echo $module->title ?>">
-            <?php } ?>
-                <img src="<?php echo '/img/admin/modules/'.$module->name.'.png' ?>" alt=""/><br/>
-                <span><?php echo $module->title; ?></span>
-            </a>
-         </div>
+            
+            	 <a href="<?php echo $link ?>" title="<?php echo $module->title ?>">
+                	<img src="<?php echo '/img/admin/modules/'.$module->name.'.png' ?>" alt=""/>
+                </a><br/>
+                <a href="<?php echo $link ?>" title="<?php echo $module->title ?>"><?php echo $module->title; ?></a>
+            
+        </div>
     <?php }?>
      
 <?php } ?>
-<div id="left_block">
-    <div class="block_r ser content_blocks">
-        <h3><b>Управление сайтом</b></h3>  
-        <ul>
-            <li><a href="/pages/<?=$this->layout()->lang ?>/admin_pages/">Структура-1</a></li>
-            <li><a href="/news/<?=$this->layout()->lang ?>/admin_news/">Новости</a></li>
-            <li><a href="/articles/<?=$this->layout()->lang ?>/admin_articles/">Статьи</a></li>
-            <li><a href="/otzivy/<?=$this->layout()->lang ?>/admin_otzivy/">Отзывы и Предложения</a></li>
-            <li><a href="/portfolio/<?=$this->layout()->lang ?>/admin_portfolio/">Портфолио</a></li>
-            <li><a href="/blocks/<?=$this->layout()->lang ?>/admin_blocks/">Блоки</a></li>
-            <li><a href="/templates/<?=$this->layout()->lang ?>/admin_templates/">Шаблоны сайтов</a></li>
-        </ul>
-    </div>
-     <div class="block_r orange content_blocks">
-        <h3><b>Каталог товаров</b></h3>
-       <!--  <p class="info_block">Ниже указаны действия</p> -->
-        <ul>
-          <li><a href="/catalog/<?=$this->layout()->lang ?>/admin_division/">Разделы каталога</a></li>
-          <li><a href="/catalog/<?=$this->layout()->lang ?>/admin_product_options/">Список Параметров</a></li>         
-        </ul>
-        </div>
+</div>
 </div>
 
 <div id="right_block">
 
       <div class="block_r blue">
         <h3><b>Дополнительно</b></h3>
-
-        <ul>
-           
-         <li  ><a href="/blocks/<?=$this->layout()->lang ?>/admin_blocks/">Блоки</a></li>
-
-           <li  ><a href="/admin/<?=$this->layout()->lang ?>/divtype/">Типы разделов</a></li>
-          
-          
-                
-        </ul>
+			<p>Краткая справочная информация</p>
+        
       </div>
     </div>
