@@ -9,44 +9,62 @@
                                                                 foreach($this->all as $key => $data)
                                                                     {?>
                                                                       <tr>
-									<td >
-                                                                            <strong><?=$data->title?></strong>
+																		<td  width="200">
+                                                                            <a href = '<?=$this->currentModule?>/edit/mod/<?=$data->name?>' title="Добавить тип раздела"><img src="/img/admin/add.png" alt="" /></a>
+                                                                            &nbsp;<strong><?=$data->title?></strong>
                                                                         </td>
-                                                                        <td class="options">
-                                                                            <a href = "/admin/ru/modules/active/id/<?=$data->id?>">
-                                                                                <?if($data->active){?>
-                                                                                    <img src="/img/admin/active_1.gif" alt="" />
-                                                                                <?}else{?>
-                                                                                   <img src="/img/admin/active_0.gif" alt="" />
-                                                                                <?}?>
-                                                                            </a>
-                                                                            <a href = '<?=$this->currentModule?>/edit/mod/<?=$data->name?>'><img src="/img/admin/plus_krug.gif" alt="" /></a>
+                                                                        <td >
+                                                                        	<?php 
+                                                                        	
+                                                                        	/**
+                                                                        	 * TODO вынести вызов класса в контроллер
+                                                                        	 */
+                                                                        	?>
+                                                                           <?php $divisions = SiteDivisionsType::getInstance()->getdivisions($data->name);?>
+                                                                            <?php if ($divisions->count()){?>
+                                                                            	<table class="divisions_list">
+                                                                            	<?php foreach ($divisions as $division){?>
+                                                                            		<tr id="row_<?php echo $division->id?>">
+				                                                                      <td class="division" id="elem_<?php echo $division->id?>">
+				                                                                          -- <strong><a  href ="<?=$this->currentModule?>/edit/id/<?=$division->id?>/" title="редактировать"><?=$division->title?></a></strong>
+				                                                                      </td>
+				                                                                      <td  class="division" width="70">	                                                                      
+					                                                                      <a href = '<?=$this->currentModule?>/edit/id/<?=$division->id?>' title="Изменить"><img src="/img/admin/edit.png" alt="" /></a>
+					                                                                      <a href ="#" title="Включить/Выключить" id="active_<?php echo $division->id?>" onclick="return false;"><img src="/img/admin/active_<?=$division->active ?>.png" alt="" /></a>
+					                                                                      <?php echo $this->ajaxStatusLink(array(
+															                            		'target_id'	=>'active_'.$division->id,
+															                            		'link_id'	=>'active_'.$division->id,
+															                            		'target_url'=>$this->currentModule.'/changeactive',
+															                            		'url_data'	=>"{id: ".$division->id."}",
+															                            		'loader_img'=>"/img/loader.gif"
+															                            		
+															                            	));?>
+					                                                                      <a href ="#" id="del_<?php echo $division->id?>" title="Удалить"><img src="/img/admin/delete.png" alt=""  /></a>
+					                                                                      <?php echo $this->ajaxDeleteLink(array(
+															                            		'target_id'	=>'elem_'.$division->id,
+															                            		'delete_id'	=>'row_'.$division->id,
+															                            		'link_id'	=>'del_'.$division->id,
+															                            		'target_url'=>$this->currentModule.'/delete',
+															                            		'url_data'	=>"{id: ".$division->id."}",
+															                            		'loader_img'=>"/img/loader.gif"
+															                            		
+															                            	));?>
+							                                                                      </td>
+				                                                                      </tr>
+                                                                            	<?php }?>
+                                                                            	</table>
+                                                                            <?php }?>
+                                                                            
                                                                         </td>
                                                                       </tr>
 
-                                                                          <?php $div = SiteDivisionsType::getInstance()->getDivisions($data->name);
-                                                                          foreach($div as $key => $divisions)
-                                                                              {?>
-                                                                      <tr>
-                                                                      <td class="category_child">
-                                                                          -- <strong><a  href ="<?=$this->currentModule?>/edit/id/<?=$divisions->id?>/" title="редактировать"><?=$divisions->title?></a></strong>
-                                                                      </td>
-                                                                      <td class="options">
-                                                                          <a href = '<?=$this->currentModule?>/active/id/<?=$divisions->id?>' title="Включить/Выключить"><img src="/img/admin/active_<?=$divisions->active ?>.gif" alt="" /></a>
-                                                                      <a href = '<?=$this->currentModule?>/edit/id/<?=$divisions->id?>' title="Изменить"><img src="/img/admin/redact.gif" alt="" /></a>
-                                                                      <a href = '<?=$this->currentModule?>/delete/id/<?=$divisions->id?>' title="Удалить"><img src="/img/admin/delete.gif" alt="" onclick="return confirm('Вы уверены?');" /></a>
-                                                                      </td>
-                                                                      </tr>
-                                                                           <?}?>
+                                                                         
 
-                                                                    <?php
-                                                                    }?>
+                                                                    <?php }?>
 
 								</table>
 		</div>
-							<div style="padding-left: 20px;padding-top: 10px;" >
-								<?=$this->Pagination($this->currentModule.'/index/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
-							</div>
+							
 </div>
 
   <div id="right_block">

@@ -102,17 +102,43 @@ class Admin_DivtypeController extends MainAdminController  {
 		}	
 		
 	}
-
 	
-	public function deleteAction(){
-		$id = $this->_getParam('id');
-		if ($id ){
-			$item = SiteDivisionsType::getInstance()->find($id)->current();
-//			@unlink(DIR_PUBLIC.'pics/works/'.$item->img);
-//			@unlink(DIR_PUBLIC.'files/works/'.$item->file);
-			$item->delete();
-			$path = $this->view->peoples_id ? '/index/peoples_id/'.$this->view->peoples_id : '';
-			$this->_redirect($this->_curModule.$path);
-		}
-	}
+ 	/**
+     * изменение активности
+     */
+    public function changeactiveAction() {
+        // проверка пришел ли запрос аяксом
+        if ($this->_request->isXmlHttpRequest()) {
+            $id = $this->_getParam('id');
+            $row = SiteDivisionsType::getInstance()->find($id)->current();
+            if ($row != null) {
+                $row->active = abs($row->active - 1);
+                $row->save();
+                echo '<img src="/img/admin/active_' . $row->active . '.png" />';
+            } else {
+                echo 'error';
+            }
+        }
+        exit;
+    }
+
+    
+ 	/**
+     * удаление элемента 
+     */
+    public function deleteAction() {
+        if ($this->_request->isXmlHttpRequest()) {
+            $id = $this->_getParam('id');
+            $row = SiteDivisionsType::getInstance()->find($id)->current();
+            if ($row != null) {                
+                $row->delete();
+                echo 'ok';
+            } else {
+                echo 'error';
+            }
+        }
+        exit;
+    }
+	
+	
 }

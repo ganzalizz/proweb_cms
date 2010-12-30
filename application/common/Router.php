@@ -41,7 +41,7 @@ class Router
 	 * @return boolean
 	 */
 	public function addRoute($data, $action = 'index', $controller = 'page', $module = 'default'){
-		if(!$this->hasRoute($data['name'], $data['id']))
+		if(!$this->hasRoute($data['path'], $data['id']))
 		{
 			$this->write($data, $action, $controller, $module);
 			
@@ -122,7 +122,7 @@ class Router
 	 */
 	public function hasRoute($name){		
 		$config = new Zend_Config_Yaml($this->_routeFileName);		
-		return $config->__isset($name);
+		return $config->routes->routes->__isset($name);
 			
 	}
 	
