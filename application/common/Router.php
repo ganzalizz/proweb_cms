@@ -90,10 +90,9 @@ class Router
                 unset($data['old_route']);
                 $route_name = $this->filtered($data['path']);
                 
-                if ((!$this->hasRoute($route_name)) || ($old_route != $route_name)){
-                    echo $old_route.'------------';
+                if ((!$this->hasRoute($route_name)) || ($old_route != $route_name)){                    
                     $this->deleteRoute($old_route);
-                	  $this->addRoute($data, $action, $controller, $module);
+                	$this->addRoute($data, $action, $controller, $module);
                 }
                 else{
                 

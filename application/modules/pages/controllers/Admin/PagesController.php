@@ -136,11 +136,6 @@ class Pages_Admin_PagesController extends MainAdminController {
    		if ($page->img){
 			$form->getElement('img')->setAttrib('img', '/pics/pages/thumbs/'.$page->img);
    		}	
-	
-      
-        
-      
-        
        
         $this->view->lang = $lang;
         $this->view->form = $form;
