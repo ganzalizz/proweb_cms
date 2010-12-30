@@ -47,6 +47,7 @@ class Otzivy_OtzivyController extends Zend_Controller_Action {
                             $form->getValue('Новое сообщение в книге отзывов и предложений'), 
                             $form->getValue('email'));
                 $form = new Form_FormOtzivy();
+                $this->view->ok = 1;
                 
             }
         }    

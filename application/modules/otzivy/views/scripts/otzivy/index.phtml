@@ -25,6 +25,14 @@
     <?php echo $this->paginationControl($this->paginator, null, null, array('url_params'=>$this->url_params))?>
 <?php } ?>
 
+
+        <?if ($this->ok==1) { ?>
+        <div class="content_block">
+            <p class="data_saved"><font color="green"><strong>Спасибо!<br/>Ваше сообщение отправлено.</strong></font></p>
+        </div>
+        <?} ?>
+      
+     
 <?=$this->form->render() ?> 	
 
 </div>
