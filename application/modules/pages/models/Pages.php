@@ -204,6 +204,7 @@ class Pages extends Zend_Db_Table {
 		} else {
 			$select->where('id_parent = ?', (string)$id_parent);	
 		}	
+		$select->where('deleted = ?', 0);
 		$select->order('priority');
 		
 		$nodes = $this->fetchAll ( $select );
@@ -238,28 +239,28 @@ class Pages extends Zend_Db_Table {
 	 * @return array
 	 */
 	public function getSitemap($version, $id_parent = 1, $level = 1) {
-		$return = array ( );
-		$nodes = array ( );
-		$where = array (
-			//$this->getAdapter ()->quoteInto ( 'version = ?', $version ), 
-			$this->getAdapter ()->quoteInto ( 'level = ?', $level ), 
-			$this->getAdapter ()->quoteInto ( 'id_parent = ?', $id_parent ), 
-			$this->getAdapter ()->quoteInto ( 'deleted = ?', 0 ),
-			$this->getAdapter ()->quoteInto ( 'sitemap = ?', 1 )
-		 );
-		$nodes = $this->fetchAll ( $where, 'priority' );
+		$select = $this->select()
+			->reset()
+			->where('level = ?', $level)
+			->where( 'id_parent = ?', $id_parent)
+			->where('deleted = ?', 0)
+			->where('show_in_sitemap = ?', 1)
+			->order('priority');
+		
+		
+		
+		$nodes = $this->fetchAll ( $select );
 		$html = '';
 		if ($nodes->count()){
 			$html = '<ul>';
 			foreach ( $nodes as $data ) {
 				
-				if ($this->getCountOfChildren ( $data->id ) > 0) {
+				if ($this->hasChild($data->id )) {
 					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->title</a>";
-					//$html.=$this->getSitemap ( $version, $data->id, $data->level + 1 );
+					$html.=$this->getSitemap ( $version, $data->id, $data->level + 1 );
 					$html.="</li>";
-					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'cls' => 'master-task', 'iconCls' => 'task-folder', 'children' => $this->getTree ( $version, $data->id, $data->level + 1 ) );
-				} else {
-					//$return [] = array ('task' => $data->title, 'duration' => $this->getDuration ( $data ), 'user' => Security::getInstance ()->getUser ()->username, 'id' => $data->id, 'uiProvider' => 'col', 'leaf' => 'true', 'iconCls' => 'task' );
+					
+				} else {					
 					$html.="<li id=\"$data->id\" ><a href=\"/$data->path\" >$data->title</a>";
 					
 					$html.="</li>";
