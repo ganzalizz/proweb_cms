@@ -1,3 +1,5 @@
+<?php print_r($this->modules->toArray())?>
+
 <div id="left_block">
 <?php $groupe = ''; ?>  
 <?php foreach ($this->modules as $module){ ?>
@@ -32,6 +34,12 @@
             
         </div>
     <?php } else {?>
+    	<?php if ($module->module_link == null) { ?>
+            	<?php $link = '/'.$module->name.'/ru/admin_'.$module->name; ?>            
+            <?php } else { ?>
+            	<?php $link = $module->module_link; ?>           
+            <?php } ?>
+    
         <?php //TODO: сделать формирование ссылок тернарным оператором ?>
          <div class="admin_panel_block">
             
