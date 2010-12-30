@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-a:4:{s:4:"hash";i:1455207293;s:5:"mtime";i:1293693919;s:6:"expire";i:1293697519;s:4:"tags";a:1:{i:0;s:6:"blocks";}}
-=======
-a:4:{s:4:"hash";i:1455207293;s:5:"mtime";i:1293638750;s:6:"expire";i:1293642350;s:4:"tags";a:1:{i:0;s:6:"blocks";}}
->>>>>>> e69d6ac613e8f34ed1d35c16e95c78ec71b3ec1d
+a:4:{s:4:"hash";i:1455207293;s:5:"mtime";i:1293695323;s:6:"expire";i:1293698923;s:4:"tags";a:1:{i:0;s:6:"blocks";}}
