@@ -186,8 +186,7 @@ class Templates extends Zend_Db_Table {
     public function addTemplate($row, $data) {
 
         unset($data['id']);
-        $row->setFromArray($data);
-        $row->save();
+        $row->setFromArray($data)->save();
         return $row;
     }
 

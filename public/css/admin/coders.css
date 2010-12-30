@@ -339,3 +339,30 @@ span.complete {
 .admin_panel_block a:hover span{
     text-decoration: none;
 }
+.form_page input#type-text,
+.form_page input#type-html {
+    width:auto;
+    margin: 3px 5px 7px 10px;
+}
+
+.pagination { background:none; padding-bottom:10px; padding-top:15px; font-size:13px; }
+.pagination span {color:#1b6bf1;}
+.pagination a { color:#010101; padding-left:5px; padding-right:5px; float: left; text-decoration: none;}
+.pagination .page {
+    background: url("/img/pager_blue/page.png") no-repeat scroll 0 0 transparent;
+    color: white;
+    height: 24px;
+    padding-top: 4px;
+    text-align: center;
+    width: 24px;
+}
+.pagination .page_active {
+    background: url("/img/pager_blue/page_active.png") no-repeat scroll 0 0 transparent;
+    color: blue;
+    float: left;
+    height: 24px;
+    margin-right: 5px;
+    padding-top: 4px;
+    text-align: center;
+    width: 24px;
+}

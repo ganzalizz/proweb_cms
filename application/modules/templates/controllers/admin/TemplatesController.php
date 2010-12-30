@@ -44,14 +44,17 @@ class Templates_Admin_TemplatesController extends MainAdminController {
 
     public function addAction() {
         $this->view->layout()->action_title = "Создать элемент";
+        $row = Templates::getInstance()->fetchNew();
 
-        $form = new Form_FormTemplates( );
+        $form = new Form_FormTemplates();
 
-        if ($this->_request->isPost()) {
-            
+        if (!is_null($row) && $this->_request->isPost()) {
+            $save_row = $this->processForm($form, $row);
+            if ($save_row->id)
+                $this->_redirect($this->_curModule . '/edit/id/' . $save_row->id);
         }
-
-        $this->processForm($form, $this->getRequest());
+        
+        $form->getElement('is_active')->setChecked(true);
 
         $this->view->form = $form;
     }
@@ -64,28 +67,22 @@ class Templates_Admin_TemplatesController extends MainAdminController {
             $this->view->layout()->action_title = "Редактировать элемент";
             $row = Templates::getInstance()->find((int) $this->_getParam('id'))->current();
         } else {
-            $this->view->layout()->action_title = "Создать элемент";
-            $row = Templates::getInstance()->fetchNew();
+            $this->_redirect('/404');
         }
 
         $form = new Form_FormTemplates();
 
-
-
         if (!is_null($row)) {
 
             if ($this->_request->isPost()){
-                $data = $this->processForm( $form, $row );
+                $save_row = $this->processForm( $form, $row );
+                $data = $form->getValues();
                 $form->populate($data);
             } else {
                 $form->populate($row->toArray());
             }
             if ($row->template_image) {
                 $form->getElement('template_image')->setAttrib('template_image', '/pics/templates/thumbs/' . $row->template_image);
-            }
-            if (!$id) {
-                // по умолчанию создаем активный элемент
-                $form->getElement('is_active')->setChecked(true);
             }
         }
 
@@ -179,7 +176,7 @@ class Templates_Admin_TemplatesController extends MainAdminController {
                 $row->save();
                 $this->view->ok = 1;
             }
-            return $form->getValues();
+            return $row;
         }
     }
 
@@ -229,19 +226,4 @@ class Templates_Admin_TemplatesController extends MainAdminController {
             mkdir($this->_basePicsPath . '/thumbs', 0777, true);
         }
     }
-
-    public function installAction() {
-        require_once 'TemplatesInstall.php';
-        $install = new TemplatesInstall('templates');
-        $install->Install();
-        $this->_redirect("/admin/ru/modules");
-    }
-
-    public function uninstallAction() {
-        require_once 'TemplatesInstall.php';
-        $install = new TemplatesInstall('templates');
-        $install->Uninstall();
-        $this->_redirect("/admin/ru/modules");
-    }
-
 }
