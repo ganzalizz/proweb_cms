@@ -287,6 +287,14 @@ routes:
         controller: portfolio
         action: portfolioitem
         id: 1075
+    newslist: 
+      type: Zend_Controller_Router_Route
+      route: newslist/*
+      defaults: 
+        module: news
+        controller: news
+        action: index
+        id: 846
     newsitem: 
       type: Zend_Controller_Router_Route
       route: newsitem/*
@@ -343,11 +351,3 @@ routes:
         controller: portfolio
         action: index
         id: 1075
-    newslist: 
-      type: Zend_Controller_Router_Route
-      route: newslist/*
-      defaults: 
-        module: pages
-        controller: index
-        action: page
-        id: 846

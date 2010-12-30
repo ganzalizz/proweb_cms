@@ -61,9 +61,59 @@ class Blocks extends Zend_Db_Table {
     	}
     	return '';
     }
-   
+    
+    /**
+     * @name addBlocks Добавить блок
+     * @param Zend_Db_Table_Row $row
+     * @param  array $data
+     *
+     * @return Zend_Db_Table_Row inserted news
+     */
+    public function addBlocks($row, $data)
+    {
+        unset($data['id']);
+        $row->setFromArray($data);
+        $row->save();
+        return $row;
+    }
 
-   
+    /**
+     * редактирование блока
+     * @param Zend_Db_Table_Row $row
+     * @param array $data
+     * @return Zend_Db_Table_Row
+     */
+    public function editBlocks($row, $data)
+    {
+        unset($data['id']);
+        $row->setFromArray($data)->save();
+
+        return $row;
+
+    }
+
+    public function getAll($onpage, $page) {
+        $select = $this->select()
+                        ->from($this->_name, array('*'))
+                        ->order('priority DESC');
+        return $this->getPaginator($select, $onpage, $page);
+    }
+
+
+    /**
+     *
+     * @param Zend_Db_Table_Select $select
+     * @param int $item_per_page
+     * @param int $page
+     * @return Zend_Paginator
+     */
+    private function getPaginator($select, $item_per_page, $page) {
+        $adapter = new Zend_Paginator_Adapter_DbTableSelect($select);
+        $paginator = new Zend_Paginator($adapter);
+        $paginator->setCurrentPageNumber($page);
+        return $paginator->setItemCountPerPage($item_per_page);
+    }
+
 	
    
 

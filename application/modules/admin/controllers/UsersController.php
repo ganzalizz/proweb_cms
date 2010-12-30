@@ -1,123 +1,146 @@
 <?php
 
-class Admin_UsersController extends MainAdminController
-{
-	
-	/**
-	 * @var Zend_Layout
-	 */
-	protected $layout = null ;
-	/**
-	 * языковая версия 
-	 *
-	 * @var string
-	 */
-	protected $_lang = null;
-	/**
-	 * ссылка на index action 
-	 *
-	 * @var unknown_type
-	 */
-	protected $_currentModule = null;
-	/**
-	 * название в админке
-	 *
-	 * @var string
-	 */
-	protected $_title = "Управление пользователями";
-	/**
-	 * Users
-	 *
-	 * @var Users object
-	 */
-	protected $_users_model = null;
-	
-	public function init(){		
-		$this->layout = $this->view->layout() ;
-		//$this->view = $this->layout->getView();
-		$this->_lang = $this->_getParam('lang', 'ru');
-		$request = $this->getRequest();
-		$this->_users_model = Users::getInstance();
-		$this->_currentModule = "/".$request->getModuleName()."/".$this->_lang."/".$request->getControllerName()."/";
-		$this->view->currentModule = $this->_currentModule;
-		$this->layout->title = $this->_title; 
-		
-		
-		//echo $this->_currentModule;
-		//echo  $this->getRequest()->getActionName();
-		//echo $this->getRequest()->getControllerName();
-		
-		
-		
-	}
-	
-	public function indexAction(){
-		$this->layout->action_title = "Список пользователей";
-		$this->view->users = $users = $this->_users_model->getUsers();
-		
-	}
-	
-	public function usersListAllAction(){
-		
-	}
-	
-	public function activeAction(){
-		if($this->_hasParam('id')){
-			$id = $this->_getParam('id');
-			$user =$this->_users_model->find($id)->current();
-			if (!is_null($user)){
-				if ($user->activity==0){
-					$user->activity=1;
-				} else{
-					$user->activity=0;
-				}
-				$user->save();
-			}
-		}	
-		
-		//$lang = $this->_hasParam('lang') ? $this->getParam('lang') : 'ru';
-		$this->_redirect($this->_currentModule);		
-	}
-	
-	
-	
-	public function deleteAction(){
-		if($this->_hasParam('id'))
-			Users::getInstance()->deleteUser($this->_request->getParam('id'));
-			
-		$lang = $this->_hasParam('lang') ? $this->getParam('lang') : 'ru';
-		$this->_redirect($this->_currentModule);		
-	}
-	
-	public function editAction(){
-		$id = $this->_getParam('id',0);
-		$user = $this->_users_model->find($id)->current();
-		if (is_null($user)){
-			$user = $this->_users_model->fetchNew();
-		}
-		if ($this->_request->isPost()){
-			$validators = $this->_users_model->getValidators();
-                        
-			$filter = $this->getFilterInput($validators);
-			if ($filter->isValid()){
-				$data = $filter->getEscaped();				
-				$data['login'] = $filter->getUnescaped('login');
-				$data['password'] = $filter->getUnescaped('password');
-				$data['deletable'] = '1';
-				$data = array_intersect_key($data, $user->toArray());
-				$user->setFromArray($data);
-				$user->save();
-				$this->view->ok = 1;
-				$this->_redirect($this->_currentModule);	
-			} else {
-				$this->view->errors = $filter->getMessages();
-			}
-			
-		}
-		
-		
-		$this->view->item = $user;
-                $this->view->roles = Roles::getInstance()->getRolesForSelect();
-	}
+class Admin_UsersController extends MainAdminController {
+
+    private $_id_page = null;
+    /**
+     * Pages_row
+     * @var object
+     */
+    private $_owner = null;
+    private $_curModule = null;
+    private $_basePicsPath = null;
+    private $_onPage = null;
+
+    public function init() {
+        $this->view->addHelperPath(Zend_Registry::get('helpersPaths'), 'View_Helper');
+        $this->view->addScriptPath(DIR_LIBRARY . 'Ext/View/Scripts/');
+
+        $ini = new Ext_Common_Config('admin', 'users');
+        $this->_basePicsPath = $ini->basePicsPath;
+        $this->_onPage = $ini->countOnPage;
+
+        $this->view->layout()->title = "Управление профилями";
+        $this->view->lang = $lang = $this->_getParam('lang', 'ru');
+        $this->view->currentModul = $this->_curModule = SP . 'admin' . SP . $lang . SP . $this->getRequest()->getControllerName();
+    }
+
+    public function indexAction() {
+        $this->view->layout()->action_title = "Список пользователей";
+        $page = $this->view->current_page = $this->_getParam('page', 1);
+
+        $paginator = Users::getInstance()->getAll($this->_onPage, $page);
+        Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
+
+        $this->view->users = $paginator->getCurrentItems();
+        $this->view->paginator = $paginator;
+    }
+
+    /**
+     * изменение активности
+     */
+    public function changeactiveAction() {
+        // проверка пришел ли запрос аяксом
+        if ($this->_request->isXmlHttpRequest()) {
+            $id = $this->_getParam('id');
+            $row = Users::getInstance()->find($id)->current();
+            if ($row != null) {
+                $row->activity = abs($row->activity - 1);
+                $row->save();
+                echo '<img src="/img/admin/active_' . $row->activity . '.png" />';
+            } else {
+                echo 'error';
+            }
+        }
+        exit;
+    }
+
+    /**
+     * удаление элемента
+     */
+    public function deleteAction() {
+        if ($this->_request->isXmlHttpRequest()) {
+            $id = $this->_getParam('id');
+            $row = Users::getInstance()->find($id)->current();
+            if ($row != null) {
+                $row->delete();
+                echo 'ok';
+            } else {
+                echo 'error';
+            }
+        }
+        exit;
+    }
+
+    public function addAction() {
+        $this->view->layout()->action_title = "Создать элемент";
+        $row = Users::getInstance()->fetchNew();
+
+        $form = new Form_FormUsers();
+
+        if (!is_null($row) && $this->_request->isPost()) {
+            $save_row = $this->processForm($form, $row);
+            if ($save_row->id)
+                $this->_redirect($this->_curModule . '/edit/id/' . $save_row->id);
+        }
+
+        $form->getElement('activity')->setChecked(true);
+
+        $this->view->form = $form;
+    }
+
+    public function editAction() {
+
+        $id = $this->_getParam('id');
+
+        if ($id) {
+            Form_FormUsers::setRecordId($id);
+            $this->view->layout()->action_title = "Редактировать элемент";
+            $row = Users::getInstance()->find((int) $this->_getParam('id'))->current();
+        } else {
+            $this->_redirect('/404');
+        }
+
+        $form = new Form_FormUsers();
+
+        if (!is_null($row)) {
+            if ($this->_request->isPost()) {
+                $save_row = $this->processForm($form, $row);
+                $data = $form->getValues();
+                $form->populate($data);
+            } else {
+                $form->populate($row->toArray());
+            }
+        }
+
+        $this->view->form = $form;
+
+        // $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
+    }
+
+    /**
+     *
+     * @param Ext_Form $form
+     * @param Zend_Controller_Request_Http $request
+     */
+    private function processForm($form, $row) {
+
+        if ($this->_request->isPost()) {
+            // добавление записи в базу
+            if ($form->isValid($this->_getAllParams()) && $row->id == '') {
+                $row = Users::getInstance()->addUser($row, $form->getValidValues($form->getValues()));
+                // редактирование записи
+            } elseif ($form->isValid($this->_getAllParams()) && $row->id > 0) {
+                $row = Users::getInstance()->editUser($row, $form->getValidValues($this->_getAllParams()));
+            }
+
+            if (!is_null($row)){
+                $this->view->ok = 1;
+            }
+
+            return $row;
+        }
+    }
+
 }
-	
+

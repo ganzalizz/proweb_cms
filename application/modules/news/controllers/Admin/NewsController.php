@@ -40,14 +40,17 @@ class News_Admin_NewsController extends MainAdminController {
 
     public function addAction() {
         $this->view->layout()->action_title = "Создать элемент";
+        $row = News::getInstance()->fetchNew();
 
-        $form = new Form_FormNews( );
+        $form = new Form_FormNews();
 
-        if ($this->_request->isPost()) {
-            
+        if (!is_null($row) && $this->_request->isPost()) {
+            $save_row = $this->processForm($form, $row);
+            if ($save_row->id)
+                $this->_redirect($this->_curModule . '/edit/id/' . $save_row->id);
         }
-
-        $this->processForm($form, $this->getRequest());
+        
+        $form->getElement('is_active')->setChecked(true);
 
         $this->view->form = $form;
     }
@@ -60,18 +63,16 @@ class News_Admin_NewsController extends MainAdminController {
             $this->view->layout()->action_title = "Редактировать элемент";
             $row = News::getInstance()->find((int) $this->_getParam('id'))->current();
         } else {
-            $this->view->layout()->action_title = "Создать элемент";
-            $row = News::getInstance()->fetchNew();
+            $this->_redirect('/404');
         }
 
         $form = new Form_FormNews();
-
-
-
+        
         if (!is_null($row)) {
 
             if ($this->_request->isPost()){
-                $data = $this->processForm( $form, $row );
+                $save_row = $this->processForm( $form, $row );
+                $data = $form->getValues();
                 $form->populate($data);
             } else {
                 $form->populate($row->toArray());
@@ -82,14 +83,7 @@ class News_Admin_NewsController extends MainAdminController {
             if ($row->big_img) {
                 $form->getElement('big_img')->setAttrib('big_img', '/pics/news/big_img/' . $row->big_img);
             }
-            if (!$id) {
-                // по умолчанию создаем активный элемент
-                $form->getElement('is_active')->setChecked(true);
-            }
         }
-
-
-
 
         $this->view->form = $form;
 
@@ -244,7 +238,7 @@ class News_Admin_NewsController extends MainAdminController {
                 $this->view->ok = 1;
                 
             }
-            return $form->getValues();
+            return $row;
         }
     }
 
