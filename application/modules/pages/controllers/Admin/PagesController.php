@@ -8,17 +8,11 @@ class Pages_Admin_PagesController extends MainAdminController {
      * @var string
      */
     private $_curModule = null;
-    
-    private $_basePicsPath = null;
 
     public function init() {
         $lang = $this->_getParam('lang', 'ru');
         $this->view->currentModule = $this->_curModule = SP.'pages'.SP.$lang.SP.$this->getRequest()->getControllerName();
-        $this->view->addScriptPath(DIR_LIBRARY.'Ext/View/Scripts/');
-		$ini = new Ext_Common_Config( $this->getRequest()->getModuleName(), 'backend' );
-		$this->_basePicsPath = $ini->basePicsPath;
-		$this->view->layout()->title = $ini->module->name;
-		$this->checkDirs();
+        
 
     }
 
@@ -27,13 +21,25 @@ class Pages_Admin_PagesController extends MainAdminController {
      * Список всех страниц
      *
      */
+
     public function indexAction() {        
-        $lang = $this->_hasParam('lang') ? $this->_getParam('lang') : 'ru';       
-        $root = Pages::getInstance()->getRoot();       
+        $lang = $this->_hasParam('lang') ? $this->_getParam('lang') : 'ru';
+       
+        $root = Pages::getInstance()->getRoot();
+        //print_r($root->toArray()); exit;
         $tree = Pages::getInstance()->getTree($root->id_parent);
         $this->view->html_tree = $tree;
-        $this->view->lang = $lang;
+        
 
+        if(!empty($tree)) {
+           
+
+            $this->view->pageName = 'Модуль управления содержимым сайта';
+//			$this->view->help = 'Модуль управления содержимым сайта';
+            $this->view->lang = $lang;
+        }
+       
+        
         
     }
 
@@ -52,7 +58,94 @@ class Pages_Admin_PagesController extends MainAdminController {
     }
 
 
-   
+    /**
+	 * Добавление новой страницы
+	 *
+	 */
+	public function addAction(){
+		$lang = $this->getParam('lang');
+
+		if(!$this->_hasParam('parent_id')){
+			$this->_redirect($this->_curModule);
+		}
+
+		$page = Pages::getInstance()->createRow();
+		$options = PagesOptions::getInstance()->createRow();
+
+
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getParams();
+
+			$ok = 1;
+			$err = array();
+			if (trim($data['title'])==''){
+				$err[] = 'Незаполнено поле название';
+				$ok = 0;
+			}
+			if (!Pages::getInstance()->checkPath($data['path'], null, $lang)){
+				$err[] = "'{$data['path']}' такой адрес страницы уже занят";
+				$ok = 0;
+			}
+			if ($ok){
+
+				$id = Pages::getInstance()->addPage($data);
+				$page = Pages::getInstance()->find($id)->current();
+				$img_name = $_FILES['image']['name'];
+				$img_source = $_FILES['image']['tmp_name'];
+				$delete_img = $this->_getParam('delete_img');
+				if ($img_name!='' && $img_source!='' && !$delete_img){
+					$ext = @end(explode('.', $img_name));
+					$img = DIR_PUBLIC.'pics/default/'.$id.'_img.'.$ext;
+					if (copy($img_source,$img )){
+						$page->img = $id.'_img.'.$ext;
+
+						$page->save();
+					}
+					/*if($this->img_resize($img_source, $img, $width = 38, $heiht = 38 )){
+						$page->img = $id.'_img.'.$ext;
+						$page->save();
+					}	*/
+				} else if ($delete_img){
+					@unlink(DIR_PUBLIC.'pics/default/'.$item->img);
+					$page->img='';
+					$page->save();
+				}
+				$data['id'] = $id;
+				$this->addRoute($data);
+
+				$this->_redirect($this->_curModule);
+			}else{
+				$this->view->err = $err;
+			}
+
+
+		}
+		$this->view->page = $page;
+		$this->view->options = $options;		
+		$parentId = (int)$this->getRequest()->getParam('parent_id');
+		$this->view->parentId = $parentId;
+		$this->view->menu = MenuTypes::getInstance()->fetchAll();
+        
+		$this->view->pageName = 'Добавить страницу';
+		$modules_types = Modules::getInstance()->fetchAll('active=1','priority DESC');
+		if (count($modules_types)){
+                    foreach ($modules_types as $type){
+                        $div_types = SiteDivisionsType::getInstance()->fetchAll('active=1 AND'." `module` = '".$type->name."'", 'priority DESC');
+                        foreach ($div_types as $div){
+                            if(count($modules_types)>1){
+                            $types_select[$type->title][$div->id]=$div->title;
+                            }
+                            else{
+                            $types_select[$div->id]=$div->title;
+                            }
+                        }
+                    }
+                }
+
+                $this->view->divisions_type = $types_select;
+		$this->view->lang = $lang;
+
+	}
 
     /**
      * Удаление страницы
@@ -91,59 +184,73 @@ class Pages_Admin_PagesController extends MainAdminController {
     public function editAction() {
         $lang = $this->getParam('lang');
         $id = (int)$this->getRequest()->getParam('id');
-        $div_types = array();
-        if ($id){
-        	$page = Pages::getInstance()->getPage($id);
-        	Form_PagesForm::setMenuValues(Menu::getInstance()->getMenuPage($page->id));        	
-        	Form_PagesForm::setRecordId($id);
-        	Form_PagesForm::setdiv_typeValue($page->id_div_type);
-        	if ($page->allow_delete==1) {
-            	$div_types = SiteDivisionsType::getInstance()->getAllActive();
-        	} else {
-        		$div_types =SiteDivisionsType::getInstance()->getOne($page->id_div_type);	
-        	}
-        } else {
-        	$page = Pages::getInstance()->fetchNew();
-        	$div_types = SiteDivisionsType::getInstance()->getAllActive();
+
+
+        if($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getParams();
+
+            $ok = 1;
+            $err = array();
+            if (trim($data['title'])=='') {
+                $err[] = 'Незаполнено поле название';
+                $ok = 0;
+            }
+            if (!Pages::getInstance()->checkPath($data['path'], $id, $lang)) {
+                $err[] = "'{$data['path']}' такой адрес страницы уже занят";
+                $ok = 0;
+            }
+
+              Pages::getInstance()->editPage($data);
+            $error = $this->editRoute($data);
+            $page = Pages::getInstance()->find($id)->current();
+            $img_name = $_FILES['image']['name'];
+            $img_source = $_FILES['image']['tmp_name'];
+            $delete_img = $this->_getParam('delete_img');
+            if ($img_name!='' && $img_source!='' && !$delete_img) {
+                $ext = @end(explode('.', $img_name));
+                $img = DIR_PUBLIC.'pics/default/'.$id.'_img.'.$ext;
+                if (copy($img_source,$img )) {
+                    $page->img = $id.'_img.'.$ext;
+                    $page->save();
+                }
+
+            } else if ($delete_img) {
+                @unlink(DIR_PUBLIC.'pics/default/'.$item->img);
+                $page->img='';
+                $page->save();
+            }
+            if ($ok) {
+                $this->view->ok = 1;
+            }else {
+                $this->view->err = $err;
+            }
         }
-        
-    	
-        Form_PagesForm::setdiv_typeOptions($div_types);       
-        Form_PagesForm::setMenuOptions(MenuTypes::getInstance()->getAllAsArray());
-       
-       
-		$form = new Form_PagesForm();
-		
-		if ($this->_hasParam('id_parent')){
-			$form->getElement('id_parent')->setValue($this->_getParam('id_parent'));
-		}
-		
-		
-		
-		if ($this->_request->isPost()){
-			$data = $this->processForm($form, $page);
-			$form->populate($data);
-		
-		} else {
-			$form->populate($page->toArray());
-			
-		  $options = PagesOptions::getInstance()->getPageOptions($id)->toArray();			
-	        $options['page_title'] = $options['title'];
-	        unset($options['title']);
-	        $form->populate($options);
-		}
-		
-   		if ($page->img){
-			$form->getElement('img')->setAttrib('img', '/pics/pages/thumbs/'.$page->img);
-   		}	
-	
-      
-        
-      
-        
-       
+        $this->view->page = $page = Pages::getInstance()->getPage($id);
+
+        $this->view->options = PagesOptions::getInstance()->getPageOptions($id);
+
+
+        $this->view->menu = MenuTypes::getInstance()->getAll();
+        $this->view->pageMenu = Menu::getInstance()->getMenuPage($id);
+
+
+       /* $fck = $this->getFck('content', '90%', '400');
+        $this->view->fck = $fck;
+        $this->view->introText = $this->getFck('introText', '90%', '150','Basic');
+        $this->view->pageName = 'Редактировать страницу';*/
+        if ($page->allow_delete==1) {
+            $div_types = SiteDivisionsType::getInstance()->fetchAll('active=1','priority DESC');
+        } else $div_types =SiteDivisionsType::getInstance()->fetchAll('id='.(int)$page->id_div_type);
+
+
+        $types_select = array();
+        if (count($div_types)) {
+            foreach ($div_types as $type) {
+                $types_select[$type->id] = $type->title;
+            }
+        }
+        $this->view->divisions_type = $types_select;
         $this->view->lang = $lang;
-        $this->view->form = $form;
     }
 
    
@@ -163,21 +270,6 @@ class Pages_Admin_PagesController extends MainAdminController {
         }
 
     }
-    
-	/**
-	 * Проверка существования директорий для картинок
-	 * и создание их если нет
-	 * @param string $this->_basePicsPath
-	 */
-	private function checkDirs() {
-		//TODO: вынести директории в массив
-		if (! is_dir( $this->_basePicsPath . '/img' )) {
-			mkdir( $this->_basePicsPath . '/img', 0777, true );
-		}		
-		if (! is_dir( $this->_basePicsPath . '/thumbs' )) {
-			mkdir( $this->_basePicsPath . '/thumbs', 0777, true );
-		}
-	}
 
 
     /**
@@ -186,7 +278,7 @@ class Pages_Admin_PagesController extends MainAdminController {
      * @param array $data
      * @return bool
      */
-    private function editRoute($data, $old_route) {
+    private function editRoute($data) {
         //Loader::loadCommon('Router');
         if ($data['id_div_type']) {
             $division_type = SiteDivisionsType::getInstance()->find($data['id_div_type'])->current();
@@ -194,7 +286,6 @@ class Pages_Admin_PagesController extends MainAdminController {
                 $module = $division_type->module;
                 $controller = $division_type->controller_frontend;
                 $action = $division_type->action_frontend;
-                $data['old_route'] = $old_route;
                 Router::getInstance()->replaceRoute($data, $action, $controller, $module);
                 return true;
             }
@@ -222,98 +313,5 @@ class Pages_Admin_PagesController extends MainAdminController {
             }
         }
     }
-    
-/**
-	 * 
-	 * @param Ext_Form $form
-	 * @param Zend_Db_Table_Row $row
-	 * @return Array
-	 */
-	private function processForm($form, $row) {
-		
-		if ($this->_request->isPost()) {
-			// добавление записи в базу
-			if ($form->isValid( $this->_getAllParams() ) ) {
-				
-				if ($row->id==''){
-					// создание записи
-					$data = $form->getValidValues($form->getValues());
-					$row = Pages::getInstance()->addPage($data, $row);
-					$this->addRoute($data);
-				} else {
-					// редактирование записи
-					$data = $form->getValidValues($form->getValues());
-                              $old_row = $row->path;
-					$row = Pages::getInstance()->editPage($data, $row);
-					$this->editRoute($form->getValues(), $old_row );		
-				}
-
-				if (!is_null($row) && $row->id){ // запись в базе создана загружаем картинки					
-					$aploaded_images = $this->reciveFiles( $row->id );
-					if (isset($aploaded_images['img']) && !$this->_getParam('img_delete')){
-						
-						$thumb = Ext_Common_PhpThumbFactory::create($aploaded_images['img']);
-						$thumb->setOptions(array('jpegQuality'=>95));                        
-						$thumb->resize(100);					
-						$thumb->save($this->_basePicsPath.'thumbs/'.basename($aploaded_images['img']));
-						
-						if ($row->img!='' && $row->img != basename($aploaded_images['img'])){
-							@unlink($this->_basePicsPath.'img/'.$row->img);
-							@unlink($this->_basePicsPath.'thumbs/'.$row->img);						
-						}
-						
-						$row->img = basename($aploaded_images['img']);
-						
-					} elseif ($this->_getParam('img_delete')){					
-						@unlink($this->_basePicsPath.'img/'.$row->img);
-						@unlink($this->_basePicsPath.'thumbs/'.$row->img);
-						$row->img = '';
-					}
-					
-					
-					$row->save();
-					$form->getElement('id')->setValue($row->id);
-					$this->view->ok = 1;				
-				}
-				
-			   
-			} 			
-			return $form->getValues();
-		}
-	}
-	/**
-	 * 
-	 * @param unknown_type $destination
-	 */
-	private function reciveFiles($id) {
-		$upload = new Zend_File_Transfer_Adapter_Http( );
-		
-		$uploaded_images = array();
-		
-		if (!$id){
-			return $uploaded_images;
-		}
-		
-		// загрузка маленькой картинки
-		if ($upload->getFileInfo('img')){		
-			$img_name = $this->_basePicsPath . 'img/' . $id . '_' .
-				 basename( $upload->getFileName( 'img' ) ); 
-			$upload->addFilter( 
-				'Rename',
-				array(
-					'target'=>$img_name,
-					'overwrite'=>true
-				),
-				'img'
-			);
-			if ($upload->receive( 'img' )){
-				$uploaded_images['img'] = $img_name; 
-			}
-		}
-		
-		
-		return $uploaded_images;
-	
-	}
     
 }

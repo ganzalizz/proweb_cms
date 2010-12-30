@@ -117,8 +117,7 @@ class Modules extends Zend_Db_Table
          */
         public function GetModulesInSystem($is_array = false)
         {
-            $select = $this->select();
-            $select->order('name ASC');
+            $select = $this->select()->where('module_link IS NULL')->order('name ASC');
             $result = $this->fetchAll($select);
             
             return $result = $is_array ? $result->toArray(): $result;
@@ -129,7 +128,7 @@ class Modules extends Zend_Db_Table
          */
         private function AddModule($module_name)
         {
-            require_once APPLICATION_PATH.'/../library/Ext/Common/InstallModuleAbstract.php';
+            //require_once APPLICATION_PATH.'/../library/Ext/Common/InstallModuleAbstract.php';
            
             $config_module = new Ext_Common_Config($module_name, 'config');
             $data = array(
