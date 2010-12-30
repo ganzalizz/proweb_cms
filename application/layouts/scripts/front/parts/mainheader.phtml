@@ -6,18 +6,18 @@
  <meta name="keywords" content="<?=$this->placeholder('keywords');?>" />
  <meta name="description" content="<?=$this->placeholder('descriptions');?>" />
 <!-- CSS -->
-<link rel="stylesheet" href="css/style.css" type="text/css" />
-<link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" href="/css/style.css" type="text/css" />
+<link rel="shortcut icon" href="/favicon.ico" />
 <?php echo $this->headLink()?>
 
 <?php echo $this->headScript(); ?>
 <!--[if IE 6]>
-<link rel="stylesheet" type="text/css" href="css/ie6.css"/>
-<script  language="JavaScript" src="js/png.js" type="text/JavaScript"></script>
+<link rel="stylesheet" type="text/css" href="/css/ie6.css"/>
+<script  language="JavaScript" src="/js/png.js" type="text/JavaScript"></script>
 
 <![endif]-->
 <!--[if IE 7]>
-<link rel="stylesheet" type="text/css" href="css/ie.css"/>
+<link rel="stylesheet" type="text/css" href="/css/ie.css"/>
 <![endif]-->
 <!-- Javascript -->
 <script type="text/javascript" src="/js/jquery.js"></script>
@@ -28,7 +28,7 @@
 <div class="top_bg">
 <div class="top_block">
 <?=$this->getBlockContent('zamanuha_main') ?>    
-<div class="icons"><i class="home_i"><a href="/">главная</a></i> <i class="sitemap_i"><a href="#">карта сайта</a></i> <i class="contact_i"> <a href="#">обратная связь</a></i></div>
+<div class="icons"><i class="home_i"><a href="/">главная</a></i> <i class="sitemap_i"><a href="/sitemap">карта сайта</a></i> <i class="contact_i"> <a href="/contacts">обратная связь</a></i></div>
 </div>
 
 <div class="header">
