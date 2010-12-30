@@ -7,13 +7,13 @@
     });
 </script>
 
-<div class="description_page">
-    <h2>Добавить</h2>
-</div>
-
 <div class="content">
     <div id="left_block" class="form_page">
-    
+        <?if ($this->ok==1) { ?>
+        <div class="content_block">
+            <p class="data_saved">Данные сохранены</p>
+        </div>
+        <?} ?>
     	<?php echo $this->form?>
         
     </div>

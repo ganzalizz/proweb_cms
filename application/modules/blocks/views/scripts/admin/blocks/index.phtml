@@ -1,47 +1,103 @@
-<div id="left_block">
-	<div class="prava_dostupa">
-	<table id="news_table" cellspacing="0" cellpadding="0" border="0">
-								<tr class="head">
-									<th>Название</th>
-									<th>Приоритет</th>									
-									<th>Операции</th>									
-								</tr>
-								<?php
-									foreach ($this->all as $key => $data){
-										
-										?>
-											<tr>	
-												<td >
-													<a  href ="<?=$this->currentModule?>/edit/id/<?=$data->id?>/" title="редактировать"><strong><?=$data->title?></strong></a>
-													
-												</td >													
-												<td class="main" >
-													<strong><?=$data->priority?></strong>
-												</td>																						
-												<td class="options">
-													<a href = '<?=$this->currentModule?>/active/id/<?=$data->id?>'><img src="/img/admin/active_<?=$data->active ?>.gif" /></a>
-													<a href = '<?=$this->currentModule?>/edit/id/<?=$data->id?>'><img src="/img/admin/redact.gif" /></a>
-													<a href = '<?=$this->currentModule?>/delete/id/<?=$data->id?>'><img src="/img/admin/delete.gif" onclick="return confirm('Вы уверены?');"></a>
-												</td>
-											</tr>
-										<?php
-									}
-								?>
-							</table>
-		</div>					
-							<div style="padding-left: 20px;padding-top: 10px;" >								
-								<?=$this->Pagination($this->currentModule.'/index/', (int)$this->total, (int)$this->onpage, $this->current_page); ?>
-							</div>
-</div>
-
-  <div id="right_block">
-      <div class="block_r gray">
-        <h3><b>Действия</b></h3>
-        <ul>
-          <li><a href="<?=$this->currentModule?>/add/">Создать элемент</a></li>
-        </ul>        
-      </div>      
-  </div>
 
 
-				
+<script>
+    var delid;
+    var pageid
+
+    function go(id,page){
+
+        delid=id;
+        pageid = page;
+
+        var sure = confirm("Вы действительно хотите удалить страницу?");
+        if (sure) {
+            window.location = "<?=$this->currentModul?>/delete/id/"+delid+"/id_page/"+"<?=$this->id_page?>";
+            alert("Страница удалена");
+        }
+    }
+</script>
+
+
+<div id="company_main_head">
+    <div class="clear"><!-- --></div>
+    <div id="content">
+
+        <div class="clear"><!-- --></div>
+        <div id="left_block">
+            <div class="prava_dostupa">
+                <table style="margin-top: 0px; width: 750;" border="0" cellspacing="0" cellpadding="0">
+                    <tr class="head">
+                        <th>
+                        	<b>Название</b>
+                        </th>
+                        <th>
+                        	<b>Приоритет</b>
+                        </th>
+                        <th style="width: 120px;" >
+                            <b>Операции:</b>
+                        </th>
+                    </tr>
+
+                    <? foreach($this->blocks as $item) {?>
+                    <tr align="left" id="row_<?php echo $item['id']?>" >
+
+                        <td id="elem_<?php echo $item['id']?>" >
+                            <a  href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>" title="редактировать">
+                                <strong>
+                                    <?=$item['title']?>
+                                </strong>
+                            </a>
+                        </td>
+                        <td class="options">
+                        	<?php echo $item['priority']?>
+                        </td>
+                        <td class="options">
+                        	<!-- edit -->
+                            &nbsp;<a href="<?=$this->currentModul?>/edit/id/<?echo ($item['id'] )?>" title="редактировать"><img src="/img/admin/edit.png"></a>&nbsp;
+
+                            	<a href="#" id="active_<?php echo $item['id']?>" onclick="return false;" title="Изменить активность"><img src="/img/admin/active_<?=$item['active']?>.png" /></a>&nbsp;
+                            	<?php echo $this->ajaxStatusLink(array(
+                            		'target_id'	=>'active_'.$item['id'],
+                            		'link_id'	=>'active_'.$item['id'],
+                            		'target_url'=>$this->currentModul.'/changeactive',
+                            		'url_data'	=>"{id: ".$item['id']."}",
+                            		'loader_img'=>"/img/loader.gif"
+
+                            	));?>
+
+
+                                    <a href="#" id="del_<?php echo $item['id']?>" title="Удалить"><img src="/img/admin/delete.png"></a>
+                                    	<?php echo $this->ajaxDeleteLink(array(
+		                            		'target_id'	=>'elem_'.$item['id'],
+		                            		'delete_id'	=>'row_'.$item['id'],
+		                            		'link_id'	=>'del_'.$item['id'],
+		                            		'target_url'=>$this->currentModul.'/delete',
+		                            		'url_data'	=>"{id: ".$item['id']."}",
+		                            		'loader_img'=>"/img/loader.gif"
+
+		                            	));?>
+
+                                    </td>
+                                    </tr>
+                                        <?}?>
+
+                                    </table>
+                                    </div>
+                                    <div>Всего <?=$this->paginator->getTotalItemCount()?></div>
+									<?php echo $this->paginator?>
+
+                                    <!-- / Навигация по страницам -->
+                                    </div>
+                                    <div id="right_block">
+                                        <div class="block_r gray">
+                                            <h3><b>Действия</b></h3>
+                                            <ul>
+                                                <li class="active">Список элементов</li>
+                                                <li><a href="<?=$this->currentModul?>/add">Добавить</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    </div>
+

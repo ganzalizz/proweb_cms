@@ -43,14 +43,17 @@ class Portfolio_Admin_PortfolioController extends MainAdminController {
 
     public function addAction() {
         $this->view->layout()->action_title = "Создать элемент";
+        $row = Portfolio::getInstance()->fetchNew();
 
-        $form = new Form_FormPortfolio( );
+        $form = new Form_FormPortfolio();
 
-        if ($this->_request->isPost()) {
-
+        if (!is_null($row) && $this->_request->isPost()) {
+            $save_row = $this->processForm($form, $row);
+            if ($save_row->id)
+                $this->_redirect($this->_curModule . '/edit/id/' . $save_row->id);
         }
 
-        $this->processForm($form, $this->getRequest());
+        $form->getElement('is_active')->setChecked(true);
 
         $this->view->form = $form;
     }
@@ -63,28 +66,22 @@ class Portfolio_Admin_PortfolioController extends MainAdminController {
             $this->view->layout()->action_title = "Редактировать элемент";
             $row = Portfolio::getInstance()->find((int) $this->_getParam('id'))->current();
         } else {
-            $this->view->layout()->action_title = "Создать элемент";
-            $row = Portfolio::getInstance()->fetchNew();
+            $this->_redirect('/404');
         }
 
         $form = new Form_FormPortfolio();
 
-
-
         if (!is_null($row)) {
 
             if ($this->_request->isPost()){
-                $data = $this->processForm( $form, $row );
+                $save_row = $this->processForm( $form, $row );
+                $data = $form->getValues();
                 $form->populate($data);
             } else {
                 $form->populate($row->toArray());
             }
             if ($row->image) {
                 $form->getElement('image')->setAttrib('image', '/pics/portfolio/thumbs/' . $row->image);
-            }
-            if (!$id) {
-                // по умолчанию создаем активный элемент
-                $form->getElement('is_active')->setChecked(true);
             }
             if ($row->date_project != '') {
                 $form->getElement('date_project')->setValue(date('d.m.Y', strtotime($row->date_project)));
@@ -188,9 +185,6 @@ class Portfolio_Admin_PortfolioController extends MainAdminController {
                 $flag_save = true;
             }
 
-
-
-
             if (!is_null($row) && $flag_save){ // запись в базе создана загружаем картинки
                 $aploaded_images = $this->reciveFiles($row->id);
                 if (isset($aploaded_images['image']) && !$this->_getParam('image_delete')) {
@@ -216,7 +210,7 @@ class Portfolio_Admin_PortfolioController extends MainAdminController {
                 $this->view->ok = 1;
                 
             }
-            return $form->getValues();
+            return $row;
         }
     }
 

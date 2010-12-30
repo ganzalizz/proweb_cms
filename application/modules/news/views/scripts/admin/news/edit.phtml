@@ -6,6 +6,12 @@
 
 <div class="content">
     <div id="left_block" class="form_page">
+       <?if ($this->ok==1) { ?>
+        <div class="content_block">
+            <p class="data_saved">Данные сохранены</p>
+        </div>
+       <?} ?>
+        
        <?php echo $this->form?>
     </div>
     <div id="right_block">
@@ -13,7 +19,7 @@
             <h3><b>Действия</b></h3>
             <ul>
                 <li><a href="<?=$this->currentModul?>/index">Список элементов</a></li>               
-                <li><a href="<?=$this->currentModul?>/edit">Добавить</a></li>
+                <li><a href="<?=$this->currentModul?>/add">Добавить</a></li>
             </ul>
         </div>
     </div>
