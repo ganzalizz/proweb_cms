@@ -1,4 +1,10 @@
-
+<?php
+    // Подключение jquery-автотранслита для url
+    echo $this->JqueryTranslit(array(
+        'id_source' =>'title', // id input источника
+        'id_receiver' =>'path' // id input приемник
+    ));
+?>
 <div id="left_block"  class="form_page">
     <?if ($this->ok==1) { ?>
     <div class="content_block">

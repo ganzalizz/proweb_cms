@@ -80,9 +80,17 @@ class Articles_Form extends Ext_Form
                 //array('Alnum', true, array(true)),               
 				array('Regex', false, array('/^[a-z0-9_-]{1,}$/'))
              ),             
-            'filters'     => array('StringTrim')
+            //'filters'     => array('StringTrim')
         ));
-        
+
+        // Автотранслит для url
+        $url_filter = new Zend_Filter_Callback(
+            array(
+                'callback' => array('Ext_Common_Translit', 'transliterate'),
+            )
+        );
+        $url->addFilter($url_filter);
+
         $url_validator = new Zend_Validate_Db_NoRecordExists(array(
         	'table' => 'site_articles',
         	'field' => 'url'
