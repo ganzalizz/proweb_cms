@@ -31,14 +31,6 @@ routes:
         controller: index
         action: page
         id: 847
-    851: 
-      type: Zend_Controller_Router_Route
-      route: sitemap/*
-      defaults: 
-        module: pages
-        controller: index
-        action: sitemap
-        id: 851
     search: 
       type: Zend_Controller_Router_Route
       route: search/*
@@ -271,14 +263,6 @@ routes:
         controller: articles
         action: articlesitem
         id: 1076
-    portfolio: 
-      type: Zend_Controller_Router_Route
-      route: portfoliolist/*
-      defaults: 
-        module: portfolio
-        controller: portfolio
-        action: index
-        id: 1075
     portfolioitem: 
       type: Zend_Controller_Router_Route
       route: portfolioitem/*
@@ -287,14 +271,6 @@ routes:
         controller: portfolio
         action: portfolioitem
         id: 1075
-    newslist: 
-      type: Zend_Controller_Router_Route
-      route: newslist/*
-      defaults: 
-        module: news
-        controller: news
-        action: index
-        id: 846
     newsitem: 
       type: Zend_Controller_Router_Route
       route: newsitem/*
@@ -351,3 +327,19 @@ routes:
         controller: portfolio
         action: index
         id: 1075
+    newslist: 
+      type: Zend_Controller_Router_Route
+      route: newslist/*
+      defaults: 
+        module: pages
+        controller: index
+        action: page
+        id: 846
+    sitemap: 
+      type: Zend_Controller_Router_Route
+      route: sitemap/*
+      defaults: 
+        module: pages
+        controller: index
+        action: sitemap
+        id: 851

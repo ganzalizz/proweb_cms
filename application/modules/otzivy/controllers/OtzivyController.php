@@ -40,6 +40,12 @@ class Otzivy_OtzivyController extends Zend_Controller_Action {
         if ($this->_request->isPost()) {
             if ($form->isValid($this->_getAllParams())){
                 Otzivy::getInstance()->addOtziv($form->getValues());
+                $mail = new Ext_Common_Mail();
+                $mail->setMailBodyType('text');
+                $mail->SendMail('avenger999@gmail.by',
+                            $form->getValue('content'),
+                            $form->getValue('Новое сообщение в книге отзывов и предложений'), 
+                            $form->getValue('email'));
                 $form = new Form_FormOtzivy();
                 
             }

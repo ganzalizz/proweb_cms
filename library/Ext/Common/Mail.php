@@ -88,7 +88,7 @@ class Ext_Common_Mail extends Zend_Mail
     public function SendMail($email_to, $msg, $subject=null, $recipient = '')
     {
         
-        $this->setFrom('avenger999@gmail.com', 'Admin');
+        $this->setFrom('info@easystart.by', 'Admin');
         $this->addTo($email_to, $recipient);
         if ($this->_mailBodyType == 'html') $this->setBodyHtml ($msg, $this->_mailEncoding);
                 else $this->setBodyText ($msg, $this->_mailEncoding);

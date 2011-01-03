@@ -834,12 +834,12 @@ class Pages extends Zend_Db_Table {
 		if ($data->is_active == '0') {			
 			$title = 'Включить';
 		}
-		//$lang = $data->version;
+		$lang = 'ru';
 		if ($data->id_parent!=''){
 			//$module = ($data->module == 'default' || empty ( $data->module )) ? 'pages' : $data->module;
 			
 			$url =  $data->path;
-			$delete = $data->allow_delete==1 ? "<a href ='#' title='Удалить' delete=\"true\" id_page=\"$data->id\" ><img src='/img/admin/delete.gif' /></a>" : '';
+			$delete = $data->allow_delete==1 ? "<a href ='#' title='Удалить' delete=\"true\" id_page=\"$data->id\" ><img src='/img/admin/delete.png' /></a>" : '';
 			//$copy = $data->allow_delete==1 ? "<a href ='#' title='Сделать копию' ><img src='/images/plus_b.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/copy/id/$data->id/\" '/></a>" :'';
 			
 			
@@ -847,12 +847,12 @@ class Pages extends Zend_Db_Table {
 			$go_to_module = '';
 			//"<a href ='#' title='Просмотр'><img src='/images/search.gif' onclick='javascript:window.location = \"/$url\" '/></a>" .
 			return 	$go_to_module.
-					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" active=\"".$data->is_active."\" ><img src='/img/admin/active_" . $data->is_active . ".gif' /></a>" . 
-					"<a href ='#' title='Редактировать' ><img src='/img/admin/redact.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id/$data->id/\" '/></a>" .
-					"<a href ='#' title='Добавить' ><img src='/img/admin/plus_krug.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" .$delete;
+					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" active=\"".$data->is_active."\" ><img src='/img/admin/active_" . $data->is_active . ".png' /></a>" . 
+					"<a href ='#' title='Редактировать' ><img src='/img/admin/edit.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id/$data->id/\" '/></a>" .
+					"<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" .$delete;
 					;
 		} else{
-			return "<a href ='#' title='Добавить' ><img src='/img/admin/plus_krug.gif' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" ;
+			return "<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" ;
 		}		
 	
 	}
