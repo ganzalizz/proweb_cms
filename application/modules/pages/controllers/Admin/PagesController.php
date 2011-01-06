@@ -263,13 +263,14 @@ class Pages_Admin_PagesController extends MainAdminController {
 					// создание записи
 					$data = $form->getValidValues($form->getValues());
 					$row = Pages::getInstance()->addPage($data, $row);
+                                        $data['id'] = $row;
 					$this->addRoute($data);
 				} else {
 					// редактирование записи
 					$data = $form->getValidValues($form->getValues());
                               $old_row = $row->path;
 					$row = Pages::getInstance()->editPage($data, $row);
-					$this->editRoute($form->getValues(), $old_row );		
+					$this->editRoute($form->getValues(), $old_row );
 				}
 
 				if (!is_null($row) && $row->id){ // запись в базе создана загружаем картинки					
