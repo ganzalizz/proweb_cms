@@ -7,6 +7,31 @@
     });
 </script>
 
+<?php
+    // Подключение jquery-автотранслита для url
+    echo $this->JqueryTranslit(array(
+        'id_source' =>'title', // id input источника
+        'id_receiver' =>'url' // id input приемник
+    ));
+?>
+
+<?php
+    // ajax проверка на уникальность url
+    echo $this->ajaxExistRecordWithUrl(array(
+        'target_url' => $this->currentModul.'/existrecord',
+        // id записи, если существует
+        'item_id' => $this->id ? $this->id : 0,
+        // id поля с адресом url
+        'id_url' => "url",
+        // id поля с заголовком из которого работает автотранслит
+        'id_title' => "title",
+        // изображения
+        'img_loader' => "/img/loader.gif",
+        'img_ok' => "/img/admin/active_1.png",
+        'img_error' => "/img/admin/active_0.png"
+    ));
+?>
+
 <div class="content">
     <div id="left_block" class="form_page">
         <?if ($this->ok==1) { ?>

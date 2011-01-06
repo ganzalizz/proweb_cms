@@ -206,9 +206,9 @@ class Articles extends Zend_Db_Table {
      {
        
        $select = $this->select()
-            ->from($this->_name, array('*', 'date'=>'DATE_FORMAT(date, \'%d.%m.%Y\')'))
+            ->from($this->_name, array('*', 'date'=>'DATE_FORMAT(created_at, \'%d.%m.%Y\')'))
             ->where('is_active = ?', true)
-            ->order('date DESC');
+                ->order('created_at DESC');
        if ($year != 'all'){
        	 $select->where(new Zend_Db_Expr('YEAR(created_at) = ?'), $year);
        } 

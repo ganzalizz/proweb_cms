@@ -14,6 +14,12 @@ class Ext_View_Helper_JqueryTranslit extends Zend_View_Helper_Abstract
                     caseStyle: "lower",
                     urlSeparator: "-"
                 });
+                $("#'.$options['id_receiver'].'").syncTranslit({
+                    destination: "'.$options['id_receiver'].'",
+                    type: "url",
+                    caseStyle: "lower",
+                    urlSeparator: "-"
+                });
             });
         </script>';
 

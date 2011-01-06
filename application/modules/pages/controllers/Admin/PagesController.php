@@ -86,9 +86,37 @@ class Pages_Admin_PagesController extends MainAdminController {
         $this->_redirect($this->_curModule);
     }
 
+    /**
+     * проверка существования записи с указанным url
+     */
+    public function existrecordAction() {
+        if ($this->_request->isXmlHttpRequest()) {
+            $urlvalue = $this->_getParam('urlvalue');
+
+            $row = Pages::getInstance()->fetchRow(array('path = ?' => $urlvalue));
+
+            $item_id = $this->_getParam('itemid');
+
+            if ($item_id) {
+                if (($row != null && $row->id == $item_id) || $row == null) {
+                    echo 'ok';
+                } else {
+                    echo 'error';
+                }
+            } else {
+                if ($row == null) {
+                    echo 'ok';
+                } else {
+                    echo 'error';
+                }
+            }
+        }
+        exit;
+    }
 
 
     public function editAction() {
+
         $lang = $this->getParam('lang');
         $id = (int)$this->getRequest()->getParam('id');
         $div_types = array();
@@ -139,6 +167,7 @@ class Pages_Admin_PagesController extends MainAdminController {
        
         $this->view->lang = $lang;
         $this->view->form = $form;
+        $this->view->id = (int)$this->getRequest()->getParam('id');
     }
 
    

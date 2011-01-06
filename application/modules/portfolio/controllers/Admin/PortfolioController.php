@@ -89,6 +89,7 @@ class Portfolio_Admin_PortfolioController extends MainAdminController {
         }
 
         $this->view->form = $form;
+        $this->view->id = (int)$this->getRequest()->getParam('id');
 
         // $this->_redirect($curModul.'/index/id_page/'.$this->_id_page);
     }
@@ -104,6 +105,33 @@ class Portfolio_Admin_PortfolioController extends MainAdminController {
                 echo 'ok';
         }
         exit();
+    }
+
+    /**
+     * проверка существования записи с указанным url
+     */
+    public function existrecordAction() {
+        if ($this->_request->isXmlHttpRequest()) {
+            $urlvalue = $this->_getParam('urlvalue');
+
+            $row = Portfolio::getInstance()->fetchRow(array('url = ?' => $urlvalue));
+
+            $item_id = $this->_getParam('itemid');
+            if ($item_id) {
+                if (($row != null && $row->id == $item_id) || $row == null) {
+                    echo 'ok';
+                } else {
+                    echo 'error';
+                }
+            } else {
+                if ($row == null) {
+                    echo 'ok';
+                } else {
+                    echo 'error';
+                }
+            }
+        }
+        exit;
     }
 
     /**

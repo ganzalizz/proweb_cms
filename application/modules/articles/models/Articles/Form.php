@@ -144,17 +144,6 @@ class Articles_Form extends Ext_Form
         
         $this->addElement($link);
         
-        $date_news = new ZendX_JQuery_Form_Element_DatePicker('date_news', array(
-           'label' => 'Дата статьи',           
-        ));
-       $date_news->removeDecorator('label');
-       $date_news->removeDecorator('htmlTag');
-       
-       
-       $date_news->setJQueryParam('dateFormat', 'dd.mm.yy');
-       
-       $this->addElement($date_news);
-        
         $author = new Zend_Form_Element_Text('author', array(
             'required' => true,
             'label' => 'Автор',

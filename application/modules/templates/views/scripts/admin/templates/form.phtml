@@ -1,11 +1,3 @@
-<?php
-    // Подключение jquery-автотранслита для url
-    echo $this->JqueryTranslit(array(
-        'id_source' =>'title', // id input источника
-        'id_receiver' =>'url' // id input приемник
-    ));
-?>
-
  <?php $form_args = '';?>
  <?php foreach ($this->element->getAttribs() as $key=>$value){?>
  		<?php $form_args.= $key.'="'.$this->escape($value).'" '; ?>

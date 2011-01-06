@@ -98,12 +98,12 @@ abstract class Ext_Common_InstallModuleAbstract
                 $route_name = $this->_module_sys_Name.'item';
      		$route_config->routes->routes->$route_name = array();
                 $route_config->routes->routes->$route_name->__set('type', "Zend_Controller_Router_Route" );
-                $route_config->routes->routes->$route_name->__set('route', $route_name."/:item");
+                $route_config->routes->routes->$route_name->__set('route', $route_name."/*");
                 $route_config->routes->routes->$route_name->defaults = array();
                 $route_config->routes->routes->$route_name->defaults->__set('module', $this->_module_sys_Name);                
                 $route_config->routes->routes->$route_name->defaults->__set('controller', $this->_module_sys_Name);
                 $route_config->routes->routes->$route_name->defaults->__set('action',$this->_module_sys_Name.'item');
-                $route_config->routes->routes->$route_name->defaults->__set('id', $data['id']); 
+                //$route_config->routes->routes->$route_name->defaults->__set('id', $data['id']);
                 
                 
                 $writer = new Zend_Config_Writer_Yaml();

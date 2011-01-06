@@ -732,7 +732,7 @@ class Pages extends Zend_Db_Table {
 	private function getDataPage($data, $module) {
 		$user = Security::getInstance ()->getUser ();
 		
-		$parent = $this->getPage ( ( int ) $data ['parent_id'] );
+		$parent = $this->getPage ( ( int ) $data ['id_parent'] );
 		$countOfChildren = $this->getCountOfChildren ( $parent->id );
 		//$maxId = $this->getMaxId ();
 		$url = isset ( $data ['path'] ) ? $data ['path'] : '';
@@ -760,7 +760,7 @@ class Pages extends Zend_Db_Table {
 			'deleted' => '0',
 			'deletedBy' => $user->id,
 			'is_activeBy' => $user->id,
-			'id_parent' => isset ( $data ['parent_id'] ) ? $data ['parent_id'] : '1',
+			'id_parent' => isset ( $data ['id_parent'] ) ? $data ['id_parent'] : '1',
 			'level' => $parent->level + 1,
 			'priority' => $countOfChildren + 1,
 			'title' => isset ( $data ['title'] ) ? $data ['title'] : '',
@@ -849,11 +849,12 @@ class Pages extends Zend_Db_Table {
 			return 	$go_to_module.
 					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" active=\"".$data->is_active."\" ><img src='/img/admin/active_" . $data->is_active . ".png' /></a>" . 
 					"<a href ='#' title='Редактировать' ><img src='/img/admin/edit.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id/$data->id/\" '/></a>" .
-					"<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" .$delete;
+					"<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id_parent/$data->id/\" '/></a>" .$delete;
 					;
 		} else{
-			return "<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/parent_id/$data->id/\" '/></a>" ;
+			return "<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id_parent/$data->id/\" '/></a>" ;
 		}		
 	
 	}
+
 }
