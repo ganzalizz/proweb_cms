@@ -198,7 +198,7 @@ class Templates_Admin_TemplatesController extends MainAdminController {
                     @unlink($this->_basePicsPath . 'thumbs/' . $row->template_image);
                     $row->template_image = '';
                 }
-
+                
                 $row->save();
                 $this->view->ok = 1;
             }

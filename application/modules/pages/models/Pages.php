@@ -406,30 +406,19 @@ class Pages extends Zend_Db_Table {
 	 * @param string $module
 	 * @return int
 	 */
-	public function addPage($data, $module = 'default') {		
-		
-		$id=null;
-		if (is_array ( $data )) {
-			$new_data = $this->getDataPage ( $data, $module );
-			$id=$this->createRow()->setFromArray($new_data)->save(); 
-			//$this->insert ( $new_data );
-			$data ['id'] = $id;
-			PagesOptions::getInstance ()->addOptionsPage ( $data );
-		} else {
-			$original_id = $data->id;
-			$new_data = $this->getCopyDataPage ( $data );
-			$id = $this->insert ( $new_data );
-			PagesOptions::getInstance ()->addOptionsCopyPage ( $original_id, $id );
-			Menu::getInstance ()->addVersion ( $original_id, $id );			
-			Router::getInstance ()->addRoute ( $this->getPage($id)->toArray() );
-		
+	public function addPage($row, $data) {
+
+                $new_data = $this->getDataPage($data, 'default');
+
+                unset($new_data['id']);
+                $row->setFromArray($new_data)->save();
+                $data['id'] = $row->id;
+                PagesOptions::getInstance()->addOptionsPage( $data );
+                if (isset ($data['menu'])) {
+                    Menu::getInstance ()->addMenu ( $row->id, $data ['menu'] );
 		}
-		
-		if (is_array ( $data ) && isset ( $data ['menu'] )) {			
-			Menu::getInstance ()->addMenu ( $id, $data ['menu'] );
-		}
-		
-		return $id;
+
+                return $row;
 	}
 	
 	/**
@@ -437,15 +426,15 @@ class Pages extends Zend_Db_Table {
 	 *
 	 * @param unknown_type $data
 	 */
-	public function editPage($data) {		
-		$new_data = $this->getUpdateDataPage ( $data );		
-		$where = $this->getAdapter ()->quoteInto ( 'id = ?', $data ['id'] );
-		$page = $this->find($data ['id'])->current();
-		$page->setFromArray(array_intersect_key($data, $page->toArray()));
-		$page->save();
-		//$this->update ( $new_data, $where );
-		PagesOptions::getInstance ()->editOptionsPage ( $data );		
+	public function editPage($row, $data) {
+		$new_data = $this->getUpdateDataPage ( $data );
+                
+                $row->setFromArray($new_data)->save();
+
+                PagesOptions::getInstance ()->editOptionsPage ( $data );
 		Menu::getInstance ()->editMenu ( $data );
+
+                return $row;
 	}
 	
 	public function deletePage($ids) {
@@ -849,10 +838,10 @@ class Pages extends Zend_Db_Table {
 			return 	$go_to_module.
 					"<a href ='#' title='$title' pub=\"true\" id_page=\"$data->id\" active=\"".$data->is_active."\" ><img src='/img/admin/active_" . $data->is_active . ".png' /></a>" . 
 					"<a href ='#' title='Редактировать' ><img src='/img/admin/edit.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id/$data->id/\" '/></a>" .
-					"<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id_parent/$data->id/\" '/></a>" .$delete;
+					"<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/id_parent/$data->id/\" '/></a>" .$delete;
 					;
 		} else{
-			return "<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/edit/id_parent/$data->id/\" '/></a>" ;
+			return "<a href ='#' title='Добавить' ><img src='/img/admin/add.png' onclick='javascript:window.location = \"/pages/$lang/admin_pages/add/id_parent/$data->id/\" '/></a>" ;
 		}		
 	
 	}
