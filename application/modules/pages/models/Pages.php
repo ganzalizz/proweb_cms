@@ -242,7 +242,8 @@ class Pages extends Zend_Db_Table {
 		$select = $this->select()
 			->reset()
 			->where('level = ?', $level)
-			->where( 'id_parent = ?', $id_parent)
+                        ->where('level = ?', $level)
+			->where('is_active = ?', 1)
 			->where('deleted = ?', 0)
 			->where('show_in_sitemap = ?', 1)
 			->order('priority');

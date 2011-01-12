@@ -1,67 +1,74 @@
-<div class="clear"></div>	
-<div class="form">
-	<h3>Форма обратной связи</h3>
-	<form action="<?= $this->escape( $this->element->getAction() ); ?>" 
-		method="<?= $this->escape( $this->element->getMethod() ); ?>" >
-		
-		
-                    <div class="bg">
-                        
-			<div class="item">
-				<label for="<?php echo $this->element->name->getId()?>">
-					<?php echo $this->element->name->getLabel(); ?>
-				</label>
-				<?php echo $this->element->name; ?>
-				
-				
-			
-			</div>
-			
-			<div class="item">
-				<label for="<?php echo $this->element->email->getId()?>">
-					<?php echo $this->element->email->getLabel(); ?>
-				</label>
-				<?php echo $this->element->email; ?>
-			
-			</div>
-                        
-                        <div class="item">
-				<label for="<?php echo $this->element->subject->getId()?>">
-					<?php echo $this->element->subject->getLabel(); ?>
-				</label>
-				<?php echo $this->element->subject; ?>
-			
-			</div>
-			
-			<div class="item">
-				<label for="<?php echo $this->element->message->getId()?>">
-					<?php echo $this->element->message->getLabel(); ?>
-				</label>
-				<?php echo $this->element->message; ?>
-			
-			</div>
-                    </div>
+<?php
+    // Получаем метод и все атрибуты формы
+    $form_args = '';
+    $form_args.= 'method="'.$this->element->getMethod().'" ';
 
-                    <div class="capcha">
-                        <label for="<?php echo $this->element->captcha->getId()?>">
-                                <?php echo $this->element->captcha->getLabel(); ?>
-                        </label>
-                        <div class="overflow">
-                                <?php echo $this->element->captcha; ?>
-                                <?php echo $this->element->submit; ?>
-                                <div class="clear"></div>
-                        </div>
-                    </div>
-                    
-		
+    foreach ($this->element->getAttribs() as $key => $value) {
+        $form_args.= $key . '="' . $this->escape($value) . '" ';
+    }
+?>
 
-                <?php if (!is_null($this->layout()->template)): ?>
-                    <div class="f_left shabl">
-                        <div><img alt="<?php print $this->layout()->template->title ?>" src="/pics/templates/thumbs/<?php print $this->layout()->template->template_image ?>"></div>
-                        <a href="/templateslist">Выбрать другой шаблон</a>
-                    </div>
-                <?php endif; ?>
+ <form <?php echo $form_args?> >
 
-	
-	</form>
-</div>	
+
+    <div class="bg f_left">
+
+        <div class="item">
+                <label for="<?php echo $this->element->name->getId()?>">
+                        <?php echo $this->element->name->getLabel(); ?>
+                </label>
+                <?php echo $this->element->name; ?>
+
+
+
+        </div>
+
+        <div class="item">
+                <label for="<?php echo $this->element->email->getId()?>">
+                        <?php echo $this->element->email->getLabel(); ?>
+                </label>
+                <?php echo $this->element->email; ?>
+
+        </div>
+
+        <div class="item">
+                <label for="<?php echo $this->element->subject->getId()?>">
+                        <?php echo $this->element->subject->getLabel(); ?>
+                </label>
+                <?php echo $this->element->subject; ?>
+
+        </div>
+
+        <div class="item">
+                <label for="<?php echo $this->element->message->getId()?>">
+                        <?php echo $this->element->message->getLabel(); ?>
+                </label>
+                <?php echo $this->element->message; ?>
+
+        </div>
+    </div>
+
+    <?php if (!is_null($this->layout()->order_template)): ?>
+        <?php $template = $this->layout()->order_template; ?>
+        <div class="shabl f_left">
+            <div><img alt="<?php print $template->title ?>" src="/pics/templates/thumbs/<?php print $template->template_image ?>"></div>
+            <b>Заказ шаблона:</b> <?php print $template->title ?><br/>
+            <b>Стоимость:</b> <?php print $template->price ?><br/>
+            <a href="/templateslist">Выбрать другой шаблон</a>
+        </div>
+    <?php endif; ?>
+
+    <div class="clear"><!--x--></div>
+
+    <div class="capcha">
+        <label for="<?php echo $this->element->captcha->getId()?>">
+                <?php echo $this->element->captcha->getLabel(); ?>
+        </label>
+        <div class="overflow">
+                <?php echo $this->element->captcha; ?>
+                <?php echo $this->element->submit; ?>
+                <div class="clear"></div>
+        </div>
+    </div>
+
+</form>

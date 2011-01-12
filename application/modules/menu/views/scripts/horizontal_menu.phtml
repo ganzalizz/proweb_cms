@@ -2,9 +2,9 @@
 <div class="top_menu">
     <ul>
         <?foreach ($this->menu as $key => $data) { ?>
-        	<?php $item = $data['item'];?>
+            <?php $item = $data['item'];?>
             <li>
-                <a href="/<?=$item->path?>" title="<?=$item->title?>" <?=$item->id==$this->current ? 'class="active"' : ''?>>
+                <a href="/<?=$item->id!=844 ? $item->path : '' ?>" title="<?=$item->title?>" <?=$item->id==$this->current ? 'class="active"' : ''?>>
                     <span><?=$item->title?></span>
                    
                 </a>
