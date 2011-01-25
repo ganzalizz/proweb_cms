@@ -14,7 +14,8 @@ class Otzivy_OtzivyController extends Zend_Controller_Action {
             if ($page->is_active == '0') {
                 $this->_redirect('/404');
             }
-
+            ob_start();
+            ob_flush();
             $this->layout->page = $page;
             $this->layout->id_page = $page->id;
                        
