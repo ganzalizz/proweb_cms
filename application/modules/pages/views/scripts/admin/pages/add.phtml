@@ -1,137 +1,44 @@
+<?php
+    // Подключение jquery-автотранслита для url
+    echo $this->JqueryTranslit(array(
+        'id_source' =>'title', // id input источника
+        'id_receiver' =>'path' // id input приемник
+    ));
+?>
 
-<div id="left_block"  class="form_page">
-    <?if ($this->ok==1) { ?>
-    <div class="content_block">
-        <p class="data_saved">Данные сохранены</p>
-    </div>
+<?php
+    // ajax проверка на уникальность url
+    echo $this->ajaxExistRecordWithUrl(array(
+        'target_url' => $this->currentModule.'/existrecord',
+        // id записи, если существует
+        'item_id' => $this->id ? $this->id : 0,
+        // id поля с адресом url
+        'id_url' => "path",
+        // id поля с заголовком из которого работает автотранслит
+        'id_title' => "title",
+        // изображения
+        'img_loader' => "/img/loader.gif",
+        'img_ok' => "/img/admin/active_1.png",
+        'img_error' => "/img/admin/active_0.png"
+    ));
+?>
+
+<div class="content">
+    <div id="left_block" class="form_page">
+        <?if ($this->ok==1) { ?>
+        <div class="content_block">
+            <p class="data_saved">Данные сохранены</p>
+        </div>
         <?} ?>
-    <?if (isset($this->err)) { ?>
-    <div class="content_block">
-        <p class="error">
-                <?=$this->htmlList($this->err, false , array('class'=>'error' )) ?>
-        </p>
+    	<?php echo $this->form?>
+
     </div>
-
-    <?} ?>
-
-    <form action="" method="POST" id="addPage" enctype="multipart/form-data" name="addPage">
-
-        <div class="content_block">
-            <p class="form_name">Название страницы<span class="ser_text size11">(используется в меню)</span></p>
-            <?=$this->formText('title', $this->escape($this->page->title), array('onchange'=>'javascript:ttAdd();')) ?>
-
-            <p class="form_name">Заголовок h1<span class="ser_text size11">(используется на сайте)</span></p>
-            <?=$this->formText('h1', $this->escape($this->options->h1)) ?>
-
-
-            <p class="form_name">Url <span class="ser_text size11">(адрес раздела/страницы)</span></p>
-            <?if ($this->page->allow_delete==0 && $this->page->id!=0) {
-                $url_params = array('readonly'=>'');
-            }else {
-                $url_params = array();
-            } ?>
-            <?=$this->formText('path', $this->escape($this->page->path), $url_params) ?>
+    <div id="right_block">
+        <div class="block_r gray">
+            <h3><b>Действия</b></h3>
+            <ul>
+                <li><a href="<?=$this->currentModule?>/index/id_page/<?=$this->id_page?>">Дерево элементов</a></li>
+            </ul>
         </div>
-
-        <div class="content_block">
-            <h3><a href="#" title="Показать/Скрыть блок" class="show_hide" onclick="show_hide_block('seo_block', 'seo_block_img'); return false;"><span id="show-" ><img src="/img/admin/ico_show+.gif" alt="" id="seo_block_img" /></span> Seo</a></h3>
-            <div id="seo_block" style="display: none;">
-                <p class="form_name">Title<span class="ser_text size11">(seo)</span></p>
-                <?=$this->formText('page_title', $this->escape($this->options->title)) ?>
-
-                <p class="form_name">Keywords<span class="ser_text size11">(seo)</span></p>
-                <?=$this->formText('keywords', $this->escape($this->options->keywords)) ?>
-
-                <p class="form_name">Description <span class="ser_text size11">(seo)</span></p>
-                <?=$this->formText('descriptions', $this->escape($this->options->descriptions)) ?>
-            </div>
-        </div>
-
-        <div class="content_block">
-            <h3><a href="#" title="Показать/Скрыть блок" class="show_hide" onclick="show_hide_block('page_settings', 'page_settings_img'); return false;"><span id="show-" ><img src="/img/admin/ico_show-.gif" alt="" id="page_settings_img" /></span> Настройки</a></h3>
-            <div id="page_settings">
-                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td><p>Тип раздела</p>
-
-
-                            <?=$this->formSelect('id_div_type', $this->page->id_div_type, null, $this->divisions_type) ?>
-
-                        </td>
-                        <td>
-                            <div><?=$this->formCheckbox('is_active', null, array('checked'=>$this->page->is_active, 'class'=>'checkbox'), array(1,0)) ?>
-                                <label for="published">Опубликовать на сайте</label></div>
-
-                            <div><?=$this->formCheckbox('show_in_sitemap', null, array('class'=>'checkbox', 'checked'=>$this->page->show_in_sitemap)) ?>
-                                <label for="sitemap">Отображать в карте сайта</label></div>
-
-                            <div><?=$this->formCheckbox('show_childs', null, array('class'=>'checkbox', 'checked'=>$this->page->show_childs), array(1,0)) ?>
-                                <label for="show_childs">Отображать вложенные документы</label></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p class="form_name">Лого</p>
-                            <?=$this->formFile('image') ?>
-                        </td>
-                        <td>
-                            <?if ($this->page->img!='') { ?>
-                            <p align="center" >
-                                <img src="/pics/default/<?=$this->page->img ?>"><br>
-
-
-                                <input type="checkbox" class="checkbox" name="delete_img" id="delete_img" value="1"><label for="delete_img">удалить изображение</label>
-
-                            </p>
-                                <?} ?>
-                        </td>
-                    </tr>
-                </table>
-
-
-
-            </div/>
-
-
-        </div>
-        <div class="content_block">
-            <h3><span id="show-" ><img src="/img/admin/ico_show-.gif" alt="" /></span> Контент</h3>
-          
-           <p class="form_name">Краткое описание</p>
-            <?php echo $this->formCkEditor('intro', $this->page->intro)?>
-            
-            <p class="form_name">Полное описание</p>
-             <?php echo $this->formCkEditor('content', $this->page->content)?>
-                    </div>
-
-        <?php if (isset($this->menu)) {?>
-        <div class="content_block">
-            <h3><span id="show-" ><img src="/img/admin/ico_show-.gif" alt="" /></span> Принадлежность к меню</h3>
-                <?foreach ($this->menu as $key => $data) {
-                    $checked = false;
-
-                    if(isset($this->pageMenu[$data->id])) {
-                        $checked = 'checked';
-                    }
-                    ?>
-            <div><?=$this->formCheckbox("menu[$data->id]", $data->id, array('class'=>'checkbox', 'checked'=>$checked)) ?>
-                <label for="menu-<?php echo $data->id ?>" ><?=$data->title?></label></div>
-
-
-                    <?php
-                }?>
-        </div>
-            <?
-        }
-        ?>
-
-
-        <div class="right">
-            <button class="orange" type="button" onclick="location.href='/pages/ru/admin_pages/'"><span><em>Отменить</em></span></button>
-            <button  type="submit"><span><em>Сохранить</em></span></button>
-        </div>
-    </form>
+    </div>
 </div>

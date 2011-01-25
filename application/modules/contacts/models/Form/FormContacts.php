@@ -4,11 +4,19 @@ class Form_FormContacts extends Ext_Form
 {
     public function init()
     {
+        parent::init();
+
+        $this->setAction('');
         $this->setMethod('post');
         
-        $this->setDecorators( array( array( 'ViewScript', array( 'viewScript' => 'contacts/formcontacts.phtml' ) ) ) );
+        $this->setDecorators(array( 
+            'FormErrors',
+            array('ViewScript', array('viewScript' => 'contacts/formcontacts.phtml'))
+        ));
         
         $this->setAttrib('class', 'contacts');
+        $this->setAttrib('accept-charset', 'UTF-8');
+        $this->setAttrib('enctype', 'multipart/form-data');
         
         $name = new Zend_Form_Element_Text('name', array(
             'label' => 'Ваше имя',
@@ -18,8 +26,7 @@ class Form_FormContacts extends Ext_Form
                 array('StringLength', true, array(5, 40))
              ),
             'decorators' => array(
-				array( 'ViewHelper' ), 
-				array( 'Errors' )),
+				array( 'ViewHelper' )),
             'filters'     => array('StringTrim')
         ));
         $name->setAttrib('class', 'input');
@@ -29,8 +36,7 @@ class Form_FormContacts extends Ext_Form
             'label' => 'Email',
             'required' => true,
             'decorators' => array(        		
-				array( 'ViewHelper' ),
-				array( 'Errors' ))
+				array( 'ViewHelper' ))
         ));
         $email->setAttrib('class', 'input');
         $this->addElement($email);
@@ -43,14 +49,10 @@ class Form_FormContacts extends Ext_Form
                 array('StringLength', true, array(5, 80))
              ),
             'decorators' => array(
-				array( 'ViewHelper' ), 
-				array( 'Errors' )),
+				array( 'ViewHelper' )),
             'filters'     => array('StringTrim'),
-            //'value' => 'Заказ шаблона: название шаблона (Стоимость: 100)'
         ));
         $subject->setAttrib('class', 'input');
-
-        //$subject->setAttrib('disabled', 'disabled');
 
         $this->addElement($subject);
         
@@ -61,16 +63,15 @@ class Form_FormContacts extends Ext_Form
                 array('StringLength', true, array(5, 1000))
              ),
             'decorators' => array(
-				array( 'ViewHelper' ), 
-				array( 'Errors' )),
+				array( 'ViewHelper' )),
             'filters'     => array('StringTrim'),
             'rows'        => 10
         ));
         $message->setAttrib('class', 'input');
         $this->addElement($message);
         
-         $captcha = new Zend_Form_Element_Captcha('captcha', array(
-            'label' => "Введите символы:",
+        $captcha = new Zend_Form_Element_Captcha('captcha', array(
+            'label' => "Введите код проверки:",
             'captcha' => array(
                 'captcha'   => 'Image', // Тип CAPTCHA
                 'wordLen'   => 4,       // Количество генерируемых символов
@@ -89,11 +90,11 @@ class Form_FormContacts extends Ext_Form
             )
         ));        
         $captcha->removeDecorator('label');
+        $captcha->removeDecorator('Errors');
         $captcha->addDecorator( 'HtmlTag', array( 'tag' => 'span', 'class'=>'captcha' ));    
             
         $this->addElement($captcha);
         
-         
         /*
         // Кнопка Submit
         $submit = new Zend_Form_Element_Submit('submit', array(
@@ -104,8 +105,7 @@ class Form_FormContacts extends Ext_Form
         $submit->setAttrib('src', '/img/send.gif');
         $submit->setDecorators(array( 'ViewHelper' ), array('HtmlTag', array( 'tag' => 'span' )) );
         
-        $this->addElement($submit);
-        
+        $this->addElement($submit);        
         
     }
 }

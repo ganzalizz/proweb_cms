@@ -1,35 +1,32 @@
 <div class="cont_inner news">
 
     <h1><?=$this->layout()->page->title?></h1>
-	
-	<?php echo $this->page->content?>
 
-<?if(count($this->articles)) {?>
+    <?php echo $this->page->content?>
+
+    <?if(count($this->articles)) {?>
 
         <?foreach($this->articles as $item) {?>
-   <div class="item overflow">
-       <b class="date"><i><?php echo $item->date?></i></b>
-        <h3><a href="/articlesitem/item/<?=$item->url?>" class="head_articles"><?=$item->name?></a></h3>
-        <? if($item->small_img!=''){?>
-            <div class="photo_teaser_news">
-            	<a href="/articlesitem/item/<?php echo $item->url?>">
-            		<img src="/pics/articles/thumbs/<?php echo $item->small_img?>" alt="<?php echo $item->name?>" />
-            	</a>
-            </div> 
-        <?}?> 
-                
-       <?=$item->teaser?>            
-           
-    </div>
-   
-  <?}?>
- 
+           <div class="item overflow">
+               <b class="date"><i><?php echo $item->date?></i></b>
+                <h3><a href="/articlesitem/item/<?=$item->url?>" class="head_articles"><?=$item->name?></a></h3>
+                <? if($item->small_img!=''){?>
+                    <div class="photo_teaser_news">
+                        <a href="/articlesitem/item/<?php echo $item->url?>">
+                                <img src="/pics/articles/thumbs/<?php echo $item->small_img?>" alt="<?php echo $item->name?>" />
+                        </a>
+                    </div>
+                <?}?>
 
+               <?=$item->teaser?>
+            </div>
+        <?}?>
+
+    <?php } ?>
 </div>
-<?php } ?>
 <?php if ($this->paginator->count() > 1) { ?>
-	<?php echo $this->paginator ?>
- <?}?>
+    <?php echo $this->paginator ?>
+<?}?>
 
 
 

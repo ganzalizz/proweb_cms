@@ -5,10 +5,10 @@
         <b class="date"><i><?=  date('d.m.Y',strtotime($this->item->created_at));?></i></b>
         <h3><?php print $this->item->name ?></h3>
         <?if($this->item->big_img){?>
-            <div class="photo"><img src="/thumb.php?img=/pics/news/<?=$this->item->big_img?>&w=130&h=115" alt="" /></div>
+            <div class="photo_teaser_news"><img src="/pics/news/big_img/<?php echo $this->item->big_img?>" alt="<?php echo $this->item->name?>" /></div>
         <?}?>
         
-            <?=$this->item->content?>
+        <?=$this->item->content?>
         
     </div>
 

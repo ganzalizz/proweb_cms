@@ -8,18 +8,17 @@ class Portfolio_PortfolioController extends Zend_Controller_Action {
         $this->lang = $this->_getParam('lang', 'ru');
 
         $this->layout->setLayout("front/default");
+
+        $this->view->addScriptPath(DIR_LAYOUTS);
+        $this->view->addHelperPath(Zend_Registry::get('helpersPaths'), 'View_Helper');
+    }
+
+    public function indexAction() {
         $id = $this->_getParam('id');
         $page = Pages::getInstance()->getPage($this->_getParam('id'));
-        if (!is_null($page)) {
-            if ($page->is_active == '0') {
-                $this->_redirect('/404');
-            }
-
+        if (!is_null($page) && $page->is_active!=0) {
             $this->layout->page = $page;
             // $this->layout->lang = $page->version;
-
-            $this->view->addScriptPath(DIR_LAYOUTS);
-            $this->view->addHelperPath(Zend_Registry::get('helpersPaths'), 'View_Helper');
 
             $this->view->options = $options = PagesOptions::getInstance()->getPageOptions($id);
             $this->view->placeholder('title')->set($options->title);
@@ -31,17 +30,12 @@ class Portfolio_PortfolioController extends Zend_Controller_Action {
             $this->layout->current_type = 'pages';
             $this->view->page = $page;
             $this->layout->id_page = $page->id;
+        } else {
+            $this->_redirect('/404');
         }
-    }
 
-    public function indexAction() {
-        if ($this->_hasParam('item'))
-            $this->_forward('portfolioitem');
         $year = $this->_hasParam('year') ? $this->_getParam('year') : 'all';
-        $id_page = $this->_getParam('id');
 
-        $page = Pages::getInstance()->getPageByParam('id', $this->_getParam('id'));
-        // $this->view->child_pages = $child_pages = Pages::getInstance()->getPagesByParam('parentId', $this->_getParam('id'));
         $this->view->page = $page;
         $this->_setParam('id', $page->id);
         $this->view->year = $year;

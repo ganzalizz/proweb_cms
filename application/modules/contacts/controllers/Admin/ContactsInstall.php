@@ -4,14 +4,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once APPLICATION_PATH.'/library/Ext/Common/InstallModuleAbstract.php';
+require_once APPLICATION_PATH . '/../library/Ext/Common/InstallModuleAbstract.php';
 
-class Contacts_Admin_ContactsInstall extends Ext_Common_InstallModuleAbstract
+class ContactsInstall extends Ext_Common_InstallModuleAbstract
 {
      public function Install()
     {
        
-        
         $this->RegisterModule();
         
     }
@@ -25,6 +24,7 @@ class Contacts_Admin_ContactsInstall extends Ext_Common_InstallModuleAbstract
     
     private function RegisterModule()
     {
+        $ini = $this->_module_config->module;
         
         $register_module_sql ="
           INSERT INTO site_divisions_type(system_name,
@@ -37,22 +37,24 @@ class Contacts_Admin_ContactsInstall extends Ext_Common_InstallModuleAbstract
                                           priority,
                                           active,
                                           go_to_module)
-                    VALUES('contacts',
-                           'Форма обратной связи',
-                           'contacts',
-                           'contacts',
-                           'index',
-                           'admin_contacts',
-                           'index',
-                           0,1,1);";
+                    VALUES('" . $ini->sys->name . "',
+                           '" . $ini->name . "',
+                           '" . $ini->module . "',
+                           '" . $ini->controller_frontend . "',
+                           '" . $ini->action_frontend . "',
+                           '" . $ini->controller_backend . "',
+                           '" . $ini->action_backend . "',
+                           " . $ini->priority . ",
+                           " . $ini->active . ",
+                           " . $ini->go_to_module . ");";
                
         $this->_db->beginTransaction();
         
         if (!$this->IsModuleRegistered())
-                $this->_db->getConnection()->exec($register_module_sql);
+            $this->_db->getConnection()->exec($register_module_sql);
         
-                $where = $this->_db-> quoteInto('name = ?', 'contacts');
-                $this->_db->update('site_modules', array('installed' => 1), $where);
+        $where = $this->_db-> quoteInto('name = ?', 'contacts');
+        $this->_db->update('site_modules', array('installed' => 1), $where);
         $this->_db->commit();
     }
     

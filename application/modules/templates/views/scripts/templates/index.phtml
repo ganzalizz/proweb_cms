@@ -8,13 +8,13 @@
                         <img src="/pics/templates/thumbs/<?php print $template->template_image ?>" alt="<?php print $template->title ?>"/>
                     </a>
                 </div>
-                <p align="center">
+                <div style="text-align: center">
                     <a href="/templatesitem/item/<?php print $template->url ?>" title="<?php print $template->title ?>">
                         <?php echo $template->title ?>
                     </a><br/>
                     Стоимость: <?php echo $template->price ?><br/>
                     <a href="/contacts/template/<?php print $template->id ?>" title="Заказать">Заказать</a>
-                </p>
+                </div>
            </div>
         <?php endforeach; ?>
     </div>

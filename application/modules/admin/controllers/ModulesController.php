@@ -85,7 +85,15 @@ class Admin_ModulesController extends MainAdminController  {
 		      </td>										
 		      <td class="options">
 			  <a id="'.$module['name'].'" href="#" onclick="return false;" title="Включить модуль"><img src="/img/admin/module_'.$module['installed'].'.png" alt="/img/admin/module_'.$module['installed'].'.png"></a>    
-                      </td>'.
+                          <a href="#" id="visible_'.$module['id'].'" onclick="return false;" title="Отображать в админке"><img src="/img/admin/visible_'.$module['visible'].'.png" alt="'.$visible.'"></a>'.
+                            $this->view->ajaxStatusLink(array(
+                                        'target_id'	=>'visible_'.$module['id'],
+                                        'link_id'	=>'visible_'.$module['id'],
+                                        'target_url'=>  'modules/visibility',
+                                        'url_data'	=>"{id: ".$module['id'].",visible: '".$module['visible']."'}",
+                                        'loader_img'=>"/img/loader.gif"
+                                ))
+                            .'</td>'.
                      $this->view->ajaxStatusLink(array(
                                                   'target_id'	=>'row_'.$module['id'],
                                                   'link_id'	=>$module['name'],
@@ -110,15 +118,23 @@ class Admin_ModulesController extends MainAdminController  {
 			$module['describe'].'
 		      </td>										
 		      <td class="options">
-			  <a id="'.$module['name'].'" href="#" onclick="return false;" title="Выключить модуль"><img src="/img/admin/module_'.$module['installed'].'.png" alt="/img/admin/module_'.$module['installed'].'.png"></a>    
-                      </td>
-		      '.$this->view->ajaxStatusLink(array(
-                                                  'target_id'	=>'row_'.$module['id'],
-                                                  'link_id'	=>$module['name'],
-                                                  'target_url'=>'modules/install',
-                                                  'url_data'	=>"{installed: ".$module['installed'].",module_name: '".$module['name']."'}",
-                                                  'loader_img'=>"/img/horizontal_loader.gif"
-                                                  ));;
+			  <a id="'.$module['name'].'" href="#" onclick="return false;" title="Выключить модуль"><img src="/img/admin/module_'.$module['installed'].'.png" alt="/img/admin/module_'.$module['installed'].'.png"></a>
+                          <a href="#" id="visible_'.$module['id'].'" onclick="return false;" title="Отображать в админке"><img src="/img/admin/visible_'.$module['visible'].'.png" alt="'.$visible.'"></a>'.
+                            $this->view->ajaxStatusLink(array(
+                                        'target_id'	=>'visible_'.$module['id'],
+                                        'link_id'	=>'visible_'.$module['id'],
+                                        'target_url'=>  'modules/visibility',
+                                        'url_data'	=>"{id: ".$module['id'].",visible: '".$module['visible']."'}",
+                                        'loader_img'=>"/img/loader.gif"
+                                ))
+                            .'</td>'.
+                            $this->view->ajaxStatusLink(array(
+                                        'target_id'	=>'row_'.$module['id'],
+                                        'link_id'	=>$module['name'],
+                                        'target_url'=>'modules/install',
+                                        'url_data'	=>"{installed: ".$module['installed'].",module_name: '".$module['name']."'}",
+                                        'loader_img'=>"/img/horizontal_loader.gif"
+                                ));
            
 	} 
 	

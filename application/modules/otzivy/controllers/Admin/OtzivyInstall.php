@@ -12,7 +12,6 @@ class OtzivyInstall extends Ext_Common_InstallModuleAbstract
    {
        $this->RegisterModule();
        
-        
    }
    
    public function  Uninstall() 
@@ -35,8 +34,32 @@ class OtzivyInstall extends Ext_Common_InstallModuleAbstract
                                 PRIMARY KEY (id))
                                 ENGINE=InnoDB
                                 DEFAULT CHARSET=utf8
-                                COLLATE = utf8_general_ci;";    
-          //TODO: Сделать вычитывание в таблицу site_divisions_type  данных из конфига модуля  
+                                COLLATE = utf8_general_ci;";
+
+         $fill_table = "INSERT INTO " . $this->_module_tableName . " (name,
+                                                                 email,
+                                                                 added,
+                                                                 prizn,
+                                                                 content,
+                                                                 is_active,
+                                                                 is_main) VALUES";
+
+        $fill_counter = 1;
+        $fill_count = 20;
+        while ($fill_counter <= $fill_count) {
+            $fill_table .= $fill_counter > 1 ? ',' : '';
+            $fill_table .= "('Пользователь " . $fill_counter . "',
+                             'demo" . $fill_counter . "@easystart.by',
+                             '" . date('Y-m-d', strtotime('-'.$fill_counter.' day',time())) . "',
+                             " . ($fill_counter%2==0 ? 1 : 0) . ",
+                             'Содержание тестового " . ($fill_counter%2==0 ? 'предложения' : 'отзыва') . "',
+                             1,0)";
+            $fill_counter++;
+        }
+
+          // Вычитывание в таблицу site_divisions_type  данных из конфига модуля
+          $ini = $this->_module_config->module;
+
           $register_module_sql = "
           INSERT INTO site_divisions_type(system_name,
                                           title,
@@ -48,18 +71,21 @@ class OtzivyInstall extends Ext_Common_InstallModuleAbstract
                                           priority,
                                           active,
                                           go_to_module)
-                    VALUES('otzivy',
-                           'Отзывы и предложения',
-                           'otzivy',
-                           'otzivy',
-                           'index',
-                           'admin_otzivy',
-                           'index',
-                           0,1,1);";
+                    VALUES('" . $ini->sys->name . "',
+                           '" . $ini->name . "',
+                           '" . $ini->module . "',
+                           '" . $ini->controller_frontend . "',
+                           '" . $ini->action_frontend . "',
+                           '" . $ini->controller_backend . "',
+                           '" . $ini->action_backend . "',
+                           " . $ini->priority . ",
+                           " . $ini->active . ",
+                           " . $ini->go_to_module . ");";
                
         $this->_db->beginTransaction();
         
         $this->_db->getConnection()->exec($create_table);
+        $this->_db->getConnection()->exec($fill_table);
         
         if (!$this->IsModuleRegistered())
                 $this->_db->getConnection()->exec($register_module_sql);

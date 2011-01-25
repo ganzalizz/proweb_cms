@@ -80,9 +80,17 @@ class Articles_Form extends Ext_Form
                 //array('Alnum', true, array(true)),               
 				array('Regex', false, array('/^[a-z0-9_-]{1,}$/'))
              ),             
-            'filters'     => array('StringTrim')
+            //'filters'     => array('StringTrim')
         ));
-        
+
+        // Автотранслит для url
+        $url_filter = new Zend_Filter_Callback(
+            array(
+                'callback' => array('Ext_Common_Translit', 'transliterate'),
+            )
+        );
+        $url->addFilter($url_filter);
+
         $url_validator = new Zend_Validate_Db_NoRecordExists(array(
         	'table' => 'site_articles',
         	'field' => 'url'
@@ -135,17 +143,6 @@ class Articles_Form extends Ext_Form
         $link->addValidator(new Ext_Form_Validate_UrlValidator());
         
         $this->addElement($link);
-        
-        $date_news = new ZendX_JQuery_Form_Element_DatePicker('date_news', array(
-           'label' => 'Дата статьи',           
-        ));
-       $date_news->removeDecorator('label');
-       $date_news->removeDecorator('htmlTag');
-       
-       
-       $date_news->setJQueryParam('dateFormat', 'dd.mm.yy');
-       
-       $this->addElement($date_news);
         
         $author = new Zend_Form_Element_Text('author', array(
             'required' => true,

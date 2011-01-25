@@ -68,8 +68,16 @@ class Form_FormPortfolio extends Ext_Form
                 //array('Alnum', true, array(true)),               
 				array('Regex', false, array('/^[a-z0-9_-]{1,}$/'))
              ),             
-            'filters'     => array('StringTrim')
+            //'filters'     => array('StringTrim')
         ));
+
+        // Автотранслит для url
+        $url_filter = new Zend_Filter_Callback(
+            array(
+                'callback' => array('Ext_Common_Translit', 'transliterate'),
+            )
+        );
+        $url->addFilter($url_filter);
         
         $url_validator = new Zend_Validate_Db_NoRecordExists(array(
         	'table' => 'site_portfolio',
@@ -84,7 +92,7 @@ class Form_FormPortfolio extends Ext_Form
     	}
         $url->addValidator($url_validator);
 
-        $this->addElement($url);
+        $this->addElement($url);        
 
         $link = new Zend_Form_Element_Text('link', array(
             'required' => true,

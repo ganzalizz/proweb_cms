@@ -8,7 +8,10 @@ class Templates_TemplatesController extends Zend_Controller_Action
         $this->lang = $this->_getParam('lang', 'ru');
 
         $this->layout->setLayout("front/default");
-
+    }
+    
+    public function indexAction()
+    {
         $id = $this->_getParam('id');
         $page = Pages::getInstance()->getPage($id);
         if(!is_null($page) && $page->is_active!=0) {
@@ -26,17 +29,9 @@ class Templates_TemplatesController extends Zend_Controller_Action
            $this->_redirect('/404');
         }
 
-        //if ($this->_hasParam('item')) {
-            //$this->_forward('item');
-        //}
-    }
-    
-    public function indexAction()
-    {
         $ini = new Ext_Common_Config('templates','frontend');
-
-        $page = $this->_getParam('page',1);
         $item_per_page = $ini->countOnPage;
+        $page = $this->_getParam('page',1);
 
         $paginator = Templates::getInstance()->getTemplatesPaginator($item_per_page, $page);
         Zend_View_Helper_PaginationControl::setDefaultViewPartial('pagination.phtml');
@@ -44,7 +39,6 @@ class Templates_TemplatesController extends Zend_Controller_Action
         $paginator->setView($this->view);
         $this->view->templates = $paginator->getCurrentItems();
         $this->view->paginator = $paginator;
-
     }
 
     public function templatesitemAction() {
