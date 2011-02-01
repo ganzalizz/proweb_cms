@@ -35,6 +35,14 @@ class Rss_RssController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
+        
+        
+        $rssFeeds = Rss::getInstance()->getAllRssFeed();
+        
+        
+        
+        
+        
         if ($this->_hasParam('item'))
             $this->_forward('portfolioitem');
         $year = $this->_hasParam('year') ? $this->_getParam('year') : 'all';
@@ -49,6 +57,81 @@ class Rss_RssController extends Zend_Controller_Action {
         $this->view->portfolio = Portfolio::getInstance()->getActivePortfolio($year);
         $this->view->portfolio_count = Portfolio::getInstance()->getPortfolioCount();
     }
+    
+    public function doFeedAction($channel_sys_name){
+        
+        $channel_sys_name = $this->_getParam('feed','all');
+        if ($channel_sys_name != 'all'){
+        
+        $conf_ini = new Ext_Common_Config('rss', 'frontend');
+        $limit = $conf_ini->countRecords;
+        
+        $feed = Rss::getInstance()->getRssFeedByName($channel_sys_name);
+        
+        $r = new ReflectionClass(ucfirst($channel_sys_name));
+        $module = $r->newInstance();
+        
+        $results = $module->getLimitOrderByDate($feed[0]['fields'],$limit);
+        
+        $feed_module_conf = new Ext_Common_Config($channel_sys_name);
+        
+        $feed = new Zend_Feed_Writer_Feed();
+        //TODO: Вычитывание имени сайта из главного конфига
+        $feed->setTitle($feed_module_conf->module->name.'сайта');
+        $feed->setLink($this->getRequest()->getHttpHost().'/'.$channel_sys_name);
+        $feed->setFeedLink($this->getRequest()->getHttpHost() . $this->view->url(), 'rss');
+        $feed->addAuthor(array(
+                               'name'  => 'Paddy',
+                               'email' => 'paddy@example.com',
+                               'uri'   => $this->getRequest()->getHttpHost(),
+                                ));
+        $feed->setDateModified(time());
+        $feed->addHub('http://pubsubhubbub.appspot.com/');
+        
+        foreach ($results as $result){
+            
+           
+                $entry = $feed->createEntry();
+
+                $entry->setTitle('All Your Base Are Belong To Us');
+
+                $entry->setLink('http://www.example.com/all-your-base-are-belong-to-us');
+
+                $entry->addAuthor(array(
+
+                                        'name'  => 'Paddy',
+
+                                        'email' => 'paddy@example.com',
+
+                                        'uri'   => $this->getRequest()->getHttpHost(),
+
+                                        ));
+
+                $entry->setDateModified(time());
+
+                $entry->setDateCreated(time());
+
+                $entry->setDescription('Exposing the difficultly of porting games to English.');
+
+                $entry->setContent(
+
+                                    'I am not writing the article. The example is long enough as is ;).'
+
+                                    );
+
+                $feed->addEntry($entry);
+
+             
+               
+
+            
+        }
+        $out = $feed->export('rss');
+       
+        }
+        
+        
+    } 
 
     public function portfolioitemAction() {
         $portfolio_url = $this->_getParam('item', '');

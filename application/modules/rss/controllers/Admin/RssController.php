@@ -1,6 +1,6 @@
 <?php
 
-class Portfolio_Admin_PortfolioController extends MainAdminController {
+class Rss_Admin_RssController extends MainAdminController {
 
     /**
      *

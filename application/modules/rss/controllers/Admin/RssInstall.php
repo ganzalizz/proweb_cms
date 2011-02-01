@@ -36,7 +36,9 @@ class RssInstall extends Ext_Common_InstallModuleAbstract
                                          DEFAULT CHARSET=utf8
                                          COLLATE = utf8_general_ci;";
           //TODO: Сделать вычитывание в таблицу site_divisions_type  данных из конфига модуля  
-          $register_module_sql = "
+          $ini = $this->_module_config->module;
+
+        $register_module_sql = "
           INSERT INTO site_divisions_type(system_name,
                                           title,
                                           module,
@@ -47,15 +49,18 @@ class RssInstall extends Ext_Common_InstallModuleAbstract
                                           priority,
                                           active,
                                           go_to_module)
-                    VALUES('portfolio',
-                           'portfolio',
-                           'portfolio',
-                           'portfolio',
-                           'index',
-                           'admin_portfolio',
-                           'index',
-                           0,1,1);";
-               
+                   VALUES('" . $ini->sys->name . "',
+                           '" . $ini->name . "',
+                           '" . $ini->module . "',
+                           '" . $ini->controller_frontend . "',
+                           '" . $ini->action_frontend . "',
+                           '" . $ini->controller_backend . "',
+                           '" . $ini->action_backend . "',
+                           " . $ini->priority . ",
+                           " . $ini->active . ",
+                           " . $ini->go_to_module . ");";
+
+                
         $this->_db->beginTransaction();
         
         $this->_db->getConnection()->exec($create_table);
@@ -63,7 +68,7 @@ class RssInstall extends Ext_Common_InstallModuleAbstract
         if (!$this->IsModuleRegistered())
                 $this->_db->getConnection()->exec($register_module_sql);
         
-                $where = $this->_db-> quoteInto('name = ?', 'portfolio');
+                $where = $this->_db-> quoteInto('name = ?', 'rss');
                 $this->_db->update('site_modules', array('installed' => 1), $where);
         $this->_db->commit();
     }
@@ -75,9 +80,9 @@ class RssInstall extends Ext_Common_InstallModuleAbstract
         
         $this->_db->exec($delete_table);
         
-        $where = $this->_db->quoteInto('module = ?', 'portfolio');
+        $where = $this->_db->quoteInto('module = ?', 'rss');
         $this->_db->delete('site_divisions_type', $where);
-        $where = $this->_db->quoteInto('name = ?', 'portfolio');
+        $where = $this->_db->quoteInto('name = ?', 'rss');
         $this->_db->update('site_modules', array('installed' => 0), $where);
         
         $this->_db->commit();
